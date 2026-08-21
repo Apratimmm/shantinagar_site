@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Faculty & Leadership — Shantinagar English School</title>
+    <meta
+      name="description"
+      content="Meet the people who run Shantinagar English School: our Principal, Directors and teaching faculty across the primary and secondary schools."
+    />
+    <meta property="og:title" content="Faculty & Leadership — Shantinagar English School" />
+    <meta
+      property="og:description"
+      content="Our Principal, Directors and teaching faculty."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+              display: ['"Inter"', "system-ui", "sans-serif"],
+              serif: ['"Inter"', "system-ui", "sans-serif"],
+              mono: ['"Inter"', "system-ui", "sans-serif"],
+              "nunito-sans": ['"Nunito Sans"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body { font-family: "Inter", system-ui, sans-serif; }
+      ::selection { background: rgba(42, 82, 190, 0.2); }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+
+<!-- NAV -->{% load static %}
+
+<nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+
+    <!-- Logo + School Name -->
+    <div class="flex items-center">
+      <img src="{% static 'logo.png' %}" alt="Logo" class="h-14 mr-4"/>
+      <div class="flex flex-col">
+        <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+          Shantinagar English School
+        </span>
+        <span class="text-xs font-medium italic text-muted-primary">
+          "Quality education is our motto"
+        </span>
+      </div>
+    </div>
+
+    <!-- Desktop Links -->
+    <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+    </div>
+
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+    <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+  </div>
+</nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
+        <div class="mx-auto max-w-7xl fade-up">
+          <h1 class="max-w-[18ch] font-display text-4xl font-bold leading-[1.02] tracking-tight text-balance md:text-6xl">
+            The people who <span class="font-serif italic font-medium text-primary">know</span> your child.
+          </h1>
+          <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+            Forty-one teachers, an average tenure of eleven years, and a ratio of six students to every one of them.
+          </p>
+        </div>
+      </section>
+
+      <!-- PRINCIPAL -->
+      <section class="px-6 py-16">
+        <div class="mx-auto max-w-7xl">
+          <h2 class="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Principal</h2>
+          <div id="principal-card" class="mt-6 max-w-sm"></div>
+        </div>
+      </section>
+
+      <!-- DIRECTORS -->
+      <section class="border-y border-border bg-secondary/60 px-6 py-16">
+        <div class="mx-auto max-w-7xl">
+          <h2 class="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Directors</h2>
+          <div id="directors-grid" class="mt-6 grid gap-8 sm:grid-cols-2 lg:max-w-3xl"></div>
+        </div>
+      </section>
+
+      <!-- TEACHING FACULTY -->
+      <section class="px-6 py-16">
+        <div class="mx-auto max-w-7xl">
+          <h2 class="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Teaching Faculty</h2>
+          <div id="teachers-grid" class="mt-6 grid gap-8 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            9842148688 / 9823083928<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            englishshantinagar@gmail.com<br/>
+          </p>
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+
+      const PRINCIPAL = {
+        name: "Dr. Miriam Vance",
+        role: "Principal",
+        photo: "assets/principal.jpg",
+        detail: "Ed.D. Stanford. At Shantinagar English School since 2009, Principal since 2016.",
+      };
+
+      const DIRECTORS = [
+        {
+          name: "Harold Ashworth",
+          role: "Director of Studies",
+          photo: "assets/director.jpg",
+          detail: "Oversees curriculum, assessment and board examination preparation.",
+        },
+        {
+          name: "Elena Marsh",
+          role: "Director of Primary School",
+          photo: "assets/teacher-1.jpg",
+          detail: "Leads Grades 1–5 and the early literacy programme.",
+        },
+      ];
+
+      const TEACHERS = [
+        { name: "Dr. Anita Roy", role: "Head of Science · Grades 8–10", photo: "assets/teacher-3.jpg" },
+        { name: "James Okonjo", role: "Literature & Rhetoric · Grades 6–10", photo: "assets/teacher-4.jpg" },
+        { name: "Tom Bradshaw", role: "Primary Mathematics & Making", photo: "assets/teacher-2.jpg" },
+        { name: "Clara Nyberg", role: "Modern Languages · French, Spanish", photo: "assets/teacher-1.jpg" },
+        { name: "Peter Salgado", role: "History & Civics", photo: "assets/teacher-2.jpg" },
+        { name: "Rukmini Iyer", role: "Visual Arts & Design Technology", photo: "assets/teacher-3.jpg" },
+      ];
+
+      function personCard(p, large = false) {
+        return `
+          <figure class="group">
+            <img
+              src="${p.photo}"
+              alt="${p.name}, ${p.role}"
+              width="800"
+              height="1000"
+              loading="lazy"
+              class="w-full rounded-[24px] bg-muted object-cover shadow-sm ring-1 ring-black/5 transition-transform duration-500 group-hover:-translate-y-1 ${large ? "aspect-[4/5]" : "aspect-square"}"
+            />
+            <figcaption class="mt-4">
+              <p class="font-nunito-sans text-lg font-bold tracking-tight">${p.name}</p>
+              <p class="font-mono text-[10px] uppercase tracking-widest text-primary">${p.role}</p>
+              ${p.detail ? `<p class="font-nunito-sans mt-2 text-sm text-muted-foreground">${p.detail}</p>` : ""}
+            </figcaption>
+          </figure>
+        `;
+      }
+
+      document.getElementById("principal-card").innerHTML = personCard(PRINCIPAL, true);
+      document.getElementById("directors-grid").innerHTML = DIRECTORS.map((p) => personCard(p, true)).join("");
+      document.getElementById("teachers-grid").innerHTML = TEACHERS.map((p) => personCard(p)).join("");
+
+
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to;
+
+      // Desktop
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      // Mobile
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const toggle = document.getElementById("nav-toggle");
+      const mobileNav = document.getElementById("mobile-nav");
+      const iconMenu = document.getElementById("icon-menu");
+      const iconClose = document.getElementById("icon-close");
+      let open = false;
+      toggle.addEventListener("click", () => {
+        open = !open;
+        mobileNav.classList.toggle("hidden", !open);
+        iconMenu.classList.toggle("hidden", open);
+        iconClose.classList.toggle("hidden", !open);
+      });
+      document.getElementById("mobile-nav-links").addEventListener("click", (e) => {
+        if (e.target.tagName === "A") {
+          open = false;
+          mobileNav.classList.add("hidden");
+          iconMenu.classList.remove("hidden");
+          iconClose.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

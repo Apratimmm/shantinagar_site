@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact Us — Shantinagar English School, Ojai California</title>
+    <meta
+      name="description"
+      content="Visit, call or email Shantinagar English School at Itahari-2, Shantinagar, Sunsari, Ojai CA. Find us on the map, send us a message, or follow us on Facebook."
+    />
+    <meta property="og:title" content="Contact Shantinagar English School" />
+    <meta
+      property="og:description"
+      content="Address, phone, email, map and enquiry form for Shantinagar English School."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+              input: "oklch(0.24 0.03 200 / 0.16)",
+              ring: "#2a52be",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+              display: ['"Inter"', "system-ui", "sans-serif"],
+              serif: ['"Inter"', "system-ui", "sans-serif"],
+              mono: ['"Inter"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body { font-family: "Inter", system-ui, sans-serif; }
+      ::selection { background: rgba(42, 82, 190, 0.2); }
+      #campus-map { height: 380px; width: 100%; border-radius: 24px; z-index: 0; }
+
+      @keyframes toast-in {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      #toast.show { display: flex; animation: toast-in 0.3s ease-out both; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <!-- NAV -->{% load static %}
+
+<nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+
+    <!-- Logo + School Name -->
+    <div class="flex items-center">
+      <img src="{% static 'logo.png' %}" alt="Logo" class="h-14 mr-4"/>
+      <div class="flex flex-col">
+        <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+          Shantinagar English School
+        </span>
+        <span class="text-xs font-medium italic text-muted-primary">
+          "Quality education is our motto"
+        </span>
+      </div>
+    </div>
+
+    <!-- Desktop Links -->
+    <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+    </div>
+
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+    <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+  </div>
+</nav>
+    <main>
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
+        <div class="mx-auto max-w-7xl fade-up">
+          <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+            Contact Us
+          </span>
+          <h1 class="max-w-[22ch] font-display text-4xl font-bold leading-[1.02] tracking-tight text-balance md:text-6xl">
+            Come and see us on an ordinary day.
+          </h1>
+          <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+            The admissions office is open Monday to Friday during office hours — no appointment needed for the tour.
+          </p>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="px-6 py-24 border-t border-border bg-secondary/40">
+        <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-2">
+          <div>
+            <div class="space-y-6">
+              <div class="flex gap-4">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <div>
+                  <p class="font-display font-bold tracking-tight">Campus</p>
+                  <p class="text-muted-foreground">Itahari-2, Shantinagar, Sunsari<br /></p>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.632 1.6l-.465.355a1 1 0 0 0-.303 1.213 11.05 11.05 0 0 0 6.232 6.4Z"/></svg>
+                <div>
+                  <p class="font-display font-bold tracking-tight">Telephone</p>
+                    <span class="text-muted-foreground hover:text-foreground">9842148688</span><br>
+                    <span class="text-muted-foreground hover:text-foreground">9823083928</span>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <div>
+                  <p class="font-display font-bold tracking-tight">Email</p>
+                  <span class="text-muted-foreground hover:text-foreground">englishshantinagar@gmail.com</a>
+                </div>
+              </div>
+              <div class="flex gap-4">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <div>
+                  <p class="font-display font-bold tracking-tight">Office hours</p>
+                  <p class="text-muted-foreground">Monday–Friday, 09:00 – 04:30</p>
+                </div>
+              </div>
+              <a
+                href="https://www.facebook.com/shantinagar.shantinagar.5"
+                target="_blank"
+                rel="noreferrer noopener"
+                class="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium transition-colors hover:bg-primary/5"
+              >
+                <svg class="h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3Z"/></svg>
+                Facebook page
+              </a>
+            </div>
+
+            <div class="mt-10">
+              <div id="campus-map" class="bg-muted"></div>
+            </div>
+          </div>
+
+          <div class="rounded-[24px] border border-border bg-card p-8 shadow-sm">
+            <h2 class="font-display text-2xl font-bold tracking-tight">Send us a message</h2>
+            <p class="mt-2 text-sm text-muted-foreground">
+              Admissions enquiries, tour requests or anything else — we read every one.
+            </p>
+            <form id="contact-form" class="mt-8 space-y-5">
+              <div class="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label for="name" class="mb-2 block text-sm font-medium">Full name</label>
+                  <input
+                    id="name"
+                    name="name"
+                    required
+                    class="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div>
+                  <label for="email" class="mb-2 block text-sm font-medium">Email</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    class="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+              </div>
+              <div>
+                <label for="subject" class="mb-2 block text-sm font-medium">Subject</label>
+                <input
+                  id="subject"
+                  name="subject"
+                  required
+                  class="h-11 w-full rounded-xl border border-input bg-background px-4 text-sm outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+              <div>
+                <label for="message" class="mb-2 block text-sm font-medium">Message</label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="6"
+                  required
+                  class="w-full rounded-xl border border-input bg-background px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
+                ></textarea>
+              </div>
+              <button
+                id="submit-btn"
+                type="submit"
+                class="inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 font-medium text-primary-foreground transition-transform hover:brightness-110 active:scale-95 disabled:opacity-60"
+              >
+                Send message
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            9842148688 / 9823083928<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            englishshantinagar@gmail.com<br/>
+          </p>
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <!-- Toast notification -->
+    <div
+      id="toast"
+      class="fixed bottom-6 left-1/2 z-[9999] hidden -translate-x-1/2 items-center gap-2 rounded-full border border-border bg-card px-5 py-3 text-sm font-medium shadow-lg"
+      role="status"
+      aria-live="polite"
+    >
+      <svg class="h-4 w-4 text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+      <span id="toast-message"></span>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to;
+
+      // Desktop
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      // Mobile
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Mobile nav toggle
+      const toggle = document.getElementById("nav-toggle");
+      const mobileNav = document.getElementById("mobile-nav");
+      const iconMenu = document.getElementById("icon-menu");
+      const iconClose = document.getElementById("icon-close");
+      let open = false;
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          open = !open;
+          mobileNav.classList.toggle("hidden", !open);
+          iconMenu.classList.toggle("hidden", open);
+          iconClose.classList.toggle("hidden", !open);
+        });
+      }
+      
+      const mobileLinks = document.getElementById("mobile-nav-links");
+      if (mobileLinks) {
+        mobileLinks.addEventListener("click", (e) => {
+          if (e.target.tagName === "A") {
+            open = false;
+            if (mobileNav) mobileNav.classList.add("hidden");
+            if (iconMenu) iconMenu.classList.remove("hidden");
+            if (iconClose) iconClose.classList.add("hidden");
+          }
+        });
+      }
+
+      // Campus map
+      if (window.L) {
+        const map = L.map("campus-map", { scrollWheelZoom: false }).setView([26.706908828733734, 87.29275309957879], 17);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        }).addTo(map);
+        L.marker([26.706908828733734, 87.29275309957879])
+          .addTo(map)
+          .bindPopup("Shantinagar English School")
+          .openPopup();
+      }
+
+      // Toast helper
+      const toastEl = document.getElementById("toast");
+      const toastMessage = document.getElementById("toast-message");
+      let toastTimer;
+      function showToast(message) {
+        toastMessage.textContent = message;
+        toastEl.classList.remove("hidden");
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = window.setTimeout(() => {
+          toastEl.classList.add("hidden");
+          toastEl.classList.remove("show");
+        }, 4000);
+      }
+
+      // Contact form submit
+      const form = document.getElementById("contact-form");
+      const submitBtn = document.getElementById("submit-btn");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending…";
+        window.setTimeout(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send message";
+          form.reset();
+          showToast("Thank you! The office will reply shortly.");
+        }, 600);
+      });
+    </script>
+  </body>
+</html>

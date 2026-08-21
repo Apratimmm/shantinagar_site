@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Academics — Shantinagar English School</title>
+    <meta
+      name="description"
+      content="Learn about our Primary and Secondary schools, where we build intellectual confidence from Grade 1 through Grade 10."
+    />
+    <meta property="og:title" content="Academics — Shantinagar English School" />
+    <meta
+      property="og:description"
+      content="Learn about our Primary and Secondary schools at Shantinagar English School."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+              display: ['"Inter"', "system-ui", "sans-serif"],
+              serif: ['"Inter"', "system-ui", "sans-serif"],
+              mono: ['"Inter"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body { font-family: "Inter", system-ui, sans-serif; }
+      ::selection { background: rgba(42, 82, 190, 0.2); }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <!-- NAV -->{% load static %}
+
+<nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+
+    <!-- Logo + School Name -->
+    <div class="flex items-center">
+      <img src="{% static 'logo.png' %}" alt="Logo" class="h-14 mr-4"/>
+      <div class="flex flex-col">
+        <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+          Shantinagar English School
+        </span>
+        <span class="text-xs font-medium italic text-muted-primary">
+          "Quality education is our motto"
+        </span>
+      </div>
+    </div>
+
+    <!-- Desktop Links -->
+    <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+    </div>
+
+  </div>
+
+  <!-- Mobile Navigation -->
+  <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+    <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+  </div>
+</nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
+        <div class="mx-auto max-w-7xl fade-up">
+          <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+            Academics
+          </span>
+          <h1 class="max-w-[20ch] font-display text-4xl font-bold leading-[1.02] tracking-tight text-balance md:text-6xl">
+            Two schools, one thread.
+          </h1>
+          <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+            Our primary school teaches children how to learn. Our secondary school teaches them what to do with it. The handover in Grade 6 is deliberate, gradual and planned by both faculties together.
+          </p>
+        </div>
+      </section>
+
+      <!-- PRIMARY SCHOOL -->
+      <section class="border-t border-border bg-secondary/30 px-6 py-20">
+          
+        <div class="mx-auto max-w-7xl">
+          <div class="grid items-start gap-12 lg:grid-cols-2">
+              <figure onclick="openLightbox('{% static 'primary.jpg' %}', 'Primary School', 'Grades 1-5')" class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[-1.5deg] lg:order-2 lg:mt-24">
+              <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src="{% static 'primary.jpg' %}"
+                  alt="Primary school students engaged in an art activity in a bright classroom"
+                  width="1200"
+                  height="1400"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            </figure>
+            <div>
+              <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">Grades 1-5</span>
+              <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-balance md:text-4xl">
+                Primary School
+              </h2>
+              <div class="mt-6 space-y-4 leading-relaxed text-muted-foreground">
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+                  At the primary level, children begin their formal learning journey in a structured yet caring environment. They engage seriously with core subjects such as Mathematics, Science, Nepali, English, Computer, and Health Education. These subjects are taught in a clear and engaging manner to build strong foundational knowledge and skills that will support them as they progress to higher classes.</p>
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+                  Along with academic learning, special care is taken to nurture curiosity, good study habits, and a love for learning from an early age. Teachers focus on helping young students understand basic concepts thoroughly while encouraging them to ask questions and explore ideas with confidence.</p>
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">To support their all-round growth, primary students also take part in extra-curricular activities such as music, sports, art, and other creative programmes. These activities help develop physical fitness, teamwork, creativity, and social skills. Through this balanced approach, the school aims to give every child a solid academic base together with the confidence and values needed for healthy overall development.</p>
+              </div>
+
+
+            </div>
+
+          </div>
+
+          <div class="mt-12">
+            <div class="group rounded-[28px] border border-border bg-card px-5 py-8 shadow-md shadow-black/5 transition-shadow duration-300 hover:shadow-xl">
+              <blockquote class="font-serif text-lg text-muted-foreground leading-relaxed relative pl-6">
+
+                " A seven-year-old will tell you exactly what confuses them if you give them thirty seconds of silence. Most of teaching is learning to wait. "
+              </blockquote>
+              <footer class="mt-4 text-right">
+                <cite class="font-medium text-sm text-foreground not-italic">— Ram Bahadur, Primary Mathematics Teacher </cite>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECONDARY SCHOOL -->
+      <section class="border-t border-border bg-secondary/30 px-6 py-20">
+        <div class="mx-auto max-w-7xl">
+          <div class="grid items-start gap-12 lg:grid-cols-2">
+              <figure onclick="openLightbox('{% static 'secondary.jpeg' %}', 'Secondary School', 'Grades 6-10')" class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[1.5deg] lg:order-2 lg:mt-24">
+              <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                <img
+                  src="{% static 'secondary.jpeg' %}"
+                  alt="Secondary school students engaged in a seminar discussion around a large table"
+                  width="1200"
+                  height="1400"
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+            </figure>
+
+            <div>
+              <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">Grades 6-10</span>
+              <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-balance md:text-4xl">
+                Secondary School
+              </h2>
+              <div class="mt-6 space-y-4 leading-relaxed text-muted-foreground">
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+                  At the secondary level, students move into a more focused and rigorous phase of learning. They explore core subjects such as Mathematics, Science, Social Studies, and English in greater depth, along with additional areas that form part of the national curriculum. Lessons are designed not only to build strong academic foundations but also to help students connect what they learn in the classroom with real-life situations in Nepal and beyond.</p>
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+                  As students at this stage are gradually preparing to become independent young adults, special attention is given to developing life skills, self-discipline, time management, and a sense of personal responsibility. Teachers guide them to think critically, make thoughtful decisions, and take ownership of their learning while remaining rooted in Nepali values of respect, cooperation, and community.</p>
+                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">Alongside academics, students actively participate in a range of co-curricular and extra-curricular activities. These include music, sports, arts, cultural programmes, and other school events that encourage creativity, teamwork, and physical fitness. Through these experiences, the school aims to support the all-round development of every student—helping them grow into confident, capable, and well-balanced individuals ready for the challenges of higher education and life ahead.</p>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div class="mt-12">
+            <div class="group rounded-[28px] border border-border bg-card px-5 py-8 shadow-md shadow-black/5 transition-shadow duration-300 hover:shadow-xl">
+              <blockquote class="font-serif text-lg text-muted-foreground leading-relaxed relative pl-6">
+                "
+                I don't want students who can recite the method. I want the ones who notice their result is wrong and get curious instead of embarrassed.
+                "
+              </blockquote>
+              <footer class="mt-4 text-right">
+                <cite class="font-medium text-sm text-foreground not-italic">— Sita Kumari, Secondary Science Teacher</cite>
+              </footer>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300">
+      <button id="lightbox-close" class="absolute top-6 right-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Close modal">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="max-h-[90vh] max-w-5xl text-center">
+        <img id="lightbox-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-xl shadow-2xl mx-auto object-contain"/>
+        <div class="mt-4 px-4">
+          <span id="lightbox-title" class="inline-block rounded bg-primary/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"></span>
+          <p id="lightbox-subtitle" class="mt-1 text-xs text-white/70 font-mono"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            9842148688 / 9823083928<br/>
+          </p>
+
+            <p class="mt-2 text-sm text-muted-foreground">
+            englishshantinagar@gmail.com<br/>
+          </p>
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to;
+
+      // Desktop
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      // Mobile
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      // LIGHTBOX PREVIEW FUNCTIONALITY
+      function openLightbox(src, title, subtitle) {
+        document.getElementById("lightbox-img").src = src;
+        document.getElementById("lightbox-title").textContent = title || "";
+        document.getElementById("lightbox-subtitle").textContent = subtitle || "";
+        document.getElementById("lightbox").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+      document.getElementById("lightbox").addEventListener("click", (e) => {
+        if (e.target.id === "lightbox") closeLightbox();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeLightbox();
+      });
+    </script>
+  </body>
+</html>

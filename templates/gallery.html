@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gallery — Shantinagar English School</title>
+    <meta
+      name="description"
+      content="Photographs from Shantinagar English School: field trips, house sports, Parent's Day, theatre productions, and science fairs."
+    />
+    <meta property="og:title" content="Gallery — Shantinagar English School" />
+    <meta
+      property="og:description"
+      content="Event photo gallery of Shantinagar English School."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+              display: ['"Inter"', "system-ui", "sans-serif"],
+              serif: ['"Inter"', "system-ui", "sans-serif"],
+              mono: ['"Inter"', "system-ui", "sans-serif"],
+              "nunito-sans": ['"Nunito Sans"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body { font-family: "Inter", system-ui, sans-serif; }
+      ::selection { background: rgba(42, 82, 190, 0.2); }
+      html { scroll-behavior: smooth; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+
+    <!-- NAV -->
+    {% load static %}
+    <nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+
+        <!-- Logo + School Name -->
+        <div class="flex items-center">
+          <img src="{% static 'logo.png' %}" alt="Logo" class="h-14 mr-4"/>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+              Shantinagar English School
+            </span>
+            <span class="text-xs font-medium italic text-muted-primary">
+              "Quality education is our motto"
+            </span>
+          </div>
+        </div>
+
+        <!-- Desktop Links -->
+        <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+        </div>
+
+      </div>
+
+      <!-- Mobile Navigation -->
+      <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+        <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-20">
+        <div class="mx-auto max-w-7xl fade-up">
+          <h1 class="max-w-[20ch] font-display text-4xl font-bold leading-[1.05] tracking-tight text-balance md:text-6xl">
+            A glimpse into the events that unfold within our presence.
+          </h1>
+          <p class="mt-4 max-w-[65ch] text-lg text-muted-foreground text-pretty">
+            Trips, matches, rehearsals and the quiet parts in between — photographed by our students and staff through the year.
+          </p>
+        </div>
+      </section>
+
+      <!-- EVENT BLOCKS CONTAINER -->
+      <section class="px-6 py-24 border-t border-border bg-secondary/40">
+        <div id="events-container" class="mx-auto max-w-7xl space-y-16 md:space-y-24">
+          <!-- Rendered by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300">
+      <button id="lightbox-close" class="absolute top-6 right-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Close modal">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <button id="lightbox-prev" class="absolute left-4 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Previous photo">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="lightbox-next" class="absolute right-4 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Next photo">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="max-h-[90vh] max-w-5xl text-center">
+        <img id="lightbox-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-xl shadow-2xl mx-auto object-contain"/>
+        <div class="mt-4 px-4">
+          <span id="lightbox-event" class="inline-block rounded bg-primary/80 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-white"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+          <p class="mt-2 text-sm text-muted-foreground">
+            9842148688 / 9823083928<br/>
+          </p>
+          <p class="mt-2 text-sm text-muted-foreground">
+            englishshantinagar@gmail.com<br/>
+          </p>
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to || (to !== "/" && window.location.pathname.startsWith(to));
+
+      // Desktop Nav
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4 font-semibold"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      // Mobile Nav
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4 font-semibold"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // EVENT GROUPS DATA
+      const EVENTS = [
+          {
+          id: "science-fair",
+          title: "Story Writing Competition",
+          date: "SHRAWAN, 2083",
+          description: "Students from Grades 6 to 10 showcased interactive working models, chemistry experiments, and robotics projects.",
+          photos: [
+            {
+              src: "{% static '5.jpeg' %}",
+              alt: "Science Fair - Project demo",
+              caption: "Interactive project demonstrations",
+            },
+            {
+              src: "{% static '6.jpg' %}",
+              alt: "Science Fair - Chemistry experiment",
+              caption: "Chemistry lab experiment",
+            },
+            {
+              src: "{% static '7.jpeg' %}",
+              alt: "Science Fair - Robotics prototype",
+              caption: "Student robotics prototype",
+            },
+          ]
+        },
+        {
+          id: "parents-day",
+          title: "Poem Recitation Competition",
+          date: "Asar, 2083",
+          description: "Families filled the courtyard for the morning assembly, then sat down one by one with class teachers to go through the year's progress.",
+          photos: [
+            {
+              src: "{% static '1.jpg' %}",
+              alt: "Parent's Day - Morning assembly",
+              caption: "Morning assembly in the courtyard",
+            },
+            {
+              src: "{% static '2.jpg' %}",
+              alt: "Parent's Day - Teacher meeting",
+              caption: "Teacher–parent meetings",
+            },
+            {
+              src: "{% static '3.jpg' %}",
+              alt: "Parent's Day - Classroom visit",
+              caption: "Classroom visit",
+            },
+          ]
+        },
+        {
+          id: "sports-day",
+          title: "Educational Excursion",
+          date: "Jestha, 2083",
+          description: "Four house teams competed across track sprints, house football finals, tug-of-war, and relay races on the main athletic grounds.",
+          photos: [
+            {
+              src: "{% static '4.jpg' %}",
+              alt: "Annual Sports Day - Main event",
+              caption: "Sports Day highlights",
+            },
+          ]
+        },
+        {
+          id: "culture-fest",
+          title: "Oratory Competition",
+          date: "Jestha, 2083",
+          description: "A day of music, theatre, and traditional dance performances, accompanied by student fine art displays in the auditorium.",
+          photos: [
+            {
+              src: "{% static '8.jpg' %}",
+              alt: "Culture Fest - Theatre performance",
+              caption: "Theatre staging",
+            },
+            {
+              src: "{% static '9.jpg' %}",
+              alt: "Culture Fest - Folk dance",
+              caption: "Folk dance & musical ensemble",
+            },
+            {
+              src: "{% static '10.jpg' %}",
+              alt: "Culture Fest - Art exhibition",
+              caption: "Fine art & painting exhibition",
+            },
+          ]
+        },
+        {
+          id: "field-trips",
+          title: "Event Management Training",
+          date: "Baisakh, 2083",
+          description: "Grade 8 students embarked on an outdoor environmental study trail through the surrounding valley and botanical reserve.",
+          photos: [
+            {
+              src: "{% static '11.jpg' %}",
+              alt: "Field Trip - Valley hiking",
+              caption: "Grade 8 valley hiking trail",
+            },
+            {
+              src: "{% static '12.jpg' %}",
+              alt: "Field Trip - Botanical garden",
+              caption: "Botanical garden study trip",
+            },
+            {
+              src: "{% static '13.jpg' %}",
+              alt: "Field Trip - Environmental survey",
+              caption: "Environmental science field survey",
+            },
+          ]
+        }
+      ];
+
+      // Flatten photos list with event title metadata for lightbox navigation
+      let ALL_FLAT_PHOTOS = [];
+
+      let currentFilter = "all";
+
+      // Render Event Blocks with Polaroid Cards
+      function renderEventSections() {
+        const container = document.getElementById("events-container");
+        ALL_FLAT_PHOTOS = [];
+        let photoGlobalIndex = 0;
+        let html = "";
+
+        EVENTS.forEach((ev) => {
+          const eventPhotosHtml = ev.photos.map((p, idx) => {
+            const flatIndex = photoGlobalIndex++;
+            ALL_FLAT_PHOTOS.push({
+              ...p,
+              eventTitle: ev.title,
+            });
+
+            // Slight alternating rotations for organic polaroid look
+            const rotationClass = (idx % 3 === 0) ? 'rotate-[-1.5deg]' : (idx % 3 === 2) ? 'rotate-[1.5deg]' : 'rotate-[-0.5deg]';
+
+            return `
+              <figure
+                onclick="openLightbox(${flatIndex})"
+                class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 ${rotationClass}"
+              >
+                <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                  <img
+                    src="${p.src}"
+                    alt="${p.alt}"
+                    loading="lazy"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+              </figure>
+            `;
+          }).join("");
+
+          // Grid cols based on photo count
+          const gridColsClass = ev.photos.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-5xl' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+
+          html += `
+            <div id="block-${ev.id}" class="pb-16  last:border-b-0">
+              <!-- Event Block Header (Title & Date only, no divider line) -->
+              <div class="flex flex-row items-baseline justify-between mb-6">
+                <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                  ${ev.title}
+                </h2>
+                <span class="font-mono text-xs md:text-sm font-semibold uppercase tracking-widest text-muted-background/70">
+                  ${ev.date}
+                </span>
+              </div>
+
+              <!-- Event Block Pictures Grid (Polaroid style) -->
+              <div class="grid gap-8 ${gridColsClass}">
+                ${eventPhotosHtml}
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      // LIGHTBOX FUNCTIONALITY
+      let activePhotoIndex = 0;
+
+      function openLightbox(index) {
+        if (index < 0 || index >= ALL_FLAT_PHOTOS.length) return;
+        activePhotoIndex = index;
+        const photo = ALL_FLAT_PHOTOS[index];
+
+        document.getElementById("lightbox-img").src = photo.src;
+        document.getElementById("lightbox-img").alt = photo.alt;
+        document.getElementById("lightbox-event").textContent = photo.eventTitle;
+
+        document.getElementById("lightbox").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function prevLightbox() {
+        if (ALL_FLAT_PHOTOS.length === 0) return;
+        const nextIdx = (activePhotoIndex - 1 + ALL_FLAT_PHOTOS.length) % ALL_FLAT_PHOTOS.length;
+        openLightbox(nextIdx);
+      }
+
+      function nextLightbox() {
+        if (ALL_FLAT_PHOTOS.length === 0) return;
+        const nextIdx = (activePhotoIndex + 1) % ALL_FLAT_PHOTOS.length;
+        openLightbox(nextIdx);
+      }
+
+      document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+      document.getElementById("lightbox-prev").addEventListener("click", prevLightbox);
+      document.getElementById("lightbox-next").addEventListener("click", nextLightbox);
+
+      document.getElementById("lightbox").addEventListener("click", (e) => {
+        if (e.target.id === "lightbox") {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (document.getElementById("lightbox").classList.contains("hidden")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") prevLightbox();
+        if (e.key === "ArrowRight") nextLightbox();
+      });
+
+      // INITIALIZE PAGE
+      renderEventSections();
+
+      // Mobile Nav Toggle
+      const toggle = document.getElementById("nav-toggle");
+      if (toggle) {
+        const mobileNav = document.getElementById("mobile-nav");
+        const iconMenu = document.getElementById("icon-menu");
+        const iconClose = document.getElementById("icon-close");
+        let open = false;
+        toggle.addEventListener("click", () => {
+          open = !open;
+          mobileNav.classList.toggle("hidden", !open);
+          if (iconMenu) iconMenu.classList.toggle("hidden", open);
+          if (iconClose) iconClose.classList.toggle("hidden", !open);
+        });
+      }
+      document.getElementById("mobile-nav-links").addEventListener("click", (e) => {
+        if (e.target.tagName === "A") {
+          const mobileNav = document.getElementById("mobile-nav");
+          if (mobileNav) mobileNav.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>

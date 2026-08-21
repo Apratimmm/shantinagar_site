@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Events — Shantinagar English School</title>
+    <meta
+      name="description"
+      content="Festivals, fairs, matches and performances from recent terms — the parts of school that never appear on a report card."
+    />
+    <meta property="og:title" content="Events — Shantinagar English School" />
+    <meta
+      property="og:description"
+      content="Festivals, fairs, matches and performances from recent terms."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+              display: ['"Inter"', "system-ui", "sans-serif"],
+              serif: ['"Inter"', "system-ui", "sans-serif"],
+              mono: ['"Inter"', "system-ui", "sans-serif"],
+              "nunito-sans": ['"Nunito Sans"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      @keyframes fade-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+      body { font-family: "Inter", system-ui, sans-serif; }
+      ::selection { background: rgba(42, 82, 190, 0.2); }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <!-- NAV -->{% load static %}
+    <nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+        <div class="flex items-center">
+          <img src="{% static 'logo.png' %}" alt="Logo" class="h-14 mr-4"/>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+              Shantinagar English School
+            </span>
+            <span class="text-xs font-medium italic text-muted-foreground">
+              "Quality education is our motto"
+            </span>
+          </div>
+        </div>
+        <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground"></div>
+      </div>
+      <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+        <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-20 md:py-28">
+        <div class="mx-auto max-w-7xl fade-up">
+          <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+            Events
+          </span>
+          <h1 class="mt-2 max-w-[20ch] font-display text-5xl font-bold leading-[1.02] tracking-tight text-balance md:text-7xl">
+            What the year <span class="font-serif italic font-medium text-primary">felt</span> like.
+          </h1>
+          <p class="mt-6 max-w-[60ch] text-xl text-muted-foreground text-pretty">
+            Festivals, fairs, matches and performances from recent terms — the parts of school that never appear on a report card.
+          </p>
+        </div>
+      </section>
+
+      <!-- EVENTS GRID -->
+      <section class="px-6 py-24 bg-secondary/30">
+        <div class="mx-auto max-w-7xl">
+          <span class="mb-8 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Recent Highlights
+          </span>
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            
+            <!-- Event Card 1 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1542840410-3092f99611a3?auto=format&fit=crop&q=80&w=600" alt="Spring Culture Festival" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Festival</span>
+                  <span class="text-muted-foreground">12 April 2026</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">Spring Culture Festival</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  Eleven countries represented, forty-two performances, and a courtyard full of food cooked by parents. Grades 1-10 shared the same stage.
+                </p>
+              </div>
+            </div>
+
+            <!-- Event Card 2 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&q=80&w=600" alt="Harvest Fair & House Sports" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Community</span>
+                  <span class="text-muted-foreground">30 October 2025</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">Harvest Fair & House Sports</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  The kitchen garden crop went to stalls run entirely by Grade 7. Proceeds funded three scholarships for the coming year.
+                </p>
+              </div>
+            </div>
+
+            <!-- Event Card 3 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1526676037777-05a232554f77?auto=format&fit=crop&q=80&w=600" alt="All-School Sports Day" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Sport</span>
+                  <span class="text-muted-foreground">19 September 2025</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">All-School Sports Day</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  Four houses, one field, and a relay final decided by a stride. Every student in the school ran at least one event.
+                </p>
+              </div>
+            </div>
+
+            <!-- Event Card 4 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1562923727-86c28f6d7285?auto=format&fit=crop&q=80&w=600" alt="Science & Invention Fair" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Academics</span>
+                  <span class="text-muted-foreground">6 February 2026</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">Science & Invention Fair</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  Sixty-eight student projects judged by visiting researchers. Two were invited to present at the county symposium.
+                </p>
+              </div>
+            </div>
+
+            <!-- Event Card 5 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1507676184212-d0330a151f15?auto=format&fit=crop&q=80&w=600" alt="Winter Theatre Production" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Arts</span>
+                  <span class="text-muted-foreground">20 November 2025</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">Winter Theatre Production</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  A student-adapted staging of The Tempest — cast, set, lighting and score built entirely in-house over nine weeks.
+                </p>
+              </div>
+            </div>
+
+            <!-- Event Card 6 -->
+            <div class="group flex flex-col overflow-hidden rounded-[24px] border border-border bg-card shadow-sm transition-transform duration-300 hover:shadow-md hover:-translate-y-1">
+              <div class="aspect-[4/3] w-full overflow-hidden bg-muted">
+                <img src="https://images.unsplash.com/photo-1543807535-eceef0bc6599?auto=format&fit=crop&q=80&w=600" alt="Carol Service by Candlelight" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy">
+              </div>
+              <div class="flex flex-1 flex-col p-8">
+                <div class="mb-4 flex items-center justify-between font-mono text-[10px] uppercase tracking-widest text-primary">
+                  <span>Tradition</span>
+                  <span class="text-muted-foreground">16 December 2025</span>
+                </div>
+                <h3 class="font-display text-2xl font-bold text-foreground">Carol Service by Candlelight</h3>
+                <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+                  The oldest thing we do. The choir closes the year in the old hall, and the whole school walks out singing.
+                </p>
+              </div>
+            </div>
+
+          </div>
+          
+          <div class="mt-16 text-base text-muted-foreground">
+            Upcoming dates are published on the <a href="/calendar/" class="text-primary underline underline-offset-4 hover:text-foreground">school calendar</a>.
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+          <p class="mt-2 text-sm text-muted-foreground">
+            9842148688 / 9823083928<br/>
+          </p>
+          <p class="mt-2 text-sm text-muted-foreground">
+            englishshantinagar@gmail.com<br/>
+          </p>
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to || (to !== "/" && window.location.pathname.startsWith(to));
+
+      // Desktop
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      // Mobile
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      const toggle = document.getElementById("nav-toggle");
+      if(toggle) {
+        const mobileNav = document.getElementById("mobile-nav");
+        const iconMenu = document.getElementById("icon-menu");
+        const iconClose = document.getElementById("icon-close");
+        let open = false;
+        toggle.addEventListener("click", () => {
+          open = !open;
+          mobileNav.classList.toggle("hidden", !open);
+          iconMenu.classList.toggle("hidden", open);
+          iconClose.classList.toggle("hidden", !open);
+        });
+      }
+      document.getElementById("mobile-nav-links").addEventListener("click", (e) => {
+        if (e.target.tagName === "A") {
+          const mobileNav = document.getElementById("mobile-nav");
+          const iconMenu = document.getElementById("icon-menu");
+          const iconClose = document.getElementById("icon-close");
+          if(mobileNav) mobileNav.classList.add("hidden");
+          if(iconMenu) iconMenu.classList.remove("hidden");
+          if(iconClose) iconClose.classList.add("hidden");
+        }
+      });
+    </script>
+  </body>
+</html>
