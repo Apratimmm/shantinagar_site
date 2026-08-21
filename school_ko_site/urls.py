@@ -17,12 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from .views import *
+from logic.views import *
 
 urlpatterns = [
     path('', home, name='home'),
+    path('login/', user_login, name='login'),
+    path('dashboard/', dashboard, name='dashboard'),
     path('academics/', academics, name='academics'),
     path('calendar/' ,calendar, name='calendar'),
     path('contact/', contact, name='contact'),
     path('gallery/', gallery, name='gallery'),
     path('results/', results, name='results'),
+    path('verify_user/',verify_user, name='verify_user'),
+    path('logout/', logout, name='logout'),
+    path('edit_about/', edit_about, name='edit_about'),
 ]
