@@ -5,3 +5,4 @@ cloudinary
 django-cloudinary-storage
 Pillow
 python-dotenv>=1.0
+dj-database-url>=3.1
