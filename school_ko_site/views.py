@@ -12,8 +12,6 @@ def calendar(request):
 def contact(request):
     return render(request, 'contact.html')
 
-def faculty(request):
-    return render(request, 'faculty.html')
 
 def gallery(request):
     return render(request, 'gallery.html')

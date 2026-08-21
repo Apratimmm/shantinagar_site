@@ -23,7 +23,6 @@ urlpatterns = [
     path('academics/', academics, name='academics'),
     path('calendar/' ,calendar, name='calendar'),
     path('contact/', contact, name='contact'),
-    path('faculty/', faculty, name='faculty'),
     path('gallery/', gallery, name='gallery'),
     path('results/', results, name='results'),
 ]
