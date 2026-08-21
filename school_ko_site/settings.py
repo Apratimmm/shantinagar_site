@@ -17,26 +17,16 @@ import cloudinary
 import cloudinary.uploader
 from cloudinary.utils import cloudinary_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-u_na76214dsnwn7s#gi0j&aok-e@_35k_-b39*7yqmvpj$*u3d",
 )
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'cloudinary',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
     'logic'
 ]
@@ -100,8 +89,7 @@ STORAGES = {
     },
 }
 
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DATABASES = {
     'default': {
@@ -110,7 +98,6 @@ DATABASES = {
     }
 }
 
-# Use PostgreSQL when DATABASE_URL is provided (e.g. Vercel integration)
 if os.environ.get("DATABASE_URL"):
     import urllib.parse
     db_url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
@@ -124,7 +111,6 @@ if os.environ.get("DATABASE_URL"):
             "PORT": db_url.port,
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
