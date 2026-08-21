@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard — Shantinagar English School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", system-ui, sans-serif; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <span class="text-lg font-bold text-primary">Dashboard</span>
+        <a href="/logout/" class="text-sm font-semibold text-primary hover:underline">Log Out</a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+        <h1 class="text-3xl font-bold tracking-tight mb-8">Welcome to your Dashboard</h1>
+        
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          
+          <a href="/edit_about/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">About Us</h2>
+            <p class="mt-2 text-sm text-foreground/70">View our mission, vision, and history.</p>
+          </a>
+
+          <a href="/academics/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">Academics</h2>
+            <p class="mt-2 text-sm text-foreground/70">Explore our educational programs and curriculum.</p>
+          </a>
+
+          <a href="/calendar/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">Calendar</h2>
+            <p class="mt-2 text-sm text-foreground/70">Check upcoming school events and holidays.</p>
+          </a>
+
+          <a href="/gallery/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">Gallery</h2>
+            <p class="mt-2 text-sm text-foreground/70">View photos from recent school activities.</p>
+          </a>
+
+          <a href="/results/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">Results</h2>
+            <p class="mt-2 text-sm text-foreground/70">Check the latest academic results and achievements.</p>
+          </a>
+
+          <a href="/contact/" class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary group-hover:underline">Contact Us</h2>
+            <p class="mt-2 text-sm text-foreground/70">Get in touch with the school administration.</p>
+          </a>
+
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

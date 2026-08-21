@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit About Us — Shantinagar English School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", system-ui, sans-serif; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+
+    <!-- NAV -->
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <span class="text-lg font-bold text-primary">Dashboard</span>
+        <a href="/logout/" class="text-sm font-semibold text-primary hover:underline">Log Out</a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+
+        <!-- Breadcrumb / Title -->
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-3xl font-bold tracking-tight">Edit About Us</h1>
+          <a href="/dashboard/" class="text-sm font-semibold text-primary hover:underline">
+            Back to Dashboard
+          </a>
+        </div>
+
+        <!-- Success Messages -->
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <!-- Edit Form -->
+        <form method="post" enctype="multipart/form-data" action="/edit_about/" class="space-y-12">
+          {% csrf_token %}
+
+          <!-- ================= HISTORY ================= -->
+          {% if history %}
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Our History</h2>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Heading</label>
+              <input type="text" name="history_heading" value="{{ history.heading }}"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Text</label>
+              <textarea name="history_text" rows="8"
+                        class="w-full border rounded-lg px-4 py-2">{{ history.text }}</textarea>
+            </div>
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Image</label>
+              {% if history.image %}
+                <img src="{{ history.image.url }}" alt="Current image" class="h-32 mb-3 rounded">
+              {% endif %}
+              <input type="file" name="history_image" accept="image/*">
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- ================= PRINCIPAL ================= -->
+          {% if principal %}
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Message from the {{ principal.person_title }}</h2>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Quote / Heading</label>
+              <input type="text" name="principal_heading" value="{{ principal.heading }}"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Message Text</label>
+              <textarea name="principal_text" rows="8"
+                        class="w-full border rounded-lg px-4 py-2">{{ principal.text }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1">Person Name</label>
+                <input type="text" name="principal_name" value="{{ principal.person_name }}"
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1">Title</label>
+                <input type="text" name="principal_title" value="{{ principal.person_title }}"
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Photo</label>
+              {% if principal.image %}
+                <img src="{{ principal.image.url }}" class="h-32 mb-3 rounded">
+              {% endif %}
+              <input type="file" name="principal_image" accept="image/*">
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- ================= CHAIRPERSON ================= -->
+          {% if chairperson %}
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Message from the {{ chairperson.person_title }}</h2>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Quote / Heading</label>
+              <input type="text" name="chairperson_heading" value="{{ chairperson.heading }}"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Message Text</label>
+              <textarea name="chairperson_text" rows="8"
+                        class="w-full border rounded-lg px-4 py-2">{{ chairperson.text }}</textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <label class="block text-sm font-medium mb-1">Person Name</label>
+                <input type="text" name="chairperson_name" value="{{ chairperson.person_name }}"
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1">Title</label>
+                <input type="text" name="chairperson_title" value="{{ chairperson.person_title }}"
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Photo</label>
+              {% if chairperson.image %}
+                <img src="{{ chairperson.image.url }}" class="h-32 mb-3 rounded">
+              {% endif %}
+              <input type="file" name="chairperson_image" accept="image/*">
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Save Button -->
+          <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg">
+              Save Changes
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </main>
+
+  </body>
+</html>
