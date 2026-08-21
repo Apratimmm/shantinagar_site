@@ -85,6 +85,21 @@ DATABASES = {
     }
 }
 
+# Use PostgreSQL when DATABASE_URL is provided (e.g. Vercel integration)
+if os.environ.get("DATABASE_URL"):
+    import urllib.parse
+    db_url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": db_url.path.lstrip("/"),
+            "USER": db_url.username,
+            "PASSWORD": db_url.password,
+            "HOST": db_url.hostname,
+            "PORT": db_url.port,
+        }
+    }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators

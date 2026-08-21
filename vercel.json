@@ -1,25 +1,8 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "vercel-python",
-      "config": {
-        "includeFiles": [
-          "templates/",
-          "staticfiles/",
-          "school_ko_site/",
-          "images/",
-          "manage.py"
-        ],
-        "build": "python manage.py collectstatic --noinput"
-      }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "school_ko_site/wsgi.py": {
+      "maxDuration": 60
     }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.py"
-    }
-  ]
+  }
 }
