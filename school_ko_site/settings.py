@@ -99,21 +99,12 @@ DATABASES = {
 }
 
 if os.environ.get("DATABASE_URL"):
-    import urllib.parse
-    db_url = urllib.parse.urlparse(os.environ["DATABASE_URL"])
+    import dj_database_url
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": db_url.path.lstrip("/"),
-            "USER": db_url.username,
-            "PASSWORD": db_url.password,
-            "HOST": db_url.hostname,
-            "PORT": db_url.port,
-            "OPTIONS": {
-                k: v[0] if len(v) == 1 else v
-                for k, v in urllib.parse.parse_qs(db_url.query).items()
-            },
-        }
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
 
 # Password validation
