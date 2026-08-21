@@ -4,5 +4,13 @@
     "school_ko_site/wsgi.py": {
       "maxDuration": 60
     }
+  },
+  "build": {
+    "env": {
+      "PYTHON_VERSION": "3.12"
+    }
+  },
+  "github": {
+    "silent": true
   }
 }

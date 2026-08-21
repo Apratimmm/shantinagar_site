@@ -109,6 +109,10 @@ if os.environ.get("DATABASE_URL"):
             "PASSWORD": db_url.password,
             "HOST": db_url.hostname,
             "PORT": db_url.port,
+            "OPTIONS": {
+                k: v[0] if len(v) == 1 else v
+                for k, v in urllib.parse.parse_qs(db_url.query).items()
+            },
         }
     }
 
