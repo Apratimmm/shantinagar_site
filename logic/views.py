@@ -1,11 +1,18 @@
+import json
+from pprint import pprint
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import AboutSection
+from .models import *
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+import os
+import resend
 
+resend.api_key = os.environ.get("RESEND_API_KEY")
 def verify_user(request):
 
     if request.user.is_authenticated:
@@ -72,3 +79,148 @@ def edit_about(request):
         "chairperson": chairperson,
     }
     return render(request, "edit_about.html", context)
+
+@login_required
+def edit_academics(request):
+    primary, _ = Academic.objects.get_or_create(school="primary")
+    secondary, _ = Academic.objects.get_or_create(school="secondary")
+
+    if request.method == "POST":
+        primary.description = request.POST.get("primary_description", "")
+        primary.quote = request.POST.get("primary_quote", "")
+        primary.teacher_name = request.POST.get("primary_teacher_name", "")
+        primary.teacher_designation = request.POST.get("primary_teacher_designation", "")
+        if request.FILES.get("primary_image"):
+            primary.image = request.FILES["primary_image"]
+        primary.save()
+
+        secondary.description = request.POST.get("secondary_description", "")
+        secondary.quote = request.POST.get("secondary_quote", "")
+        secondary.teacher_name = request.POST.get("secondary_teacher_name", "")
+        secondary.teacher_designation = request.POST.get("secondary_teacher_designation", "")
+        if request.FILES.get("secondary_image"):
+            secondary.image = request.FILES["secondary_image"]
+        secondary.save()
+
+        messages.success(request, "Academics content updated successfully!")
+        return redirect("edit_academics")
+
+    context = {
+        "primary": primary,
+        "secondary": secondary,
+    }
+    return render(request, "edit_academics.html", context)
+
+@require_POST
+def send_email(request):
+    data = json.loads(request.body)
+    name    = data.get("name", "").strip()
+    email   = data.get("email", "").strip()
+    subject = data.get("subject", "").strip()
+    message = data.get("message", "").strip()
+    pprint(name)
+    pprint(email)
+    pprint(subject)
+    pprint(message)
+    actual_message = f"""
+    <p><strong>Name:</strong> {name}</p>
+    <p><strong>Email:</strong> {email}</p>
+    <p><strong>Subject:</strong> {subject}</p>
+    <hr>
+    <p>{message}</p> """
+
+    try:
+        resend.Emails.send({
+            "from": "onboarding@resend.dev",
+            "to": "apratimkhadkaaa99@gmail.com",
+            "reply_to": email,
+            "subject": f"Mail received from the school's website",
+            "html": actual_message})
+
+        return JsonResponse({
+            "success": True,
+            "message": "Thank you! Your message has been sent successfully."
+        })
+
+    except Exception:
+            return JsonResponse({
+            "success": False,
+            "message": "Sorry, something went wrong. Please try again later."
+        }, status=500)
+
+@login_required
+def edit_contact(request):
+    contact, _ = ContactInfo.objects.get_or_create(id=1)
+    if request.method == "POST":
+        contact.telephone = request.POST.get("telephone", "")
+        contact.email = request.POST.get("email", "")
+        contact.facebook_link = request.POST.get("facebook_link", "")
+        contact.save()
+
+        messages.success(request, "Contact information updated successfully!")
+        return redirect("edit_contact")
+
+    context = {
+        "contact": contact,
+    }
+    return render(request, "edit_contact.html", context)
+
+@login_required
+def edit_results(request):
+    yearly_results = YearlyResult.objects.all().order_by("-year")[:3]
+    toppers = Topper.objects.all().order_by("-score")[:5]
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "yearly":
+            for i in range(3):
+                result_id = request.POST.get(f"result_id_{i}")
+                year = request.POST.get(f"year_{i}")
+
+                if not year:
+                    continue
+
+                if result_id:
+                    result = get_object_or_404(YearlyResult, id=result_id)
+                else:
+                    result = YearlyResult()
+
+                result.year = year
+                result.candidates = request.POST.get(f"candidates_{i}") or 0
+                result.pass_rate = request.POST.get(f"pass_rate_{i}") or 0
+                result.average = request.POST.get(f"average_{i}") or 0
+                result.save()
+
+            messages.success(request, "Yearly results saved successfully!")
+
+        elif form_type == "topper":
+            for i in range(5):
+                topper_id = request.POST.get(f"topper_id_{i}")
+                name = request.POST.get(f"name_{i}")
+
+                if not name:
+                    continue
+
+                if topper_id:
+                    topper = get_object_or_404(Topper, id=topper_id)
+                else:
+                    topper = Topper()
+
+                topper.name = name
+                topper.score = request.POST.get(f"score_{i}") or 0
+
+                if request.FILES.get(f"image_{i}"):
+                    topper.image = request.FILES[f"image_{i}"]
+
+                topper.save()
+
+            messages.success(request, "Top scorers saved successfully!")
+
+        return redirect("edit_results")
+
+    context = {
+        "yearly_results": yearly_results,
+        "toppers": toppers,
+    }
+    return render(request, "edit_results.html", context)
