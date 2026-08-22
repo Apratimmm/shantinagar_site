@@ -78,3 +78,104 @@ class AboutSection(models.Model):
 
     def __str__(self):
         return self.get_section_display()
+
+class Academic(models.Model):
+    SCHOOL_CHOICES = [
+        ("primary", "Primary School"),
+        ("secondary", "Secondary School"),
+    ]
+
+    school = models.CharField(
+        max_length=20,
+        choices=SCHOOL_CHOICES,
+        unique=True,
+        help_text="Primary or Secondary"
+    )
+
+    description = models.TextField(
+        help_text="Main description about this school level"
+    )
+
+    image = models.ImageField(
+        upload_to="academics/",
+        blank=True,
+        null=True,
+        help_text="Image for this section"
+    )
+
+    quote = models.TextField(
+        blank=True,
+        help_text="Optional quote"
+    )
+
+    teacher_name = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Name of the teacher/head"
+    )
+
+    teacher_designation = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Designation of the teacher (e.g. Head of Primary)"
+    )
+
+    class Meta:
+        verbose_name = "Academic Section"
+        verbose_name_plural = "Academic Sections"
+        ordering = ["school"]
+
+    def __str__(self):
+        return self.get_school_display()
+
+
+class ContactInfo(models.Model):
+    telephone = models.TextField(
+        help_text="You can add multiple numbers. Separate them with a comma or new line."
+    )
+
+    email = models.EmailField(
+        help_text="Main contact email address"
+    )
+
+    facebook_link = models.URLField(
+        blank=True,
+        null=True,
+        help_text="Full Facebook page URL"
+    )
+
+    class Meta:
+        verbose_name = "Contact Information"
+        verbose_name_plural = "Contact Information"
+
+    def __str__(self):
+        return "School Contact Information"
+
+    def get_telephone_list(self):
+        if not self.telephone:
+            return []
+        numbers = self.telephone.replace(",", "\n").splitlines()
+        return [num.strip() for num in numbers if num.strip()]
+
+class YearlyResult(models.Model):
+    year = models.PositiveIntegerField(unique=True)
+    candidates = models.PositiveIntegerField()
+    pass_rate = models.DecimalField(max_digits=5, decimal_places=2)
+    average = models.DecimalField(max_digits=5, decimal_places=2)
+
+    class Meta:
+        ordering = ["-year"]
+
+    def __str__(self):
+        return f"Result {self.year}"
+
+class Topper(models.Model):
+    name = models.CharField(max_length=150)
+    score = models.DecimalField(max_digits=5, decimal_places=2)
+    image = models.ImageField(upload_to="toppers/", blank=True, null=True)
+
+    class Meta:
+        ordering = ["-score"]
+
+    def __str__(self):
+        return f"{self.name} - {self.score}"
