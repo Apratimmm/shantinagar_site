@@ -31,4 +31,8 @@ urlpatterns = [
     path('verify_user/',verify_user, name='verify_user'),
     path('logout/', logout, name='logout'),
     path('edit_about/', edit_about, name='edit_about'),
+    path('edit_academics/', edit_academics, name='edit_academics'),
+    path('send_email/', send_email, name='send_mail'),
+    path('edit_contact/', edit_contact, name='edit_contact'),
+    path('edit_results/', edit_results, name='edit_results'),
 ]
