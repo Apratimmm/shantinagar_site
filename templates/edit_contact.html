@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load static %}
+<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Contact — Shantinagar English School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+              secondary: "oklch(0.975 0.006 95)",
+              muted: "oklch(0.975 0.006 95)",
+              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+            },
+            borderRadius: { "3xl": "24px" },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", system-ui, sans-serif; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+
+    <!-- NAV -->
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-3xl font-bold tracking-tight">Edit Contact Information</h1>
+        </div>
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" action="/edit_contact/" class="space-y-12">
+          {% csrf_token %}
+
+          {% if contact %}
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Contact Details</h2>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Telephone</label>
+              <textarea name="telephone" rows="3"
+                        class="w-full border rounded-lg px-4 py-2">{{ contact.telephone }}</textarea>
+              <p class="mt-1 text-xs text-muted-foreground">Separate multiple numbers with a comma or new line.</p>
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Email</label>
+              <input type="email" name="email" value="{{ contact.email }}"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Facebook Link</label>
+              <input type="url" name="facebook_link" value="{{ contact.facebook_link }}"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="flex justify-end">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg"
+                    onclick="this.textContent='Saving...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();">
+              Save Changes
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+    </main>
+
+  </body>
+</html>
