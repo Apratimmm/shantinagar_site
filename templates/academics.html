@@ -107,19 +107,25 @@
 
       <!-- PRIMARY SCHOOL -->
       <section class="border-t border-border bg-secondary/30 px-6 py-20">
-          
+
         <div class="mx-auto max-w-7xl">
           <div class="grid items-start gap-12 lg:grid-cols-2">
-              <figure onclick="openLightbox('{% static 'primary.jpg' %}', 'Primary School', 'Grades 1-5')" class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[-1.5deg] lg:order-2 lg:mt-24">
+            <figure {% if primary.image %}onclick="openLightbox('{{ primary.image.url }}', 'Primary School', 'Grades 1-5')"{% endif %} class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[-1.5deg] lg:order-2 lg:mt-24">
               <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                {% if primary.image %}
                 <img
-                  src="{% static 'primary.jpg' %}"
-                  alt="Primary school students engaged in an art activity in a bright classroom"
+                  src="{{ primary.image.url }}"
+                  alt="Primary school students"
                   width="1200"
                   height="1400"
                   loading="lazy"
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+                {% else %}
+                <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                  <span class="font-display text-5xl font-bold text-primary/30 select-none">PS</span>
+                </div>
+                {% endif %}
               </div>
             </figure>
             <div>
@@ -128,26 +134,18 @@
                 Primary School
               </h2>
               <div class="mt-6 space-y-4 leading-relaxed text-muted-foreground">
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
-                  At the primary level, children begin their formal learning journey in a structured yet caring environment. They engage seriously with core subjects such as Mathematics, Science, Nepali, English, Computer, and Health Education. These subjects are taught in a clear and engaging manner to build strong foundational knowledge and skills that will support them as they progress to higher classes.</p>
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
-                  Along with academic learning, special care is taken to nurture curiosity, good study habits, and a love for learning from an early age. Teachers focus on helping young students understand basic concepts thoroughly while encouraging them to ask questions and explore ideas with confidence.</p>
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">To support their all-round growth, primary students also take part in extra-curricular activities such as music, sports, art, and other creative programmes. These activities help develop physical fitness, teamwork, creativity, and social skills. Through this balanced approach, the school aims to give every child a solid academic base together with the confidence and values needed for healthy overall development.</p>
+                {{ primary.description|linebreaks }}
               </div>
-
-
             </div>
-
           </div>
 
           <div class="mt-12">
             <div class="group rounded-[28px] border border-border bg-card px-5 py-8 shadow-md shadow-black/5 transition-shadow duration-300 hover:shadow-xl">
               <blockquote class="font-serif text-lg text-muted-foreground leading-relaxed relative pl-6">
-
-                " A seven-year-old will tell you exactly what confuses them if you give them thirty seconds of silence. Most of teaching is learning to wait. "
+                "{{ primary.quote }}"
               </blockquote>
               <footer class="mt-4 text-right">
-                <cite class="font-medium text-sm text-foreground not-italic">— Ram Bahadur, Primary Mathematics Teacher </cite>
+                <cite class="font-medium text-sm text-foreground not-italic">— {{ primary.teacher_name }}, {{ primary.teacher_designation }}</cite>
               </footer>
             </div>
           </div>
@@ -158,16 +156,22 @@
       <section class="border-t border-border bg-secondary/30 px-6 py-20">
         <div class="mx-auto max-w-7xl">
           <div class="grid items-start gap-12 lg:grid-cols-2">
-              <figure onclick="openLightbox('{% static 'secondary.jpeg' %}', 'Secondary School', 'Grades 6-10')" class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[1.5deg] lg:order-2 lg:mt-24">
+            <figure {% if secondary.image %}onclick="openLightbox('{{ secondary.image.url }}', 'Secondary School', 'Grades 6-10')"{% endif %} class="order-1 group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[1.5deg] lg:order-2 lg:mt-24">
               <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                {% if secondary.image %}
                 <img
-                  src="{% static 'secondary.jpeg' %}"
-                  alt="Secondary school students engaged in a seminar discussion around a large table"
+                  src="{{ secondary.image.url }}"
+                  alt="Secondary school students"
                   width="1200"
                   height="1400"
                   loading="lazy"
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
+                {% else %}
+                <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                  <span class="font-display text-5xl font-bold text-primary/30 select-none">SS</span>
+                </div>
+                {% endif %}
               </div>
             </figure>
 
@@ -177,26 +181,18 @@
                 Secondary School
               </h2>
               <div class="mt-6 space-y-4 leading-relaxed text-muted-foreground">
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
-                  At the secondary level, students move into a more focused and rigorous phase of learning. They explore core subjects such as Mathematics, Science, Social Studies, and English in greater depth, along with additional areas that form part of the national curriculum. Lessons are designed not only to build strong academic foundations but also to help students connect what they learn in the classroom with real-life situations in Nepal and beyond.</p>
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
-                  As students at this stage are gradually preparing to become independent young adults, special attention is given to developing life skills, self-discipline, time management, and a sense of personal responsibility. Teachers guide them to think critically, make thoughtful decisions, and take ownership of their learning while remaining rooted in Nepali values of respect, cooperation, and community.</p>
-                <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">Alongside academics, students actively participate in a range of co-curricular and extra-curricular activities. These include music, sports, arts, cultural programmes, and other school events that encourage creativity, teamwork, and physical fitness. Through these experiences, the school aims to support the all-round development of every student—helping them grow into confident, capable, and well-balanced individuals ready for the challenges of higher education and life ahead.</p>
+                {{ secondary.description|linebreaks }}
               </div>
-
-
             </div>
           </div>
 
           <div class="mt-12">
             <div class="group rounded-[28px] border border-border bg-card px-5 py-8 shadow-md shadow-black/5 transition-shadow duration-300 hover:shadow-xl">
               <blockquote class="font-serif text-lg text-muted-foreground leading-relaxed relative pl-6">
-                "
-                I don't want students who can recite the method. I want the ones who notice their result is wrong and get curious instead of embarrassed.
-                "
+                "{{ secondary.quote }}"
               </blockquote>
               <footer class="mt-4 text-right">
-                <cite class="font-medium text-sm text-foreground not-italic">— Sita Kumari, Secondary Science Teacher</cite>
+                <cite class="font-medium text-sm text-foreground not-italic">— {{ secondary.teacher_name }}, {{ secondary.teacher_designation }}</cite>
               </footer>
             </div>
           </div>

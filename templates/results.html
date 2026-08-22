@@ -122,70 +122,65 @@
           <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">Grade 10 board examination outcomes, year by year. Pass rate and cohort average are verified against the official statements of marks.</p>
             <br>
           <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {% for result in yearly_results %}
             <div class="group flex flex-col items-center justify-center gap-8 rounded-[28px] border border-border bg-card p-10 shadow-md shadow-black/5 text-center transition-shadow duration-300 hover:shadow-xl">
-              <h3 class="font-display text-4xl font-extrabold text-foreground">2082</h3>
+              <h3 class="font-display text-4xl font-extrabold text-foreground">{{ result.year }}</h3>
               <div class="flex flex-col gap-6">
                 <div class="flex flex-col gap-1.5">
                   <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Candidates</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">68</p>
+                  <p class="font-display text-4xl font-extrabold text-foreground">{{ result.candidates }}</p>
                 </div>
                 <div class="flex flex-col gap-1.5">
                   <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Pass rate</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">100%</p>
+                  <p class="font-display text-4xl font-extrabold text-foreground">{{ result.pass_rate }}%</p>
                 </div>
                 <div class="flex flex-col gap-1.5">
                   <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Average</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">88.4%</p>
+                  <p class="font-display text-4xl font-extrabold text-foreground">{{ result.average }}%</p>
                 </div>
               </div>
             </div>
-            <div class="group flex flex-col items-center justify-center gap-8 rounded-[28px] border border-border bg-card p-10 shadow-md shadow-black/5 text-center transition-shadow duration-300 hover:shadow-xl">
-              <h3 class="font-display text-4xl font-extrabold text-foreground">2081</h3>
-              <div class="flex flex-col gap-6">
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Candidates</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">64</p>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Pass rate</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">100%</p>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Average</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">87.1%</p>
-                </div>
-              </div>
-            </div>
-            <div class="group flex flex-col items-center justify-center gap-8 rounded-[28px] border border-border bg-card p-10 shadow-md shadow-black/5 text-center transition-shadow duration-300 hover:shadow-xl">
-              <h3 class="font-display text-4xl font-extrabold text-foreground">2080</h3>
-              <div class="flex flex-col gap-6">
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Candidates</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">61</p>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Pass rate</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">98.4%</p>
-                </div>
-                <div class="flex flex-col gap-1.5">
-                  <p class="font-mono text-[10px] uppercase tracking-widest text-muted-primary">Average</p>
-                  <p class="font-display text-4xl font-extrabold text-foreground">85.9%</p>
-                </div>
-              </div>
-            </div>
+            {% endfor %}
           </div>
         </div>
       </section>
 
-      <!-- TOP 5 SCORERS --><section class="px-6 py-24 border-t border-border bg-secondary/40">
+      <!-- TOP 5 SCORERS -->
+      <section class="px-6 py-24 border-t border-border bg-secondary/40">
         <div class="mx-auto max-w-7xl">
           <div class="mb-12">
-            <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">Class of 2025</span>
+            <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">Top Scorers</span>
             <h2 class="mt-3 font-display text-2xl font-bold tracking-tight">Top 5 scorers</h2>
           </div>
 
-          <div id="top-scorers-row1" class="grid grid-cols-3 gap-10 mx-auto w-full max-w-[56rem]"></div>
-          <div id="top-scorers-row2" class="mt-10 grid grid-cols-2 gap-10 mx-auto max-w-[37rem]"></div>
+          <div class="grid grid-cols-2 gap-10 mx-auto max-w-[56rem] sm:grid-cols-3 lg:grid-cols-5">
+            {% for topper in toppers %}
+            <figure {% if topper.image %}onclick="openLightbox('{{ topper.image.url }}', '{{ topper.name }}', '{{ topper.score }} %')"{% endif %} class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[-1.5deg]">
+              <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                {% if topper.image %}
+                <img
+                  src="{{ topper.image.url }}"
+                  alt="{{ topper.name }}"
+                  width="800"
+                  height="1000"
+                  loading="lazy"
+                  class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                />
+                {% else %}
+                <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                  <span class="font-display text-3xl font-bold text-primary select-none">
+                    {% for word in topper.name.split %}{% if forloop.counter <= 2 %}{{ word.0|upper }}{% endif %}{% endfor %}
+                  </span>
+                </div>
+                {% endif %}
+              </div>
+              <figcaption class="mt-4 px-2 text-center">
+                <p class="mt-1 font-nunito-sans text-sm font-medium text-foreground">{{ topper.name }}</p>
+                <p class="mt-1 font-display text-2xl font-extrabold text-primary">{{ topper.score }} %</p>
+              </figcaption>
+            </figure>
+            {% endfor %}
+          </div>
 
           <p class="mt-12 text-xs text-muted-foreground">
             Statements of marks are issued by the examination board. Certified copies are available from the school office on request.
@@ -302,66 +297,6 @@
         });
       }
 
-      // Top Scorers Data
-      const TOP_SCORERS = [
-        {
-          rank: 1,
-          name: "Aarav Sharma",
-          score: 99.1,
-          year: "2025",
-          photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-        },
-        {
-          rank: 2,
-          name: "Sneha Thapa",
-          score: 98.5,
-          year: "2025",
-          photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-        },
-        {
-          rank: 3,
-          name: "Rohan Shrestha",
-          score: 97.9,
-          year: "2025",
-          photo: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&q=80&w=400",
-        },
-        {
-          rank: 4,
-          name: "Kriti Adhikari",
-          score: 97.2,
-          year: "2025",
-          photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-        },
-        {
-          rank: 5,
-          name: "Nischal Gurung",
-          score: 96.8,
-          year: "2025",
-          photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-        },
-      ];
-
-      const scorerCard = (s) => `
-        <figure onclick="openLightbox('${s.photo}', '${s.name}','${s.score}')" class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 rotate-[-1.5deg]">
-          <div class="relative aspect-[4/3] overflow-hidden bg-muted">
-            <img
-              src="${s.photo}"
-              alt="${s.name}, rank ${s.rank}"
-              width="800"
-              height="1000"
-              loading="lazy"
-              class="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-            />
-          </div>
-          <figcaption class="mt-4 px-2 text-center">
-            <p class="mt-1 font-nunito-sans text-sm font-medium text-foreground">${s.name}</p>
-            <p class="mt-1 font-display text-2xl font-extrabold text-primary">${s.score} %</p>
-          </figcaption>
-        </figure>
-      `;
-
-      document.getElementById("top-scorers-row1").innerHTML = TOP_SCORERS.slice(0, 3).map(scorerCard).join("");
-      document.getElementById("top-scorers-row2").innerHTML = TOP_SCORERS.slice(3, 5).map(scorerCard).join("");
 
       // LIGHTBOX MODAL
       function openLightbox(src, title, subtitle) {
