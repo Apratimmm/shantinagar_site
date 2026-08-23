@@ -1,0 +1,123 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard — Shantinagar English School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              background: "oklch(0.995 0.003 95)",
+              foreground: "oklch(0.24 0.03 200)",
+              card: "oklch(1.0 0 95)",
+              primary: "#2a52be",
+              "primary-foreground": "oklch(0.98 0.01 200)",
+              border: "oklch(0.24 0.03 200 / 0.12)",
+            },
+            fontFamily: {
+              sans: ['"Inter"', "system-ui", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: "Inter", system-ui, sans-serif; }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+        <h1 class="text-3xl font-bold tracking-tight mb-8">Edit Event</h1>
+
+        <div class="bg-white rounded-2xl shadow p-8 mb-10">
+
+          <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="update_details">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium mb-1">Event Name</label>
+                <input type="text" name="event_name" value="{{ event.event_name }}" required
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1">Event Date</label>
+                <input type="text" name="event_date" value="{{ event.event_date }}" required
+                       class="w-full border rounded-lg px-4 py-2"
+                       placeholder="e.g. Baisakh 20, 2083">
+              </div>
+            </div>
+
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Save Changes
+            </button>
+          </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow p-8 mb-10">
+          <h2 class="text-xl font-semibold mb-6 text-primary">Add Image(s)</h2>
+
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="add_images">
+
+            <div class="mb-6">
+              <input type="file" name="images" accept="image/*" multiple
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Upload
+            </button>
+          </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow p-8">
+          <h2 class="text-xl font-semibold mb-6 text-primary">Current Image(s)</h2>
+
+          {% if event.images.all %}
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+              {% for img in event.images.all %}
+                <div class="relative group">
+                  <img src="{{ img.image.url }}" alt="Gallery image"
+                       class="w-full h-48 object-cover rounded-xl shadow">
+
+                  <form method="POST" class="absolute top-2 right-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="delete_image">
+                    <input type="hidden" name="image_id" value="{{ img.id }}">
+                    <button type="submit"
+                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg"
+                            onclick="return confirm('Delete this image?')">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-gray-500">No images uploaded yet.</p>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

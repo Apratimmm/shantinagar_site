@@ -223,3 +223,77 @@ def edit_results(request):
         "toppers": toppers,
     }
     return render(request, "edit_results.html", context)
+
+@login_required
+def show_events(request):
+    events = GalleryEvent.objects.all().only("id", "event_name", "event_date")
+    return render(request, "show_events.html", {"events": events})
+
+@login_required
+def add_event(request):
+    if request.method == "POST":
+        event_name = request.POST.get("event_name", "").strip()
+        event_date = request.POST.get("event_date","").strip()
+
+        event = GalleryEvent.objects.create(
+            event_name=event_name,
+            event_date=event_date
+        )
+
+        images = request.FILES.getlist("images")
+        for img in images:
+            GalleryImage.objects.create(event=event, image=img)
+
+        messages.success(request, "Event created successfully!")
+        return redirect("show_events")
+
+    return render(request,"add_event.html")
+
+def edit_event(request, event_id):
+    event = get_object_or_404(GalleryEvent.objects.prefetch_related("images"), id=event_id)
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "update_details":
+            event_name = request.POST.get("event_name", "").strip()
+            event_date = request.POST.get("event_date", "").strip()
+
+            if event_name and event_date:
+                event.event_name = event_name
+                event.event_date = event_date
+                event.save()
+                messages.success(request, "Event updated successfully!")
+            else:
+                messages.error(request, "Event name and date are required.")
+
+            return redirect("edit_event", event_id=event.id)
+
+        elif form_type == "add_images":
+            images = request.FILES.getlist("images")
+            for img in images:
+                GalleryImage.objects.create(event=event, image=img)
+
+            messages.success(request, "Images added successfully!")
+            return redirect("edit_event", event_id=event.id)
+
+        elif form_type == "delete_image":
+            image_id = request.POST.get("image_id")
+            image = get_object_or_404(GalleryImage, id=image_id, event=event)
+            image.delete()
+            messages.success(request, "Image deleted!")
+            return redirect("edit_event", event_id=event.id)
+
+    context = {
+        "event": event,
+    }
+    return render(request, "edit_event.html", context)
+
+@login_required
+def delete_event(request, event_id):
+    event = get_object_or_404(GalleryEvent, id=event_id)
+    event_name = event.event_name
+    event.delete()
+
+    messages.success(request, f'Event "{event_name}" deleted successfully!')
+    return redirect("show_events")

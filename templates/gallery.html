@@ -105,15 +105,60 @@
         </div>
       </section>
 
-      <!-- EVENT BLOCKS CONTAINER -->
+      <!-- EVENT BLOCKS CONTAINER (server-rendered from the `events` context) -->
       <section class="px-6 py-24 border-t border-border bg-secondary/40">
-        <div id="events-container" class="mx-auto max-w-7xl space-y-16 md:space-y-24">
-          <!-- Rendered by JS -->
+        <div class="mx-auto max-w-7xl space-y-16 md:space-y-24">
+          {% for event in events %}
+            {% with total=event.images.all|length %}
+              {% if total %}
+                <div id="block-{{ event.id }}" class="pb-16 last:border-b-0">
+                  <!-- Event Block Header (Title & Date only, no divider line) -->
+                  <div class="flex flex-row items-baseline justify-between mb-6">
+                    <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight text-foreground">
+                      {{ event.event_name }}
+                    </h2>
+                    <span class="font-mono text-xs md:text-sm font-semibold uppercase tracking-widest text-muted-background/70">
+                      {{ event.event_date }}
+                    </span>
+                  </div>
+
+                  <!-- Event Block Pictures Grid (Polaroid style) -->
+                  <div class="grid gap-8 {% if total == 2 %}grid-cols-1 md:grid-cols-2 max-w-5xl{% else %}grid-cols-1 sm:grid-cols-2 lg:grid-cols-3{% endif %}">
+                    {% for image in event.images.all %}
+                      <figure
+                        onclick="openLightbox(this)"
+                        data-gallery-photo="true"
+                        data-photo-src="{{ image.image.url }}"
+                        data-photo-alt="{{ event.event_name }}"
+                        data-event-title="{{ event.event_name }}"
+                        class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-1.5deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[1.5deg]{% else %}rotate-[-0.5deg]{% endif %}"
+                      >
+                        <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                          <img
+                            src="{{ image.image.url }}"
+                            alt="{{ event.event_name }}"
+                            loading="lazy"
+                            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                      </figure>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endif %}
+            {% endwith %}
+          {% empty %}
+            <div class="mx-auto max-w-2xl text-center py-20">
+              <p class="text-lg text-muted-foreground">
+                The gallery is empty. New events and their photographs will appear here once published.
+              </p>
+            </div>
+          {% endfor %}
         </div>
       </section>
     </main>
 
-    <!-- LIGHTBOX MODAL -->
+
     <div id="lightbox" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300">
       <button id="lightbox-close" class="absolute top-6 right-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Close modal">
         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -195,192 +240,24 @@
 
       document.getElementById("year").textContent = new Date().getFullYear();
 
-      // EVENT GROUPS DATA
-      const EVENTS = [
-          {
-          id: "science-fair",
-          title: "Story Writing Competition",
-          date: "SHRAWAN, 2083",
-          description: "Students from Grades 6 to 10 showcased interactive working models, chemistry experiments, and robotics projects.",
-          photos: [
-            {
-              src: "{% static '5.jpeg' %}",
-              alt: "Science Fair - Project demo",
-              caption: "Interactive project demonstrations",
-            },
-            {
-              src: "{% static '6.jpg' %}",
-              alt: "Science Fair - Chemistry experiment",
-              caption: "Chemistry lab experiment",
-            },
-            {
-              src: "{% static '7.jpeg' %}",
-              alt: "Science Fair - Robotics prototype",
-              caption: "Student robotics prototype",
-            },
-          ]
-        },
-        {
-          id: "parents-day",
-          title: "Poem Recitation Competition",
-          date: "Asar, 2083",
-          description: "Families filled the courtyard for the morning assembly, then sat down one by one with class teachers to go through the year's progress.",
-          photos: [
-            {
-              src: "{% static '1.jpg' %}",
-              alt: "Parent's Day - Morning assembly",
-              caption: "Morning assembly in the courtyard",
-            },
-            {
-              src: "{% static '2.jpg' %}",
-              alt: "Parent's Day - Teacher meeting",
-              caption: "Teacher–parent meetings",
-            },
-            {
-              src: "{% static '3.jpg' %}",
-              alt: "Parent's Day - Classroom visit",
-              caption: "Classroom visit",
-            },
-          ]
-        },
-        {
-          id: "sports-day",
-          title: "Educational Excursion",
-          date: "Jestha, 2083",
-          description: "Four house teams competed across track sprints, house football finals, tug-of-war, and relay races on the main athletic grounds.",
-          photos: [
-            {
-              src: "{% static '4.jpg' %}",
-              alt: "Annual Sports Day - Main event",
-              caption: "Sports Day highlights",
-            },
-          ]
-        },
-        {
-          id: "culture-fest",
-          title: "Oratory Competition",
-          date: "Jestha, 2083",
-          description: "A day of music, theatre, and traditional dance performances, accompanied by student fine art displays in the auditorium.",
-          photos: [
-            {
-              src: "{% static '8.jpg' %}",
-              alt: "Culture Fest - Theatre performance",
-              caption: "Theatre staging",
-            },
-            {
-              src: "{% static '9.jpg' %}",
-              alt: "Culture Fest - Folk dance",
-              caption: "Folk dance & musical ensemble",
-            },
-            {
-              src: "{% static '10.jpg' %}",
-              alt: "Culture Fest - Art exhibition",
-              caption: "Fine art & painting exhibition",
-            },
-          ]
-        },
-        {
-          id: "field-trips",
-          title: "Event Management Training",
-          date: "Baisakh, 2083",
-          description: "Grade 8 students embarked on an outdoor environmental study trail through the surrounding valley and botanical reserve.",
-          photos: [
-            {
-              src: "{% static '11.jpg' %}",
-              alt: "Field Trip - Valley hiking",
-              caption: "Grade 8 valley hiking trail",
-            },
-            {
-              src: "{% static '12.jpg' %}",
-              alt: "Field Trip - Botanical garden",
-              caption: "Botanical garden study trip",
-            },
-            {
-              src: "{% static '13.jpg' %}",
-              alt: "Field Trip - Environmental survey",
-              caption: "Environmental science field survey",
-            },
-          ]
-        }
-      ];
+      // LIGHTBOX FUNCTIONALITY
+      // Reads photo metadata from data-* attributes on the server-rendered
+      // <figure> elements so prev/next navigation spans every gallery photo.
+      let activeFigure = null;
 
-      // Flatten photos list with event title metadata for lightbox navigation
-      let ALL_FLAT_PHOTOS = [];
-
-      let currentFilter = "all";
-
-      // Render Event Blocks with Polaroid Cards
-      function renderEventSections() {
-        const container = document.getElementById("events-container");
-        ALL_FLAT_PHOTOS = [];
-        let photoGlobalIndex = 0;
-        let html = "";
-
-        EVENTS.forEach((ev) => {
-          const eventPhotosHtml = ev.photos.map((p, idx) => {
-            const flatIndex = photoGlobalIndex++;
-            ALL_FLAT_PHOTOS.push({
-              ...p,
-              eventTitle: ev.title,
-            });
-
-            // Slight alternating rotations for organic polaroid look
-            const rotationClass = (idx % 3 === 0) ? 'rotate-[-1.5deg]' : (idx % 3 === 2) ? 'rotate-[1.5deg]' : 'rotate-[-0.5deg]';
-
-            return `
-              <figure
-                onclick="openLightbox(${flatIndex})"
-                class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 ${rotationClass}"
-              >
-                <div class="relative aspect-[4/3] overflow-hidden bg-muted">
-                  <img
-                    src="${p.src}"
-                    alt="${p.alt}"
-                    loading="lazy"
-                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                </div>
-              </figure>
-            `;
-          }).join("");
-
-          // Grid cols based on photo count
-          const gridColsClass = ev.photos.length === 2 ? 'grid-cols-1 md:grid-cols-2 max-w-5xl' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
-
-          html += `
-            <div id="block-${ev.id}" class="pb-16  last:border-b-0">
-              <!-- Event Block Header (Title & Date only, no divider line) -->
-              <div class="flex flex-row items-baseline justify-between mb-6">
-                <h2 class="font-display text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                  ${ev.title}
-                </h2>
-                <span class="font-mono text-xs md:text-sm font-semibold uppercase tracking-widest text-muted-background/70">
-                  ${ev.date}
-                </span>
-              </div>
-
-              <!-- Event Block Pictures Grid (Polaroid style) -->
-              <div class="grid gap-8 ${gridColsClass}">
-                ${eventPhotosHtml}
-              </div>
-            </div>
-          `;
-        });
-
-        container.innerHTML = html;
+      function getPhotoFigures() {
+        return Array.from(document.querySelectorAll('[data-gallery-photo="true"]'));
       }
 
-      // LIGHTBOX FUNCTIONALITY
-      let activePhotoIndex = 0;
+      function openLightbox(figure) {
+        const figures = getPhotoFigures();
+        const idx = figures.indexOf(figure);
+        if (idx === -1) return;
+        activeFigure = figure;
 
-      function openLightbox(index) {
-        if (index < 0 || index >= ALL_FLAT_PHOTOS.length) return;
-        activePhotoIndex = index;
-        const photo = ALL_FLAT_PHOTOS[index];
-
-        document.getElementById("lightbox-img").src = photo.src;
-        document.getElementById("lightbox-img").alt = photo.alt;
-        document.getElementById("lightbox-event").textContent = photo.eventTitle;
+        document.getElementById("lightbox-img").src = figure.dataset.photoSrc;
+        document.getElementById("lightbox-img").alt = figure.dataset.photoAlt || "";
+        document.getElementById("lightbox-event").textContent = figure.dataset.eventTitle || "";
 
         document.getElementById("lightbox").classList.remove("hidden");
         document.body.style.overflow = "hidden";
@@ -392,15 +269,19 @@
       }
 
       function prevLightbox() {
-        if (ALL_FLAT_PHOTOS.length === 0) return;
-        const nextIdx = (activePhotoIndex - 1 + ALL_FLAT_PHOTOS.length) % ALL_FLAT_PHOTOS.length;
-        openLightbox(nextIdx);
+        const figures = getPhotoFigures();
+        if (!activeFigure || figures.length === 0) return;
+        const idx = figures.indexOf(activeFigure);
+        const prevIdx = (idx - 1 + figures.length) % figures.length;
+        openLightbox(figures[prevIdx]);
       }
 
       function nextLightbox() {
-        if (ALL_FLAT_PHOTOS.length === 0) return;
-        const nextIdx = (activePhotoIndex + 1) % ALL_FLAT_PHOTOS.length;
-        openLightbox(nextIdx);
+        const figures = getPhotoFigures();
+        if (!activeFigure || figures.length === 0) return;
+        const idx = figures.indexOf(activeFigure);
+        const nextIdx = (idx + 1) % figures.length;
+        openLightbox(figures[nextIdx]);
       }
 
       document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
@@ -419,9 +300,6 @@
         if (e.key === "ArrowLeft") prevLightbox();
         if (e.key === "ArrowRight") nextLightbox();
       });
-
-      // INITIALIZE PAGE
-      renderEventSections();
 
       // Mobile Nav Toggle
       const toggle = document.getElementById("nav-toggle");

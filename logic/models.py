@@ -179,3 +179,29 @@ class Topper(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.score}"
+
+class GalleryEvent(models.Model):
+    event_name = models.CharField(max_length=200)
+    event_date = models.CharField()
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = "Gallery Event"
+        verbose_name_plural = "Gallery Events"
+
+    def __str__(self):
+        return f"{self.event_name} ({self.event_date})"
+
+class GalleryImage(models.Model):
+    event = models.ForeignKey(
+        GalleryEvent,
+        on_delete=models.CASCADE,
+        related_name="images"
+    )
+    image = models.ImageField(upload_to="gallery/")
+
+    class Meta:
+        ordering = ["id"]
+
+    def __str__(self):
+        return f"Image for {self.event.event_name}"

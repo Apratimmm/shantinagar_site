@@ -35,4 +35,8 @@ urlpatterns = [
     path('send_email/', send_email, name='send_mail'),
     path('edit_contact/', edit_contact, name='edit_contact'),
     path('edit_results/', edit_results, name='edit_results'),
+    path('show_events/', show_events, name='show_events'),
+    path('add_event/', add_event, name='add_event'),
+    path('edit_event/<int:event_id>/', edit_event, name='edit_event'),
+    path('delete_event/<int:event_id>/', delete_event, name='delete_event'),
 ]

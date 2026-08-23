@@ -40,7 +40,12 @@ def contact(request):
     return render(request, 'contact.html', context)
 
 def gallery(request):
-    return render(request, 'gallery.html')
+    events = GalleryEvent.objects.prefetch_related("images").all()
+
+    context = {
+        "events": events,
+    }
+    return render(request, "gallery.html", context)
 
 def results(request):
     yearly_results = YearlyResult.objects.all()[:3]
