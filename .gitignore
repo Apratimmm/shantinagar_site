@@ -12,6 +12,9 @@ identifier.sqlite
 # Virtual environments
 .virenv/
 
+# Node
+node_modules/
+
 # IDE
 .idea/
 .vscode/
