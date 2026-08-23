@@ -113,11 +113,10 @@ def edit_academics(request):
 
 @require_POST
 def send_email(request):
-    data = json.loads(request.body)
-    name    = data.get("name", "").strip()
-    email   = data.get("email", "").strip()
-    subject = data.get("subject", "").strip()
-    message = data.get("message", "").strip()
+    name    = request.POST.get("name", "").strip()
+    email   = request.POST.get("email", "").strip()
+    subject = request.POST.get("subject", "").strip()
+    message = request.POST.get("message", "").strip()
     pprint(name)
     pprint(email)
     pprint(subject)

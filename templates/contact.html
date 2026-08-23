@@ -220,6 +220,13 @@
               >
                 Send message
               </button>
+
+              <div
+                id="form-message"
+                class="hidden rounded-lg border border-green-200 bg-green-50 p-4 text-green-800"
+                role="alert"
+                aria-live="polite"
+              ></div>
             </form>
           </div>
         </div>
@@ -356,20 +363,70 @@
         }, 4000);
       }
 
-      // Contact form submit
       const form = document.getElementById("contact-form");
       const submitBtn = document.getElementById("submit-btn");
-      form.addEventListener("submit", (e) => {
+
+      form.addEventListener("submit", async function (e) {
         e.preventDefault();
+
         submitBtn.disabled = true;
-        submitBtn.textContent = "Sending…";
-        window.setTimeout(() => {
+        submitBtn.textContent = "Sending...";
+
+        const formData = new FormData(form);
+
+        try {
+          const response = await fetch("/send_email/", {
+            method: "POST",
+            body: formData,
+            headers: {
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+          });
+
+          const data = await response.json();
+
+          showMessage(data.message, data.success);
+
+          if (data.success) {
+            form.reset();
+          }
+        } catch (error) {
+          showMessage("Network error. Please try again.", false);
+        } finally {
           submitBtn.disabled = false;
           submitBtn.textContent = "Send message";
-          form.reset();
-          showToast("Thank you! The office will reply shortly.");
-        }, 600);
+        }
       });
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + "=")) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      const formMessage = document.getElementById("form-message");
+
+      function showMessage(message, isSuccess) {
+        formMessage.textContent = message;
+        formMessage.classList.remove("hidden");
+        if (!isSuccess) {
+          formMessage.className =
+            "mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-red-800";
+        } else {
+          formMessage.className =
+            "mt-4 rounded-lg border border-green-200 bg-green-50 p-4 text-green-800";
+        }
+        formMessage.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
     </script>
   </body>
 </html>
