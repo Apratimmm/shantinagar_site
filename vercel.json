@@ -7,6 +7,7 @@
     }
   },
   "build": {
+    "command": "bash vercel_build.sh",
     "env": {
       "PYTHON_VERSION": "3.12"
     }
