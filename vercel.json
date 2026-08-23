@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "staticfiles",
   "functions": {
     "school_ko_site/wsgi.py": {
       "maxDuration": 60
