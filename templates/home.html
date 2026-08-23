@@ -402,13 +402,23 @@
             Itahari-2, Shantinagar, Sunsari<br/>
           </p>
 
+            {% if contact %}
             <p class="mt-2 text-sm text-muted-foreground">
-            9842148688 / 9823083928<br/>
-          </p>
-
+              {% for number in contact.get_telephone_list %}
+                {{ number }}{% if not forloop.last %} / {% endif %}
+              {% endfor %}
+            </p>
             <p class="mt-2 text-sm text-muted-foreground">
-            englishshantinagar@gmail.com<br/>
-          </p>
+              {{ contact.email }}
+            </p>
+            {% if contact.facebook_link %}
+              <p class="mt-2 text-sm">
+                <a href="{{ contact.facebook_link }}" target="_blank" class="text-primary hover:underline">
+                  Facebook
+                </a>
+              </p>
+            {% endif %}
+            {% endif %}
         </div>
         <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
       </div>
