@@ -1,40 +1,15 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
-    {% load static %}
+    
 <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Edit Results — Shantinagar English School</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              background: "oklch(0.995 0.003 95)",
-              foreground: "oklch(0.24 0.03 200)",
-              card: "oklch(1.0 0 95)",
-              primary: "#2a52be",
-              "primary-foreground": "oklch(0.98 0.01 200)",
-              border: "oklch(0.24 0.03 200 / 0.12)",
-              secondary: "oklch(0.975 0.006 95)",
-              muted: "oklch(0.975 0.006 95)",
-              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
-            },
-            fontFamily: {
-              sans: ['"Inter"', "system-ui", "sans-serif"],
-            },
-            borderRadius: { "3xl": "24px" },
-          },
-        },
-      };
-    </script>
-    <style>
-      body { font-family: "Inter", system-ui, sans-serif; }
-    </style>
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
   </head>
   <body class="min-h-screen bg-background text-foreground flex flex-col">
 

@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -21,46 +22,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              background: "oklch(0.995 0.003 95)",
-              foreground: "oklch(0.24 0.03 200)",
-              card: "oklch(1.0 0 95)",
-              primary: "#2a52be",
-              "primary-foreground": "oklch(0.98 0.01 200)",
-              secondary: "oklch(0.975 0.006 95)",
-              muted: "oklch(0.975 0.006 95)",
-              "muted-foreground": "oklch(0.24 0.03 200 / 0.62)",
-              border: "oklch(0.24 0.03 200 / 0.12)",
-              destructive: "oklch(0.55 0.2 27)",
-            },
-            fontFamily: {
-              sans: ['"Inter"', "system-ui", "sans-serif"],
-              display: ['"Inter"', "system-ui", "sans-serif"],
-              serif: ['"Inter"', "system-ui", "sans-serif"],
-              mono: ['"Inter"', "system-ui", "sans-serif"],
-            },
-            borderRadius: { "3xl": "24px" },
-          },
-        },
-      };
-    </script>
-    <style>
-      @keyframes fade-up {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      .fade-up { animation: fade-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
-      body { font-family: "Inter", system-ui, sans-serif; }
-      ::selection { background: rgba(42, 82, 190, 0.2); }
-    </style>
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
   </head>
   <body class="min-h-screen bg-background text-foreground">
-    <!-- NAV -->{% load static %}
+    
 
 <nav class="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
   <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
@@ -118,7 +83,6 @@
           </div>
 
           <div id="months" class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
-
 
         </div>
       </section>
