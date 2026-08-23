@@ -37,23 +37,19 @@
   </head>
   <body class="min-h-screen bg-background text-foreground flex flex-col">
 
-    <!-- NAV -->
     <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
       <div class="mx-auto max-w-7xl flex justify-between items-center">
         <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
-        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
       </div>
     </nav>
 
     <main class="flex-1 p-6 sm:p-10">
       <div class="mx-auto max-w-5xl">
 
-        <!-- Breadcrumb / Title -->
         <div class="flex items-center justify-between mb-8">
           <h1 class="text-3xl font-bold tracking-tight">Edit About Us</h1>
         </div>
 
-        <!-- Success Messages -->
         {% if messages %}
           <div class="mb-6 space-y-3">
             {% for message in messages %}
@@ -64,24 +60,22 @@
           </div>
         {% endif %}
 
-        <!-- Edit Form -->
         <form method="post" enctype="multipart/form-data" action="/edit_about/" class="space-y-12">
           {% csrf_token %}
 
-          <!-- ================= HISTORY ================= -->
           {% if history %}
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Our History</h2>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Heading</label>
-              <input type="text" name="history_heading" value="{{ history.heading }}"
+              <input required type="text" name="history_heading" value="{{ history.heading }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Text</label>
-              <textarea name="history_text" rows="8"
+              <textarea required name="history_text" rows="8"
                         class="w-full border rounded-lg px-4 py-2">{{ history.text }}</textarea>
             </div>
             <div class="mb-4">
@@ -94,32 +88,31 @@
           </div>
           {% endif %}
 
-          <!-- ================= PRINCIPAL ================= -->
           {% if principal %}
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Message from the {{ principal.person_title }}</h2>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Quote / Heading</label>
-              <input type="text" name="principal_heading" value="{{ principal.heading }}"
+              <input required type="text" name="principal_heading" value="{{ principal.heading }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Message Text</label>
-              <textarea name="principal_text" rows="8"
+              <textarea required name="principal_text" rows="8"
                         class="w-full border rounded-lg px-4 py-2">{{ principal.text }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium mb-1">Person Name</label>
-                <input type="text" name="principal_name" value="{{ principal.person_name }}"
+                <input required type="text" name="principal_name" value="{{ principal.person_name }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
               <div>
                 <label class="block text-sm font-medium mb-1">Title</label>
-                <input type="text" name="principal_title" value="{{ principal.person_title }}"
+                <input required type="text" name="principal_title" value="{{ principal.person_title }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
             </div>
@@ -134,32 +127,31 @@
           </div>
           {% endif %}
 
-          <!-- ================= CHAIRPERSON ================= -->
           {% if chairperson %}
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Message from the {{ chairperson.person_title }}</h2>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Quote / Heading</label>
-              <input type="text" name="chairperson_heading" value="{{ chairperson.heading }}"
+              <input required type="text" name="chairperson_heading" value="{{ chairperson.heading }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Message Text</label>
-              <textarea name="chairperson_text" rows="8"
+              <textarea required name="chairperson_text" rows="8"
                         class="w-full border rounded-lg px-4 py-2">{{ chairperson.text }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium mb-1">Person Name</label>
-                <input type="text" name="chairperson_name" value="{{ chairperson.person_name }}"
+                <input required type="text" name="chairperson_name" value="{{ chairperson.person_name }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
               <div>
                 <label class="block text-sm font-medium mb-1">Title</label>
-                <input type="text" name="chairperson_title" value="{{ chairperson.person_title }}"
+                <input required type="text" name="chairperson_title" value="{{ chairperson.person_title }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
             </div>
@@ -174,7 +166,6 @@
           </div>
           {% endif %}
 
-          <!-- Save Button -->
           <div class="flex justify-end">
             <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg">

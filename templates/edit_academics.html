@@ -42,7 +42,6 @@
     <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
       <div class="mx-auto max-w-7xl flex justify-between items-center">
         <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
-        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
       </div>
     </nav>
 
@@ -72,25 +71,25 @@
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Description</label>
-              <textarea name="primary_description" rows="8"
+              <textarea required name="primary_description" rows="8"
                         class="w-full border rounded-lg px-4 py-2">{{ primary.description }}</textarea>
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Quote</label>
-              <textarea name="primary_quote" rows="4"
+              <textarea required name="primary_quote" rows="4"
                         class="w-full border rounded-lg px-4 py-2">{{ primary.quote }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium mb-1">Teacher Name</label>
-                <input type="text" name="primary_teacher_name" value="{{ primary.teacher_name }}"
+                <input required type="text" name="primary_teacher_name" value="{{ primary.teacher_name }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
               <div>
                 <label class="block text-sm font-medium mb-1">Teacher Designation</label>
-                <input type="text" name="primary_teacher_designation" value="{{ primary.teacher_designation }}"
+                <input required type="text" name="primary_teacher_designation" value="{{ primary.teacher_designation }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
             </div>
@@ -111,25 +110,25 @@
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Description</label>
-              <textarea name="secondary_description" rows="8"
+              <textarea required name="secondary_description" rows="8"
                         class="w-full border rounded-lg px-4 py-2">{{ secondary.description }}</textarea>
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Quote</label>
-              <textarea name="secondary_quote" rows="4"
+              <textarea required name="secondary_quote" rows="4"
                         class="w-full border rounded-lg px-4 py-2">{{ secondary.quote }}</textarea>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label class="block text-sm font-medium mb-1">Teacher Name</label>
-                <input type="text" name="secondary_teacher_name" value="{{ secondary.teacher_name }}"
+                <input required type="text" name="secondary_teacher_name" value="{{ secondary.teacher_name }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
               <div>
                 <label class="block text-sm font-medium mb-1">Teacher Designation</label>
-                <input type="text" name="secondary_teacher_designation" value="{{ secondary.teacher_designation }}"
+                <input required type="text" name="secondary_teacher_designation" value="{{ secondary.teacher_designation }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
             </div>

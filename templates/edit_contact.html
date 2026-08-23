@@ -38,11 +38,9 @@
   </head>
   <body class="min-h-screen bg-background text-foreground flex flex-col">
 
-    <!-- NAV -->
     <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
       <div class="mx-auto max-w-7xl flex justify-between items-center">
         <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
-        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
       </div>
     </nav>
 
@@ -72,20 +70,20 @@
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Telephone</label>
-              <textarea name="telephone" rows="3"
+              <textarea required name="telephone" rows="3"
                         class="w-full border rounded-lg px-4 py-2">{{ contact.telephone }}</textarea>
               <p class="mt-1 text-xs text-muted-foreground">Separate multiple numbers with a comma or new line.</p>
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Email</label>
-              <input type="email" name="email" value="{{ contact.email }}"
+              <input required type="email" name="email" value="{{ contact.email }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Facebook Link</label>
-              <input type="url" name="facebook_link" value="{{ contact.facebook_link }}"
+              <input required type="url" name="facebook_link" value="{{ contact.facebook_link }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
           </div>
