@@ -61,6 +61,17 @@
               <input required type="url" name="facebook_link" value="{{ contact.facebook_link }}"
                      class="w-full border rounded-lg px-4 py-2">
             </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Logo</label>
+              {% if contact.logo %}
+                <img src="{{ contact.logo.url }}" alt="Current logo" class="h-32 mb-3 rounded">
+              {% else %}
+                <p class="text-gray-500">No logo uploaded yet.</p>
+              {% endif %}
+              <input type="file" name="logo" accept="image/*">
+            </div>
+
           </div>
           {% endif %}
 

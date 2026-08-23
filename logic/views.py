@@ -154,6 +154,8 @@ def edit_contact(request):
         contact.telephone = request.POST.get("telephone", "")
         contact.email = request.POST.get("email", "")
         contact.facebook_link = request.POST.get("facebook_link", "")
+        if request.FILES.get("logo"):
+            contact.logo = request.FILES["logo"]
         contact.save()
 
         messages.success(request, "Contact information updated successfully!")

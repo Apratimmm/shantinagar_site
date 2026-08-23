@@ -130,6 +130,14 @@ class Academic(models.Model):
 
 
 class ContactInfo(models.Model):
+
+    logo = models.ImageField(
+        upload_to="logo/",
+        blank=True,
+        null=True,
+        help_text="logo image"
+    )
+
     telephone = models.TextField(
         help_text="You can add multiple numbers. Separate them with a comma or new line."
     )
