@@ -1,8 +1,8 @@
 import json
 from pprint import pprint
 from django.contrib.auth import authenticate
-from django.contrib.auth import login as auth_login
-from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -15,25 +15,22 @@ import resend
 resend.api_key = os.environ.get("RESEND_API_KEY")
 def verify_user(request):
 
-    if request.user.is_authenticated:
-        return redirect("dashboard")
-
     if request.method == 'POST':
-        name = request.POST.get('name') or request.POST.get('username', '')
-        password = request.POST.get('password', '')
+        name = request.POST.get('name')
+        password = request.POST.get('password')
 
         user = authenticate(request, username=name, password=password)
 
         if user is not None:
-            auth_login(request, user)
+            login(request, user)
             return redirect("dashboard")
         else:
             messages.error(request, "Invalid username or password")
 
     return render(request, "login.html")
 
-def logout(request):
-    auth_logout(request)
+def logoutt(request):
+    logout(request)
     return redirect("login")
 
 @login_required
