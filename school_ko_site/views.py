@@ -4,8 +4,6 @@ from logic.models import *
 from django.contrib import messages
 def home(request):
 
-    contact_info = ContactInfo.objects.all().first()
-
     sections = {
         s.section: s for s in AboutSection.objects.all()
     }
@@ -14,7 +12,6 @@ def home(request):
         "history": sections.get("history"),
         "principal": sections.get("principal"),
         "chairperson": sections.get("chairperson"),
-        "contact": contact_info
     }
     return render(request, "home.html", context)
 
