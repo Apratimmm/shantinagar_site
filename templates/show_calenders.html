@@ -34,7 +34,7 @@
               {% for month_id, month_name in months %}
                   <a href="{% url 'show_calender' month_id %}"
                      class="group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
-                      <h2 class="text-xl font-semibold text-primary group-hover:underline">{{ month_name }}</h2>
+                      <h2 class="text-xl font-semibold text-primary">{{ month_name }}</h2>
                   </a>
               {% endfor %}
           </div>
