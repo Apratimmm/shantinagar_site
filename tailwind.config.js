@@ -20,6 +20,7 @@ module.exports = {
         input: "oklch(0.24 0.03 200 / 0.16)",
         ring: "#2a52be",
         destructive: "oklch(0.55 0.2 27)",
+        "destructive-foreground": "oklch(0.98 0.01 27)",
       },
       fontFamily: {
         sans: ['"Inter"', "system-ui", "sans-serif"],
