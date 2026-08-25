@@ -26,6 +26,10 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
+    class Meta:
+        verbose_name = "user-info"
+        verbose_name_plural = "users-info"
+
     USERNAME_FIELD = "name"
     REQUIRED_FIELDS = []
 
@@ -73,8 +77,8 @@ class AboutSection(models.Model):
     person_title = models.CharField(max_length=100, blank=True)
 
     class Meta:
-        verbose_name = "About Section"
-        verbose_name_plural = "About Sections"
+        verbose_name = "about-section"
+        verbose_name_plural = "about-sections"
 
     def __str__(self):
         return self.get_section_display()
@@ -121,8 +125,8 @@ class Academic(models.Model):
     )
 
     class Meta:
-        verbose_name = "Academic Section"
-        verbose_name_plural = "Academic Sections"
+        verbose_name = "academic-section"
+        verbose_name_plural = "academic-sections"
         ordering = ["school"]
 
     def __str__(self):
@@ -153,8 +157,8 @@ class ContactInfo(models.Model):
     )
 
     class Meta:
-        verbose_name = "Contact Information"
-        verbose_name_plural = "Contact Information"
+        verbose_name = "contact-info"
+        verbose_name_plural = "contact-infos"
 
     def __str__(self):
         return "School Contact Information"
@@ -173,6 +177,8 @@ class YearlyResult(models.Model):
 
     class Meta:
         ordering = ["-year"]
+        verbose_name= "yearly-result"
+        verbose_name_plural = "yearly-results"
 
     def __str__(self):
         return f"Result {self.year}"
@@ -184,6 +190,8 @@ class Topper(models.Model):
 
     class Meta:
         ordering = ["-score"]
+        verbose_name = "topper"
+        verbose_name_plural = "toppers"
 
     def __str__(self):
         return f"{self.name} - {self.score}"
@@ -194,8 +202,8 @@ class GalleryEvent(models.Model):
 
     class Meta:
         ordering = ["-id"]
-        verbose_name = "Gallery Event"
-        verbose_name_plural = "Gallery Events"
+        verbose_name = "gallery-event"
+        verbose_name_plural = "gallery-events"
 
     def __str__(self):
         return f"{self.event_name} ({self.event_date})"
@@ -210,6 +218,72 @@ class GalleryImage(models.Model):
 
     class Meta:
         ordering = ["id"]
+        verbose_name = "gallery-image"
+        verbose_name_plural = "gallery-images"
 
     def __str__(self):
         return f"Image for {self.event.event_name}"
+
+class MonthInfo(models.Model):
+    MONTH_CHOICES = [
+        (1, "Baishakh"),
+        (2, "Jestha"),
+        (3, "Ashadh"),
+        (4, "Shrawan"),
+        (5, "Bhadra"),
+        (6, "Ashwin"),
+        (7, "Kartik"),
+        (8, "Mangsir"),
+        (9, "Poush"),
+        (10, "Magh"),
+        (11, "Falgun"),
+        (12, "Chaitra"),
+    ]
+
+    DAYS_CHOICES = [
+        (28, "28"),
+        (29, "29"),
+        (30, "30"),
+        (31, "31"),
+        (32, "32"),
+    ]
+
+    START_DAY_CHOICES = [
+        (1, "Sunday"),
+        (2, "Monday"),
+        (3, "Tuesday"),
+        (4, "Wednesday"),
+        (5, "Thursday"),
+        (6, "Friday"),
+        (7, "Saturday"),
+    ]
+
+    month = models.PositiveSmallIntegerField(choices=MONTH_CHOICES, unique=True)
+    month_days = models.PositiveSmallIntegerField(choices=DAYS_CHOICES, null=True, blank=True)
+    month_start_day = models.PositiveSmallIntegerField(choices=START_DAY_CHOICES, null=True, blank=True)
+
+    class Meta:
+        ordering = ["month"]
+        verbose_name = "month-info"
+        verbose_name_plural = "months-info"
+
+    def __str__(self):
+        return self.get_month_display()
+
+class EventInfo(models.Model):
+    month = models.ForeignKey(MonthInfo, on_delete=models.CASCADE, related_name="events")
+    event_date = models.PositiveSmallIntegerField()
+    event_name = models.CharField(max_length=200)
+    event_type = models.CharField(
+        max_length=20,
+        choices=[("event", "School Event"), ("holiday", "Holiday / Closure")],
+        default="event"
+    )
+
+    class Meta:
+        ordering = ["event_date"]
+        verbose_name = "month-event-info"
+        verbose_name_plural = "months-event-info"
+
+    def __str__(self):
+        return f"{self.event_date} - {self.event_name}"
