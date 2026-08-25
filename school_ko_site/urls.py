@@ -25,6 +25,7 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('academics/', academics, name='academics'),
     path('calendar/' ,calendar, name='calendar'),
+    path('month_data/<int:month_id>/', month_data, name='month_data'),
     path('contact/', contact, name='contact'),
     path('gallery/', gallery, name='gallery'),
     path('results/', results, name='results'),
@@ -39,4 +40,8 @@ urlpatterns = [
     path('add_event/', add_event, name='add_event'),
     path('edit_event/<int:event_id>/', edit_event, name='edit_event'),
     path('delete_event/<int:event_id>/', delete_event, name='delete_event'),
+    path('edit_calender/', show_calenders, name='show_calenders'),
+    path('show_calender/<int:month_id>', show_calender, name='show_calender'),
+    path('update_month/', update_month, name='update_month'),
+
 ]
