@@ -1,4 +1,3 @@
-import json
 from pprint import pprint
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
@@ -11,6 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import os
 import resend
+import json
 
 resend.api_key = os.environ.get("RESEND_API_KEY")
 def verify_user(request):
@@ -296,3 +296,78 @@ def delete_event(request, event_id):
 
     messages.success(request, f'Event "{event_name}" deleted successfully!')
     return redirect("show_events")
+
+@login_required
+def show_calenders(request):
+    months = [
+        (1, "Baisakh"),
+        (2, "Jestha"),
+        (3, "Ashadh"),
+        (4, "Shrawan"),
+        (5, "Bhadra"),
+        (6, "Ashwin"),
+        (7, "Kartik"),
+        (8, "Mangsir"),
+        (9, "Poush"),
+        (10, "Magh"),
+        (11, "Falgun"),
+        (12, "Chaitra"),
+    ]
+
+    return render(request, "show_calenders.html",{"months": months})
+
+@login_required
+def show_calender(request,month_id):
+    month = MonthInfo.objects.prefetch_related("events").get(month=month_id)
+
+    if month:
+        return render(request, "show_calender.html", {
+            "server_data": {
+                "hasData": True,
+                "monthName": month.get_month_display(),
+                "daysInMonth": month.month_days or 31,
+                "firstDay": (month.month_start_day or 1) - 1,
+                "events": {
+                    str(e.event_date): {"label": e.event_name, "type": e.event_type}
+                    for e in month.events.all()
+                },
+            },
+        })
+
+    return render(request, "show_calender.html", {"server_data": {"hasData": False}})
+
+@login_required
+@require_POST
+def update_month(request):
+    data = json.loads(request.body)
+    month_name = data.get("monthName", "").strip()
+    days_in_month = data.get("daysInMonth")
+    start_day = data.get("startDay")
+    events = data.get("events", [])
+
+    month_choices = {name: num for num, name in MonthInfo.MONTH_CHOICES}
+    month_number = month_choices.get(month_name)
+
+    if month_number is None:
+        return JsonResponse(
+            {"success": False, "message": f"Unknown month name: {month_name}"},
+            status=400,
+        )
+
+    month_info, created = MonthInfo.objects.get_or_create(month=month_number)
+    month_info.month_days = days_in_month
+    month_info.month_start_day = start_day + 1
+    month_info.save()
+
+    month_info.events.all().delete()
+    for ev in events:
+        EventInfo.objects.create(
+            month=month_info,
+            event_date=ev.get("event_date"),
+            event_name=ev.get("event_name", ""),
+            event_type=ev.get("event_type", "event"),
+        )
+
+    return JsonResponse(
+        {"success": True, "message": "Calendar has been updated !   !"}
+    )

@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>School Calendar 2026–27 — Shantinagar English School</title>
+    <title>Calendar — Shantinagar English School</title>
     <meta
       name="description"
       content="Term dates, holidays and school events for the 2026–27 academic year at Shantinagar English School, marked month by month."
@@ -25,40 +25,38 @@
     <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
   </head>
   <body class="min-h-screen bg-background text-foreground">
-    
+    <nav class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
 
-<nav class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+        <!-- Logo + School Name -->
+        <div class="flex items-center">
+          <img src="{{ logo_url }}" alt="Logo" class="h-14 mr-4"/>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+              Shantinagar English School
+            </span>
+            <span class="text-xs font-medium italic text-muted-primary">
+              "Quality education is our motto"
+            </span>
+          </div>
+        </div>
 
-    <!-- Logo + School Name -->
-    <div class="flex items-center">
-      <img src="{{ logo_url }}" alt="Logo" class="h-14 mr-4"/>
-      <div class="flex flex-col">
-        <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
-          Shantinagar English School
-        </span>
-        <span class="text-xs font-medium italic text-muted-primary">
-          "Quality education is our motto"
-        </span>
+        <!-- Desktop Links -->
+        <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+        </div>
+
       </div>
-    </div>
 
-    <!-- Desktop Links -->
-    <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
-    </div>
+      <!-- Log in button pinned to the right edge of the screen -->
+      <a href="/login/" class="absolute top-1/2 right-4 hidden lg:inline-flex -translate-y-1/2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
+        Log in
+      </a>
 
-  </div>
-
-  <!-- Log in button pinned to the right edge of the screen -->
-  <a href="/login/" class="absolute top-1/2 right-4 hidden lg:inline-flex -translate-y-1/2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
-    Log in
-  </a>
-
-  <!-- Mobile Navigation -->
-  <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
-    <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
-  </div>
-</nav>
+      <!-- Mobile Navigation -->
+      <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+        <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+      </div>
+    </nav>
     <main>
       <!-- HERO -->
       <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
@@ -70,7 +68,7 @@
             The year, mapped</span>.
           </h1>
           <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
-            A clear and concise calender to showcase everything that happens in a year.
+            A clear and concise calendar to showcase everything that happens in a year.
           </p>
         </div>
       </section>
@@ -80,14 +78,36 @@
         <div class="mx-auto max-w-7xl">
           <div class="flex flex-wrap gap-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
             <span class="flex items-center gap-2">
-              <span class="h-2.5 w-2.5 rounded-full bg-destructive"></span> Holiday / closure
+              <span class="h-2.5 w-2.5 rounded-full bg-destructive"></span> Holiday
             </span>
             <span class="flex items-center gap-2">
               <span class="h-2.5 w-2.5 rounded-full bg-primary"></span> School event
             </span>
           </div>
 
-          <div id="months" class="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3"></div>
+          <!-- Month navigation -->
+          <div class="mt-8 flex items-center justify-between">
+            <button
+              id="prev-month"
+              type="button"
+              class="rounded-full bg-secondary px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              ‹ Prev
+            </button>
+            <h2 id="month-title" class="font-display text-xl font-bold tracking-tight">
+              Loading...
+            </h2>
+            <button
+              id="next-month"
+              type="button"
+              class="rounded-full bg-secondary px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Next ›
+            </button>
+          </div>
+
+          <!-- CALENDAR OUTPUT (single month) -->
+          <div id="month" class="mt-6"></div>
 
         </div>
       </section>
@@ -127,240 +147,61 @@
       </div>
     </footer>
 
+    {% if server_data %}
+    {{ server_data|json_script:"server-data" }}
+    {% else %}
+    <script id="server-data" type="application/json">{"hasData": false, "currentMonth": 1, "month": {"monthName": "Baishakh", "daysInMonth": 31, "firstDay": 0, "events": {}}}</script>
+    {% endif %}
+
     <script>
+      const SERVER_DATA = JSON.parse(
+        document.getElementById("server-data")?.textContent || '{"hasData":false,"currentMonth":1,"month":{"monthName":"Baishakh","daysInMonth":31,"firstDay":0,"events":{}}}'
+      );
 
-        const EVENTS = [
-            // ==================== JANUARY ====================
+      const MONTH_NAMES = [
+          "Baishakh" ,
+          "Jestha" ,
+          "Ashadh" ,
+          "Shrawan" ,
+          "Bhadra" ,
+          "Ashwin" ,
+          "Kartik" ,
+          "Mangsir" ,
+          "Poush" ,
+          "Magh" ,
+          "Falgun" ,
+          "Chaitra"
+      ];
 
-            { date: "2026-01-01", label: "New Year's Day — school closed", type: "holiday" },
-            { date: "2026-01-03", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-04", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-10", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-11", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-12", label: "First day of Spring Term", type: "event" },
-            { date: "2026-01-17", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-18", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-24", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-25", label: "School Holiday", type: "holiday" },
-            { date: "2026-01-26", label: "Republic Day assembly", type: "event" },
-            { date: "2026-01-31", label: "School Holiday", type: "holiday" },
+      const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      const TOTAL_MONTHS = 12;
 
-            // ==================== FEBRUARY ====================
+      function monthCalendar(monthData) {
+        const monthName = monthData.monthName;
+        const daysInMonth = monthData.daysInMonth;
+        const firstDay = monthData.firstDay || 0;
+        const events = monthData.events || {};
 
-            { date: "2026-02-01", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-07", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-08", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-14", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-15", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-16", label: "Teacher training day — no classes", type: "holiday" },
-            { date: "2026-02-21", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-22", label: "School Holiday", type: "holiday" },
-            { date: "2026-02-27", label: "Inter-house quiz competition", type: "event" },
-            { date: "2026-02-28", label: "School Holiday", type: "holiday" },
+        // Pre-compute the set of weekend days once; both cell styling and the
+        // event list reuse this set instead of recalculating weekday per day twice.
+        const weekendDays = new Set();
+        for (let d = 1; d <= daysInMonth; d++) {
+          const weekday = (firstDay + d - 1) % 7;
+          if (weekday === 0 || weekday === 6) weekendDays.add(d);
+        }
 
-            // ==================== MARCH ====================
+        const regularFor = (day) =>
+          weekendDays.has(day)
+            ? { label: "Weekend", type: "holiday" }
+            : null;
 
-            { date: "2026-03-01", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-07", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-08", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-13", label: "Primary sports day", type: "event" },
-            { date: "2026-03-14", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-15", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-20", label: "Mid-term assessments begin", type: "event" },
-            { date: "2026-03-21", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-22", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-28", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-29", label: "School Holiday", type: "holiday" },
-            { date: "2026-03-30", label: "Spring break begins", type: "holiday" },
-            { date: "2026-03-31", label: "Spring break", type: "holiday" },
-
-            // ==================== APRIL ====================
-
-            { date: "2026-04-01", label: "Spring break", type: "holiday" },
-            { date: "2026-04-02", label: "Spring break", type: "holiday" },
-            { date: "2026-04-03", label: "Spring break ends", type: "holiday" },
-            { date: "2026-04-04", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-05", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-06", label: "Term 2 begins", type: "event" },
-            { date: "2026-04-11", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-12", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-17", label: "Earth Day science exhibition", type: "event" },
-            { date: "2026-04-18", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-19", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-25", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-26", label: "School Holiday", type: "holiday" },
-            { date: "2026-04-29", label: "Parent–teacher meeting", type: "event" },
-
-            // ==================== MAY ====================
-
-            { date: "2026-05-01", label: "May Day — school closed", type: "holiday" },
-            { date: "2026-05-02", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-03", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-08", label: "Annual cultural programme", type: "event" },
-            { date: "2026-05-09", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-10", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-16", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-17", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-22", label: "Inter-house athletics competition", type: "event" },
-            { date: "2026-05-23", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-24", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-30", label: "School Holiday", type: "holiday" },
-            { date: "2026-05-31", label: "School Holiday", type: "holiday" },
-
-            // ==================== JUNE ====================
-
-            { date: "2026-06-01", label: "Final examinations begin", type: "event" },
-            { date: "2026-06-06", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-07", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-12", label: "School art exhibition", type: "event" },
-            { date: "2026-06-13", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-14", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-19", label: "Graduation rehearsal", type: "event" },
-            { date: "2026-06-20", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-21", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-26", label: "End-of-year awards ceremony", type: "event" },
-            { date: "2026-06-27", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-28", label: "School Holiday", type: "holiday" },
-            { date: "2026-06-29", label: "Summer holidays begin", type: "holiday" },
-
-            // ==================== JULY ====================
-
-            { date: "2026-07-01", label: "Summer holidays", type: "holiday" },
-            { date: "2026-07-04", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-05", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-11", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-12", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-18", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-19", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-25", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-26", label: "School Holiday", type: "holiday" },
-            { date: "2026-07-27", label: "Summer enrichment programme", type: "event" },
-
-            // ==================== AUGUST ====================
-
-            { date: "2026-08-01", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-02", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-08", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-09", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-14", label: "New student orientation", type: "event" },
-            { date: "2026-08-15", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-16", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-17", label: "Faculty in-service day (no classes)", type: "holiday" },
-            { date: "2026-08-22", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-23", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-24", label: "First day of Term 1", type: "event" },
-            { date: "2026-08-29", label: "School Holiday", type: "holiday" },
-            { date: "2026-08-30", label: "School Holiday", type: "holiday" },
-
-            // ==================== SEPTEMBER ====================
-
-            { date: "2026-09-04", label: "Founders' Day assembly", type: "event" },
-            { date: "2026-09-05", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-06", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-07", label: "Labor Day — school closed", type: "holiday" },
-            { date: "2026-09-12", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-13", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-18", label: "School photography day", type: "event" },
-            { date: "2026-09-19", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-20", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-25", label: "Primary forest school open morning", type: "event" },
-            { date: "2026-09-26", label: "School Holiday", type: "holiday" },
-            { date: "2026-09-27", label: "School Holiday", type: "holiday" },
-
-            // ==================== OCTOBER ====================
-
-            { date: "2026-10-03", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-04", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-09", label: "Autumn break begins", type: "holiday" },
-            { date: "2026-10-10", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-11", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-12", label: "Autumn break", type: "holiday" },
-            { date: "2026-10-13", label: "Autumn break ends", type: "holiday" },
-            { date: "2026-10-17", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-18", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-23", label: "Parent–teacher conferences", type: "event" },
-            { date: "2026-10-24", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-25", label: "School Holiday", type: "holiday" },
-            { date: "2026-10-30", label: "Harvest fair & house sports", type: "event" },
-            { date: "2026-10-31", label: "School Holiday", type: "holiday" },
-
-            // ==================== NOVEMBER ====================
-
-            { date: "2026-11-01", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-07", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-08", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-11", label: "Veterans Day — school closed", type: "holiday" },
-            { date: "2026-11-14", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-15", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-20", label: "Winter theatre production", type: "event" },
-            { date: "2026-11-21", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-22", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-26", label: "Thanksgiving — school closed", type: "holiday" },
-            { date: "2026-11-27", label: "Thanksgiving break", type: "holiday" },
-            { date: "2026-11-28", label: "School Holiday", type: "holiday" },
-            { date: "2026-11-29", label: "School Holiday", type: "holiday" },
-
-            // ==================== DECEMBER ====================
-
-            { date: "2026-12-05", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-06", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-11", label: "Grade 10 mock board examinations", type: "event" },
-            { date: "2026-12-12", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-13", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-18", label: "Last day of Term 2 · Carol service", type: "event" },
-            { date: "2026-12-19", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-20", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-21", label: "Winter holidays begin", type: "holiday" },
-            { date: "2026-12-25", label: "Christmas Day — school closed", type: "holiday" },
-            { date: "2026-12-26", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-27", label: "School Holiday", type: "holiday" },
-            { date: "2026-12-31", label: "Winter holidays", type: "holiday" },
-        ];
-
-     const MONTHS = [
-         { year: 2026 , month: 0 } ,
-         { year: 2026 , month: 1 } ,
-         { year: 2026 , month: 2 } ,
-         { year: 2026 , month: 3 } ,
-         { year: 2026 , month: 4 } ,
-         { year: 2026 , month: 5 } ,
-         { year: 2026 , month: 6 } ,
-         { year: 2026 , month: 7 } ,
-         { year: 2026 , month: 8 } ,
-         { year: 2026 , month: 9 } ,
-         { year: 2026 , month: 10 } ,
-         { year: 2026 , month: 11 } ,
-     ];
-
-        const MONTH_NAMES = [
-            "Baishakh" ,
-            "Jestha" ,
-            "Ashadh" ,
-            "Shrawan" ,
-            "Bhadra" ,
-            "Ashwin" ,
-            "Kartik" ,
-            "Mangsir" ,
-            "Poush" ,
-            "Magh" ,
-            "Falgun" ,
-            "Chaitra"
-        ];
-
-      const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
-      const pad = (n) => String(n).padStart(2, "0");
-
-      function monthCalendar(year, month) {
-        const first = new Date(Date.UTC(year, month, 1));
-        const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
-        const leading = first.getUTCDay();
-        const monthName = MONTH_NAMES[month];
-
-        const eventFor = (day) =>
-          EVENTS.find((e) => e.date === `${year}-${pad(month + 1)}-${pad(day)}`);
+        const eventFor = (day) => {
+          const ex = events[day];
+          return ex ? ex : regularFor(day);
+        };
 
         const cells = [];
-        for (let i = 0; i < leading; i++) cells.push('<div class="aspect-square"></div>');
+        for (let i = 0; i < firstDay; i++) cells.push('<div class="aspect-square"></div>');
         for (let d = 1; d <= daysInMonth; d++) {
           const ev = eventFor(d);
           const tone =
@@ -374,12 +215,23 @@
           );
         }
 
-        const monthEvents = EVENTS.filter((e) =>
-          e.date.startsWith(`${year}-${pad(month + 1)}`) && e.label !== "School Holiday").sort((a, b) => a.date.localeCompare(b.date));
+        const combined = [];
+        for (const d of weekendDays.keys()) {
+          combined.push({ day: d, label: "Weekend", type: "holiday" });
+        }
+        Object.entries(events).forEach(([dayStr, ev]) => {
+          const day = Number(dayStr);
+          const idx = combined.findIndex((e) => e.day === day);
+          if (idx !== -1) combined.splice(idx, 1);
+          combined.push({ day, label: ev.label, type: ev.type });
+        });
+        combined.sort((a, b) => a.day - b.day);
 
-        const list = monthEvents.length
+        const legendEvents = combined.filter((e) => e.label !== "Weekend");
+
+        const list = legendEvents.length
           ? `<ul class="mt-5 space-y-2 border-t border-border pt-4 text-sm">
-              ${monthEvents
+              ${legendEvents
                 .map(
                   (e) => `
                 <li class="flex items-start gap-3">
@@ -388,21 +240,18 @@
                   }"></span>
                   <span>
                     <span class="font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-                      ${Number(e.date.slice(-2))} ${monthName.slice(0, 3)}
+                      ${e.day}
                     </span>
                     <br />${e.label}
                   </span>
                 </li>`
                 )
                 .join("")}
-            </ul>`
+          </ul>`
           : "";
 
         return `
           <div class="rounded-[24px] border border-border bg-card p-6 shadow-sm">
-            <h3 class="font-display text-lg font-bold tracking-tight">
-              ${monthName} <span class="text-muted-foreground">2086</span>
-            </h3>
             <div class="mt-4 grid grid-cols-7 gap-1 text-center font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
               ${WEEKDAYS.map((d) => `<div class="py-1">${d}</div>`).join("")}
             </div>
@@ -411,9 +260,51 @@
           </div>`;
       }
 
-      document.getElementById("months").innerHTML = MONTHS.map((m) =>
-        monthCalendar(m.year, m.month)
-      ).join("");
+      const monthContainer = document.getElementById("month");
+      const monthTitle = document.getElementById("month-title");
+      const prevBtn = document.getElementById("prev-month");
+      const nextBtn = document.getElementById("next-month");
+
+      let currentMonth = SERVER_DATA.currentMonth || 1;
+
+      function renderMonth(monthData) {
+        monthTitle.textContent = monthData.monthName;
+        monthContainer.innerHTML = monthCalendar(monthData);
+        prevBtn.disabled = currentMonth <= 1;
+        nextBtn.disabled = currentMonth >= TOTAL_MONTHS;
+      }
+
+      async function fetchMonth(monthId) {
+        const res = await fetch(`/month_data/${monthId}/`);
+        if (!res.ok) {
+          throw new Error(`Failed to load month ${monthId}`);
+        }
+        return await res.json();
+      }
+
+      function navigate(delta) {
+        const newMonth = currentMonth + delta;
+        if (newMonth < 1 || newMonth > TOTAL_MONTHS) return;
+
+        monthContainer.innerHTML = '<div class="text-center py-12 text-muted-foreground">Loading…</div>';
+        prevBtn.disabled = newMonth <= 1;
+        nextBtn.disabled = newMonth >= TOTAL_MONTHS;
+
+        fetchMonth(newMonth)
+          .then((data) => {
+            currentMonth = newMonth;
+            renderMonth(data);
+          })
+          .catch((err) => {
+            console.error(err);
+            monthContainer.innerHTML = '<div class="text-center py-12 text-destructive">Failed to load month. Please try again.</div>';
+          });
+      }
+
+      prevBtn.addEventListener("click", () => navigate(-1));
+      nextBtn.addEventListener("click", () => navigate(1));
+
+      renderMonth(SERVER_DATA.month);
 
       const NAV = [
         { to: "/", label: "About Us" },
@@ -458,20 +349,25 @@
       const iconMenu = document.getElementById("icon-menu");
       const iconClose = document.getElementById("icon-close");
       let open = false;
-      toggle.addEventListener("click", () => {
-        open = !open;
-        mobileNav.classList.toggle("hidden", !open);
-        iconMenu.classList.toggle("hidden", open);
-        iconClose.classList.toggle("hidden", !open);
-      });
-      document.getElementById("mobile-nav-links").addEventListener("click", (e) => {
-        if (e.target.tagName === "A") {
-          open = false;
-          mobileNav.classList.add("hidden");
-          iconMenu.classList.remove("hidden");
-          iconClose.classList.add("hidden");
-        }
-      });
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          open = !open;
+          mobileNav.classList.toggle("hidden", !open);
+          iconMenu.classList.toggle("hidden", open);
+          iconClose.classList.toggle("hidden", !open);
+        });
+      }
+      const mobileNavLinks = document.getElementById("mobile-nav-links");
+      if (mobileNavLinks) {
+        mobileNavLinks.addEventListener("click", (e) => {
+          if (e.target.tagName === "A") {
+            open = false;
+            mobileNav.classList.add("hidden");
+            iconMenu.classList.remove("hidden");
+            iconClose.classList.add("hidden");
+          }
+        });
+      }
     </script>
   </body>
 </html>

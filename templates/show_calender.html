@@ -1,0 +1,560 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+          <h2 class="text-xl font-semibold mb-6 text-primary">Month information</h2>
+          <p class="text-sm text-muted-foreground mb-6">Add or update the basic information of a month</p>
+        <div class="bg-white rounded-2xl shadow p-6 mb-8">
+
+          <form id="month-form" class="grid gap-4">
+            {% csrf_token %}
+
+            <div class="grid gap-1.5">
+              <label
+                for="month-name"
+                class="block text-sm font-medium mb-1"
+                >Month name</label
+              >
+              <input
+                      id="month-name"
+                     name="month-name" required
+                      type="text"
+                      placeholder="e.g. Mangsir"
+                      class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none" />
+            </div>
+
+            <div class="grid gap-1.5">
+              <label
+                for="day-count"
+                class="block text-sm font-medium mb-1"
+                >Number of days</label
+              >
+              <select
+                id="day-count"
+                name="day-count"
+                required
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none"
+              >
+                <option value="28">28</option>
+                <option value="29">29</option>
+                <option value="30">30</option>
+                <option value="31">31</option>
+                <option value="32">32</option>
+              </select>
+            </div>
+
+            <div class="grid gap-1.5">
+              <label
+                for="start-day"
+                class="block text-sm font-medium mb-1"
+                >Starting weekday</label
+              >
+              <select
+                id="start-day"
+                name="start-day"
+                required
+                class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none"
+              >
+                <option value="0">Sunday</option>
+                <option value="1">Monday</option>
+                <option value="2">Tuesday</option>
+                <option value="3">Wednesday</option>
+                <option value="4">Thursday</option>
+                <option value="5">Friday</option>
+                <option value="6">Saturday</option>
+              </select>
+            </div>
+
+            <div class="flex justify-end">
+              <button
+                type="submit"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg"
+              >
+                Create calendar
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- CALENDAR OUTPUT -->
+        <h2 id="legend" class="text-xl font-semibold mb-6 text-primary">Month events</h2>
+          <p class="text-sm text-muted-foreground mb-6">Add, edit or remove any holidays or school programs into the calendar.</p>
+
+        <!-- CALENDAR OUTPUT -->
+        <div id="month"></div>
+      <br>
+      <div class="flex items-center justify-end mb-4">
+          <div id="save-message" class="text-sm hidden"></div>
+          <button
+            type="button"
+            id="create-calender"
+            class="ml-auto flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+          >
+            <span id="create-calender-text">Update calendar</span>
+            <span id="create-calender-spinner" class="hidden">
+              <svg class="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- EVENT EDITOR (modal) -->
+    <div
+      id="editor"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-background/60 backdrop-blur-sm"
+    >
+      <div class="w-full max-w-xs rounded-[24px] border border-border bg-card p-8 shadow-xl mx-auto">
+        <div class="mb-6 text-center">
+          <h3 class="text-xl font-bold tracking-tight">Day <span id="editor-day" class="font-medium text-foreground"></span></h3>
+
+        </div>
+
+        <form id="editor-form" class="space-y-4">
+          <div>
+            <label for="editor-label" class="block text-sm font-medium text-foreground">Event label</label>
+            <input
+              type="text"
+              id="editor-label"
+              placeholder="e.g. Sports Day"
+              class="mt-1 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
+            <label for="editor-type" class="block text-sm font-medium text-foreground">Type</label>
+            <select
+              id="editor-type"
+              class="mt-1 block w-full rounded-md border border-border bg-background px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            >
+              <option value="event">School program</option>
+              <option value="holiday">Holiday / closure</option>
+            </select>
+          </div>
+
+          <div class="pt-1 space-y-2">
+            <button
+              type="submit"
+              class="w-full rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90"
+            >
+              Save
+            </button>
+            <div class="flex justify-center gap-2">
+              <button
+                type="button"
+                id="editor-remove"
+                class="hidden w-full rounded-full bg-destructive px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-destructive/90"
+              >
+                Remove
+              </button>
+              <button
+                type="button"
+                id="editor-cancel"
+                class="w-full rounded-full bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if server_data %}
+    {{ server_data|json_script:"server-data" }}
+    {% else %}
+    <script id="server-data" type="application/json">{"hasData": false}</script>
+    {% endif %}
+
+    <script>
+
+      const SERVER_DATA = JSON.parse(
+        document.getElementById("server-data")?.textContent || '{"hasData":false}'
+      );
+
+      const MONTH_NAMES = [
+        "Baishakh", "Jestha", "Ashadh", "Shrawan",
+        "Bhadra", "Ashwin", "Kartik", "Mangsir",
+        "Poush", "Magh", "Falgun", "Chaitra",
+      ];
+
+      const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
+
+      // ---- Storage for user-added events (per rendered month) ----
+      const EXTRA_STORE = "schoolCalendarExtras";
+      const EXTRA = loadExtras();
+
+      function loadExtras() {
+        try {
+          const raw = localStorage.getItem(EXTRA_STORE);
+          return raw ? JSON.parse(raw) : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function saveExtras() {
+        try {
+          localStorage.setItem(EXTRA_STORE, JSON.stringify(EXTRA));
+        } catch {
+          /* storage unavailable — keep working in-session */
+        }
+      }
+
+        return monthIndex !== -1
+          ? "i:" + monthIndex
+          : "n:" + (monthName || "").toLowerCase();
+      }
+
+      function monthIndexFromName(name) {
+        const norm = (name || "").trim().toLowerCase();
+        return MONTH_NAMES.findIndex((m) => m.toLowerCase() === norm);
+      }
+
+
+      function renderMonth(monthName, daysInMonth, firstDay, extraByDay) {
+        const monthIndex = monthIndexFromName(monthName);
+        const extra = extraByDay || {};
+
+
+        const weekendDays = new Set();
+        for (let d = 1; d <= daysInMonth; d++) {
+          const weekday = (firstDay + d - 1) % 7;
+          if (weekday === 0 || weekday === 6) weekendDays.add(d);
+        }
+
+
+        const regularFor = (day) =>
+          weekendDays.has(day)
+            ? { label: "Weekend", type: "holiday" }
+            : null;
+
+
+        const eventFor = (day) => {
+          const ex = extra[day];
+          return ex ? ex : regularFor(day);
+        };
+
+        const cells = [];
+        for (let i = 0; i < firstDay; i++)
+          cells.push('<div class="aspect-square"></div>');
+
+        for (let d = 1; d <= daysInMonth; d++) {
+          const ev = eventFor(d);
+          const tone = ev
+            ? ev.type === "holiday"
+              ? "bg-red-500/15 text-red-600 font-semibold text-destructive"
+              : "bg-primary/15 font-semibold text-primary"
+            : "text-foreground/70";
+
+          const title = ev ? ev.label : "Click to add an event";
+
+          cells.push(
+            `<div data-day="${d}"
+                  title="${title}"
+                  class="day-cell flex aspect-square cursor-pointer items-center justify-center rounded-lg text-sm ${tone} transition-colors hover:bg-secondary">`
+            + d +
+            `</div>`
+          );
+        }
+
+
+        const combined = [];
+
+        for (const d of weekendDays.keys()) {
+          combined.push({ day: d, label: "Weekend", type: "holiday" });
+        }
+
+        Object.entries(extra).forEach(([dayStr, ev]) => {
+          const day = Number(dayStr);
+          const idx = combined.findIndex((e) => e.day === day);
+          if (idx !== -1) combined.splice(idx, 1);
+          combined.push({ day, label: ev.label, type: ev.type });
+        });
+        combined.sort((a, b) => a.day - b.day);
+
+
+        const legendEvents = combined.filter((e) => e.label !== "Weekend");
+
+        let list = "";
+        if (legendEvents.length) {
+          list = `<ul class="mt-5 space-y-2 border-t border-border pt-4 text-sm">
+            ${legendEvents
+              .map(
+                (e) => `
+              <li class="flex items-start gap-3">
+                <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full ${
+                  e.type === "holiday" ? "bg-destructive" : "bg-primary"
+                }"></span>
+                <span>
+                  <span class="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+                    ${e.day}
+                  </span>
+                  <br />${e.label}
+                </span>
+              </li>`
+              )
+              .join("")}
+          </ul>`;
+        }
+
+        return `
+          <div class="rounded-2xl border border-border bg-card p-6 shadow">
+            <h3 class="font-display text-lg font-bold tracking-tight">
+              ${monthName}
+            </h3>
+            <div class="mt-4 grid grid-cols-7 gap-1 text-center font-mono text-xs uppercase tracking-widest text-muted-foreground">
+              ${WEEKDAYS.map((d) => `<div class="py-1">${d}</div>`).join("")}
+            </div>
+            <div class="mt-1 grid grid-cols-7 gap-1">${cells.join("")}</div>
+            ${list}
+          </div>`;
+      }
+
+      // ---- Host wiring ----
+      const form = document.getElementById("month-form");
+      const out = document.getElementById("month");
+      const legend = document.getElementById("legend");
+      const editor = document.getElementById("editor");
+      const editorForm = document.getElementById("editor-form");
+      const editorDay = document.getElementById("editor-day");
+      const editorLabel = document.getElementById("editor-label");
+      const editorType = document.getElementById("editor-type");
+      const editorRemove = document.getElementById("editor-remove");
+      const editorCancel = document.getElementById("editor-cancel");
+
+      const createBtn = document.getElementById("create-calender");
+      const createBtnText = document.getElementById("create-calender-text");
+      const createBtnSpinner = document.getElementById("create-calender-spinner");
+      const saveMessage = document.getElementById("save-message");
+
+      let currentMonthId = null;
+      let currentEditDay = null;
+
+      function renderFromInputs() {
+        const name =
+          document.getElementById("month-name").value.trim() || "Mangsir";
+        const days =
+          parseInt(document.getElementById("day-count").value, 10) || 31;
+        const start =
+          parseInt(document.getElementById("start-day").value, 10) || 0;
+
+        const monthIndex = monthIndexFromName(name);
+        currentMonthId = monthId(monthIndex, name);
+
+        const serverEvents =
+          SERVER_DATA.hasData && name === SERVER_DATA.monthName
+            ? SERVER_DATA.events || {}
+            : {};
+        const extra = Object.assign(
+          {},
+          serverEvents,
+          EXTRA[currentMonthId] || {}
+        );
+
+        out.innerHTML = renderMonth(name, days, start, extra);
+        legend.classList.remove("hidden");
+      }
+
+      function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+      }
+
+      const UPDATE_URL = "{% url 'update_month' %}";
+
+      function showSaveMessage(text, isError) {
+        saveMessage.textContent = text;
+        saveMessage.className = "pt-2 text-center text-sm " + (isError
+          ? "text-destructive"
+          : "text-green-600");
+        saveMessage.classList.remove("hidden");
+      }
+
+      function hideSaveMessage() {
+        saveMessage.classList.add("hidden");
+      }
+
+      async function update_month() {
+        const name =
+          document.getElementById("month-name").value.trim() || "Mangsir";
+        const days =
+          parseInt(document.getElementById("day-count").value, 10) || 31;
+        const start =
+          parseInt(document.getElementById("start-day").value, 10) || 0;
+
+        createBtn.disabled = true;
+        createBtnText.textContent = "Saving…";
+        hideSaveMessage();
+
+        const serverEvents =
+          SERVER_DATA.hasData && name === SERVER_DATA.monthName
+            ? SERVER_DATA.events || {}
+            : {};
+        const allEvents = Object.assign(
+          {},
+          serverEvents,
+          EXTRA[currentMonthId] || {}
+        );
+
+        const eventsList = Object.entries(allEvents).map(([day, ev]) => ({
+          event_date: Number(day),
+          event_name: ev.label,
+          event_type: ev.type,
+        }));
+
+        try {
+          const response = await fetch(UPDATE_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({
+              monthName: name,
+              daysInMonth: days,
+              startDay: start,
+              events: eventsList,
+            }),
+          });
+          const data = await response.json();
+
+          // Reset loading state
+          createBtn.disabled = false;
+          createBtnText.textContent = "Create calendar";
+          createBtnSpinner.classList.add("hidden");
+
+          if (data.success) {
+            showSaveMessage(data.message, false);
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            showSaveMessage("Error: " + data.message, true);
+          }
+        } catch (err) {
+          console.error("Failed to save calendar:", err);
+          createBtn.disabled = false;
+          createBtnText.textContent = "Create calendar";
+          createBtnSpinner.classList.add("hidden");
+          showSaveMessage("Failed to save calendar.", true);
+        }
+      }
+
+      function openEditor(day) {
+        currentEditDay = day;
+        editorDay.textContent = day;
+        
+        const name = document.getElementById("month-name").value.trim() || "Mangsir";
+        const serverEvents = SERVER_DATA.hasData && name === SERVER_DATA.monthName ? SERVER_DATA.events || {} : {};
+        const extraEvents = EXTRA[currentMonthId] || {};
+        const existing = extraEvents[day] || serverEvents[day];
+
+        editorLabel.value = existing ? existing.label : "";
+        editorType.value = existing ? existing.type : "event";
+        editorRemove.classList.toggle("hidden", !existing);
+        editor.classList.remove("hidden");
+        editor.style.display = "flex";
+        editorLabel.focus();
+      }
+
+      function closeEditor() {
+        editor.style.display = "none";
+        editor.classList.add("hidden");
+        currentEditDay = null;
+      }
+
+      function saveEditor() {
+        const label = editorLabel.value.trim();
+        if (!label) return;
+        if (!EXTRA[currentMonthId]) EXTRA[currentMonthId] = {};
+        EXTRA[currentMonthId][currentEditDay] = {
+          label,
+          type: editorType.value,
+        };
+        saveExtras();
+        closeEditor();
+        renderFromInputs();
+      }
+
+      function removeEditor() {
+        if (EXTRA[currentMonthId]) {
+          delete EXTRA[currentMonthId][currentEditDay];
+          if (Object.keys(EXTRA[currentMonthId]).length === 0)
+            delete EXTRA[currentMonthId];
+        }
+        
+        const name = document.getElementById("month-name").value.trim() || "Mangsir";
+        if (SERVER_DATA.hasData && name === SERVER_DATA.monthName && SERVER_DATA.events) {
+          delete SERVER_DATA.events[currentEditDay];
+        }
+
+        saveExtras();
+        closeEditor();
+        renderFromInputs();
+      }
+
+      if (SERVER_DATA.hasData) {
+        document.getElementById("month-name").value = SERVER_DATA.monthName;
+        document.getElementById("day-count").value = String(SERVER_DATA.daysInMonth);
+        document.getElementById("start-day").value = String(SERVER_DATA.firstDay);
+
+        document.getElementById("month-name").disabled = true;
+        renderFromInputs();
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        renderFromInputs();
+      });
+
+      document
+        .getElementById("create-calender")
+        .addEventListener("click", update_month);
+
+      out.addEventListener("click", (e) => {
+        const cell = e.target.closest("[data-day]");
+        if (!cell) return;
+        openEditor(Number(cell.getAttribute("data-day")));
+      });
+
+      editorForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        saveEditor();
+      });
+      editorRemove.addEventListener("click", removeEditor);
+      editorCancel.addEventListener("click", closeEditor);
+      editor.addEventListener("click", (e) => {
+        if (e.target === editor) closeEditor();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !editor.classList.contains("hidden"))
+          closeEditor();
+      });
+    </script>
+  </body>
+</html>

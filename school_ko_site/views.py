@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from logic.models import *
 from django.contrib import messages
+from django.http import JsonResponse
 def home(request):
 
     sections = {
@@ -26,8 +27,49 @@ def academics(request):
     }
     return render(request, 'academics.html', context)
 
+MONTH_NAMES = [
+    "Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
+    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra",
+]
+
+
+def get_month_data(month_id):
+    try:
+        m = MonthInfo.objects.prefetch_related("events").get(month=month_id)
+        return {
+            "month": m.month,
+            "monthName": m.get_month_display(),
+            "daysInMonth": m.month_days or 31,
+            "firstDay": (m.month_start_day or 1) - 1,
+            "events": {
+                str(e.event_date): {"label": e.event_name, "type": e.event_type}
+                for e in m.events.all()
+            },
+        }
+    except MonthInfo.DoesNotExist:
+        idx = month_id - 1
+        return {
+            "month": month_id,
+            "monthName": MONTH_NAMES[idx] if 0 <= idx < len(MONTH_NAMES) else "Unknown",
+            "daysInMonth": 31,
+            "firstDay": 0,
+            "events": {},
+        }
+
+
 def calendar(request):
-    return render(request, 'calendar.html')
+    month_data = get_month_data(1)
+    return render(request, "calendar.html", {
+        "server_data": {
+            "hasData": True,
+            "currentMonth": 1,
+            "month": month_data,
+        }
+    })
+
+def month_data(request, month_id):
+    month_data = get_month_data(month_id)
+    return JsonResponse(month_data)
 
 def contact(request):
     contact_info = ContactInfo.objects.first()
