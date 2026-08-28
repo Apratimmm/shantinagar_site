@@ -70,3 +70,69 @@ html {
   display: flex;
   animation: toast-in 0.3s ease-out both;
 }
+
+/* ---------- Theme tokens (used by component classes below) ---------- */
+:root {
+  --primary: #2a52be;
+  --primary-foreground: oklch(0.98 0.01 200);
+  --border: oklch(0.24 0.03 200 / 0.12);
+}
+
+/* ---------- Committee page component classes ---------- */
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .6s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+  .committee-card { }
+  .post-card {
+    transition: transform .3s ease, background-color .3s ease, box-shadow .3s ease;
+  }
+  .post-card:hover {
+    transform: translateY(-2px);
+  }
+  .chip {
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .chip:hover {
+    transform: scale(1.04);
+  }
+  .post-block {
+    transition: transform .3s cubic-bezier(.16, 1, .3, 1), box-shadow .3s ease, border-color .3s ease;
+  }
+  .post-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -12px rgba(0, 0, 0, .18);
+    border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
+  }
+  .post-block .role-badge {
+    transition: background-color .3s ease, color .3s ease;
+  }
+  .post-block:hover .role-badge {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+  .post-block tr td {
+    transition: background-color .2s ease;
+  }
+  .post-block tr:hover td {
+    background-color: color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+  .names-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .names-table tr {
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .names-table tr:last-child {
+    border-bottom: none;
+  }
+}

@@ -1,0 +1,211 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Committees — Shantinagar English School</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+
+    <nav class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+
+        <div class="flex items-center">
+          <img src="{{ logo_url|default:'/static/logo.png' }}" alt="Logo" class="h-14 mr-4"/>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+              Shantinagar English School
+            </span>
+            <span class="text-xs font-medium italic text-muted-primary">
+              "Quality education is our motto"
+            </span>
+          </div>
+        </div>
+
+        <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
+        </div>
+      </div>
+
+      <a href="/login/" class="absolute top-1/2 right-4 hidden lg:inline-flex -translate-y-1/2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
+        Log in
+      </a>
+
+      <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+        <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+      </div>
+    </nav>
+
+    <main>
+
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
+        <div class="mx-auto max-w-7xl">
+          <span class="reveal mb-3 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+            Student Leadership
+          </span>
+          <h1 class="reveal delay-1 max-w-[20ch] font-display text-5xl font-bold leading-[1.02] tracking-tight text-balance md:text-7xl">
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/80 to-foreground">
+              Meet Our
+            </span><br/>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-primary/70">
+              Committees
+            </span>
+          </h1>
+          <p class="reveal delay-2 mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+            Meet our student committees and the office bearers who lead them — from the President and Secretary through to our event coordinators and members.
+          </p>
+
+        </div>
+      </section>
+
+      <!-- COMMITTEES -->
+      <section class="border-t border-border bg-secondary/30 px-6 py-20">
+        <div class="mx-auto max-w-7xl grid grid-cols-1 gap-8">
+
+          {% if committees %}
+            {% for c in committees %}
+              <div class="committee-card reveal rounded-xl border border-border bg-card p-6 shadow-md md:flex md:gap-6 items-stretch">
+                <!-- Left: Committee Info -->
+                <div class="md:w-1/2 rounded-lg border border-border flex flex-col items-center justify-center p-6 bg-secondary/20">
+                  <span class="font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-primary mb-2 text-center">
+                    Committee #{{ forloop.counter }}
+                  </span>
+                  <h2 class="font-display text-2xl font-bold tracking-tight text-center">{{ c.name }}</h2>
+                  {% if c.description %}
+                    <p class="text-sm text-muted-foreground text-center mt-2">{{ c.description }}</p>
+                  {% endif %}
+                </div>
+
+                <!-- Right: Posts Accordion -->
+                <div class="flex-1 mt-6 md:mt-0 flex flex-col gap-3 justify-center">
+                  {% for label, names in c.posts %}
+                    {% if names|length == 1 %}
+                      <div class="flex items-center justify-between px-4 py-3 border border-border rounded-lg bg-card/60">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
+                        <span class="text-sm text-foreground/85 font-medium">{{ names|first }}</span>
+                      </div>
+                    {% else %}
+                      <div class="border border-border rounded-lg bg-card/60 transition-colors hover:border-primary/50">
+                        <button class="w-full flex items-center justify-between px-4 py-3 text-left focus:outline-none group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                          <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
+                          <svg class="h-5 w-5 text-muted-foreground transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                          </svg>
+                        </button>
+                        <div class="hidden border-t border-border px-5 py-4 bg-secondary/10">
+                          <table class="names-table w-full text-sm">
+                            <tbody>
+                              {% for name in names %}
+                                {% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
+                                <td class="px-4 py-2 text-foreground/85">{{ name }}</td>
+                                {% if forloop.counter|divisibleby:2 %}</tr>{% elif forloop.last %}<td class="px-4 py-2 text-foreground/85"></td></tr>{% endif %}
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="col-span-full rounded-[28px] border border-border bg-card p-12 text-center">
+              <p class="text-muted-foreground">No committees have been published yet.</p>
+            </div>
+          {% endif %}
+
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+
+          <p class="mt-2 text-sm text-muted-foreground">
+            {% for number in contact_numbers %}{{ number }}{% if not forloop.last %} / {% endif %}{% endfor %}<br/>
+          </p>
+
+          <p class="mt-2 text-sm text-muted-foreground">
+            {{ email_address }}<br/>
+          </p>
+
+          {% if facebook_link %}
+          <p class="mt-2 text-sm">
+            <a href="{{ facebook_link }}" target="_blank" class="text-primary hover:underline">
+              Facebook
+            </a>
+          </p>
+          {% endif %}
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+     const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/committee/",  label: "Committees" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => window.location.pathname === to;
+
+      document.getElementById("desktop-nav").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="transition-colors hover:text-foreground ${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("mobile-nav-links").innerHTML = NAV.map(
+          (i) =>
+              `<a href="${i.to}" class="${
+                  isActive(i.to)
+                      ? "text-foreground underline underline-offset-4"
+                      : "text-muted-foreground"
+              }">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("footer-nav").innerHTML = NAV.map(
+        (i) =>
+          `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      document.getElementById("year").textContent = new Date().getFullYear();
+
+      // Scroll reveal
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            e.target.style.transitionDelay = (i % 6) * 80 + "ms";
+            e.target.classList.add("in");
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>
