@@ -28,6 +28,7 @@ urlpatterns = [
     path('month_data/<int:month_id>/', month_data, name='month_data'),
     path('contact/', contact, name='contact'),
     path('gallery/', gallery, name='gallery'),
+    path('committee/', committee, name='committee'),
     path('results/', results, name='results'),
     path('verify_user/',verify_user, name='verify_user'),
     path('logout/', logoutt, name='logout'),
@@ -43,5 +44,9 @@ urlpatterns = [
     path('edit_calender/', show_calenders, name='show_calenders'),
     path('show_calender/<int:month_id>', show_calender, name='show_calender'),
     path('update_month/', update_month, name='update_month'),
+    path('show_committees/', show_committees, name='show_committees'),
+    path('add_committee/', add_committee, name='add_committee'),
+    path('edit_committee/<name>/', edit_committee, name='edit_committee'),
+    path('delete_committee/<name>/', delete_committee, name='delete_committee'),
 
 ]

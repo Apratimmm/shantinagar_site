@@ -371,3 +371,67 @@ def update_month(request):
     return JsonResponse(
         {"success": True, "message": "Calendar has been updated !   !"}
     )
+
+@login_required
+def show_committees(request):
+    committees = Committee.objects.all().only("name")
+    return render(request, "show_committees.html", {"committee": committees})
+
+@login_required
+def add_committee(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        committee = Committee(name=name)
+        for key, _ in Committee.POST_FIELDS:
+            setattr(committee, key, request.POST.get(key, ""))
+        committee.description = request.POST.get("description", "")
+        committee.save()
+
+        messages.success(request, "Committee created successfully!")
+        return redirect("show_committees")
+
+    return render(
+        request,
+        "add_committee.html",
+        {
+            "committee": Committee(name=""),
+            "committee_fields": [
+                (key, label, "")
+                for key, label in Committee.POST_FIELDS
+            ],
+        },
+    )
+
+@login_required
+def edit_committee(request, name):
+    committee, _ = Committee.objects.get_or_create(name=name)
+
+    if request.method == "POST":
+        for key, _ in Committee.POST_FIELDS:
+            setattr(committee, key, request.POST.get(key, ""))
+        committee.description = request.POST.get("description", "")
+        committee.save()
+
+        messages.success(request, "Committee updated successfully!")
+        return redirect("show_committees")
+
+    return render(
+        request,
+        "edit_committee.html",
+        {
+            "committee": committee,
+            "committee_fields": [
+                (key, label, getattr(committee, key))
+                for key, label in Committee.POST_FIELDS
+            ],
+        },
+    )
+
+@login_required
+def delete_committee(request, name):
+    committee = get_object_or_404(Committee, name=name)
+    committee_name = committee.name
+    committee.delete()
+
+    messages.success(request, f'Committee "{committee_name}" deleted successfully!')
+    return redirect("show_committees")

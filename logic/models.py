@@ -287,3 +287,77 @@ class EventInfo(models.Model):
 
     def __str__(self):
         return f"{self.event_date} - {self.event_name}"
+
+class Committee(models.Model):
+
+    POST_FIELDS = [
+        ("president", "President"),
+        ("vice_president", "Vice President"),
+        ("secretary", "Secretary"),
+        ("vice_secretary", "Vice Secretary"),
+        ("treasurer", "Treasurer"),
+        ("vice_treasurer", "Vice Treasurer"),
+        ("event_coordinator", "Event Coordinator"),
+        ("media_pr_officer", "Media & Public Relation Officer"),
+        ("member", "Member"),
+    ]
+
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+    )
+
+    description = models.TextField(
+        blank=True,
+        help_text="Optional description of this committee"
+    )
+
+    president = models.TextField(
+        blank=True,
+    )
+    vice_president = models.TextField(
+        blank=True,
+    )
+    secretary = models.TextField(
+        blank=True,
+    )
+    vice_secretary = models.TextField(
+        blank=True,
+    )
+    treasurer = models.TextField(
+        blank=True,
+    )
+    vice_treasurer = models.TextField(
+        blank=True,
+    )
+    event_coordinator = models.TextField(
+        blank=True,
+    )
+    media_pr_officer = models.TextField(
+        blank=True,
+    )
+    member = models.TextField(
+        blank=True,
+    )
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = "committee"
+        verbose_name_plural = "committees"
+
+    def __str__(self):
+        return self.name
+
+    @staticmethod
+    def _split_names(value):
+        if not value:
+            return []
+        return [n.strip() for n in value.replace(",", "\n").splitlines() if n.strip()]
+
+    def posts(self):
+        result = []
+        for key, label in self.POST_FIELDS:
+            names = self._split_names(getattr(self, key))
+            if names:
+                result.append((label, names))
+        return result

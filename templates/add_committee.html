@@ -1,0 +1,83 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add committee</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+        <h1 class="text-3xl font-bold tracking-tight mb-8">Add Committee</h1>
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="bg-white rounded-2xl shadow p-8 mb-10">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Committee Details</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium mb-1">Committee Name</label>
+                <input type="text" name="name" required
+                       class="w-full border rounded-lg px-4 py-2"
+                       placeholder="e.g. Student Council 2083/84">
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-1">Description</label>
+              <textarea name="description" rows="3"
+                        class="w-full border rounded-lg px-4 py-2"
+                        placeholder="Optional description of this committee"></textarea>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-2 text-primary">Office Bearers</h2>
+              <p class="text-sm text-gray-500 mb-6">If the post has more than one name then separate them by a comma or put the name in a new line.</p>
+              <p class="text-sm text-gray-500 mb-6">If the post has no name then leave it blank</p>
+
+            <div class="space-y-6">
+              {% for key, label, value in committee_fields %}
+                <div>
+                  <label class="block text-sm font-medium mb-1">{{ label }}</label>
+                  <textarea name="{{ key }}" rows="3" spellcheck="false"
+                            class="w-full border rounded-lg px-4 py-2 font-mono text-sm">{{ value }}</textarea>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mt-8">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Create Committee
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>
