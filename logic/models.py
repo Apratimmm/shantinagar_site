@@ -173,7 +173,9 @@ class YearlyResult(models.Model):
     year = models.PositiveIntegerField(unique=True)
     candidates = models.PositiveIntegerField()
     pass_rate = models.DecimalField(max_digits=5, decimal_places=2)
-    average = models.DecimalField(max_digits=5, decimal_places=2)
+    highest = models.DecimalField(max_digits=5, decimal_places=2)
+    highest_scorer_name = models.CharField(max_length=150, blank=True)
+    highest_scorer_image = models.ImageField(upload_to="yearly_topper_images/", blank=True, null=True)
 
     class Meta:
         ordering = ["-year"]
