@@ -114,10 +114,6 @@ def send_email(request):
     email   = request.POST.get("email", "").strip()
     subject = request.POST.get("subject", "").strip()
     message = request.POST.get("message", "").strip()
-    pprint(name)
-    pprint(email)
-    pprint(subject)
-    pprint(message)
     actual_message = f"""
     <p><strong>Name:</strong> {name}</p>
     <p><strong>Email:</strong> {email}</p>
@@ -128,7 +124,7 @@ def send_email(request):
     try:
         resend.Emails.send({
             "from": "onboarding@resend.dev",
-            "to": "apratimkhadkaaa99@gmail.com",
+            "to": "englishshantinagar@gmail.com",
             "reply_to": email,
             "subject": f"Mail received from the school's website",
             "html": actual_message})
@@ -248,6 +244,7 @@ def add_event(request):
 
     return render(request,"add_event.html")
 
+@login_required
 def edit_event(request, event_id):
     event = get_object_or_404(GalleryEvent.objects.prefetch_related("images"), id=event_id)
 
