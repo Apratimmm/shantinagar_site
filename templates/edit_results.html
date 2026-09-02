@@ -71,11 +71,41 @@
                          class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
                 </div>
                 <div>
-                  <label class="block text-sm font-medium mb-1">Average (%)</label>
-                  <input required type="number" name="average_{{ forloop.counter0 }}" value="{{ slot.average|default_if_none:'' }}" step="0.01"
+                  <label class="block text-sm font-medium mb-1">Highest (%)</label>
+                  <input required type="number" name="highest_{{ forloop.counter0 }}" value="{{ slot.highest|default_if_none:'' }}" step="0.01"
                          class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
                 </div>
               </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label class="block text-sm font-medium mb-1">Highest Scorer Name</label>
+                  <input type="text" name="highest_scorer_name_{{ forloop.counter0 }}" value="{{ slot.highest_scorer_name|default_if_none:'' }}"
+                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1">Highest Scorer Photo</label>
+                  <input type="file" name="highest_scorer_image_{{ forloop.counter0 }}" accept="image/*">
+                </div>
+              </div>
+
+              {% if slot.id and slot.highest_scorer_image %}
+              <div class="mt-4 flex items-start gap-4">
+                <div>
+                  <label class="block text-sm font-medium mb-1">Current Photo</label>
+                  <img src="{{ slot.highest_scorer_image.url }}" alt="{{ slot.highest_scorer_name }}" class="h-32 rounded">
+                </div>
+                <form method="post" action="/edit_results/" class="self-end">
+                  {% csrf_token %}
+                  <input type="hidden" name="form_type" value="delete_yearly_image">
+                  <input type="hidden" name="result_id" value="{{ slot.id }}">
+                  <button type="submit"
+                          class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">
+                    Delete photo
+                  </button>
+                </form>
+              </div>
+              {% endif %}
             </div>
             {% endfor %}
 
@@ -116,9 +146,20 @@
               </div>
 
               {% if slot.id and slot.image %}
-              <div class="mt-4">
-                <label class="block text-sm font-medium mb-1">Current Photo</label>
-                <img src="{{ slot.image.url }}" alt="{{ slot.name }}" class="h-32 rounded mb-3">
+              <div class="mt-4 flex items-start gap-4">
+                <div>
+                  <label class="block text-sm font-medium mb-1">Current Photo</label>
+                  <img src="{{ slot.image.url }}" alt="{{ slot.name }}" class="h-32 rounded">
+                </div>
+                <form method="post" action="/edit_results/" class="self-end">
+                  {% csrf_token %}
+                  <input type="hidden" name="form_type" value="delete_topper_image">
+                  <input type="hidden" name="topper_id" value="{{ slot.id }}">
+                  <button type="submit"
+                          class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">
+                    Delete photo
+                  </button>
+                </form>
               </div>
               {% endif %}
 
@@ -141,6 +182,21 @@
 
       </div>
     </main>
+
+    <script>
+      document.querySelectorAll(".js-delete-photo").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this top scorer photo?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
 
   </body>
 </html>

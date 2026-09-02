@@ -183,10 +183,29 @@ def edit_results(request):
                 result.year = year
                 result.candidates = request.POST.get(f"candidates_{i}") or 0
                 result.pass_rate = request.POST.get(f"pass_rate_{i}") or 0
-                result.average = request.POST.get(f"average_{i}") or 0
+                result.highest = request.POST.get(f"highest_{i}") or 0
+                result.highest_scorer_name = request.POST.get(f"highest_scorer_name_{i}") or ""
+                if request.FILES.get(f"highest_scorer_image_{i}"):
+                    result.highest_scorer_image = request.FILES[f"highest_scorer_image_{i}"]
                 result.save()
 
             messages.success(request, "Yearly results saved successfully!")
+
+        elif form_type == "delete_yearly_image":
+            result = get_object_or_404(YearlyResult, id=request.POST.get("result_id"))
+            if result.highest_scorer_image:
+                result.highest_scorer_image.delete(save=False)
+                result.highest_scorer_image = None
+                result.save()
+            messages.success(request, "Top scorer photo deleted.")
+
+        elif form_type == "delete_topper_image":
+            topper = get_object_or_404(Topper, id=request.POST.get("topper_id"))
+            if topper.image:
+                topper.image.delete(save=False)
+                topper.image = None
+                topper.save()
+            messages.success(request, "Topper photo deleted.")
 
         elif form_type == "topper":
             for i in range(5):

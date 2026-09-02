@@ -56,11 +56,13 @@
                       Edit
                     </a>
 
-                    <a href="{% url 'delete_committee' c.name %}"
-                       class="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-lg"
-                       onclick="return confirm('Are you sure you want to delete this committee?')">
-                      Delete
-                    </a>
+                    <form method="post" action="{% url 'delete_committee' c.name %}" class="inline">
+                      {% csrf_token %}
+                      <button type="submit"
+                              class="js-delete-committee bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-lg">
+                        Delete
+                      </button>
+                    </form>
                   </div>
                 </div>
               {% endfor %}
@@ -71,5 +73,22 @@
         </div>
       </div>
     </main>
+
+    <script>
+      document.querySelectorAll(".js-delete-committee").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Are you sure you want to delete this committee?")) {
+            e.preventDefault();
+            return;
+          }
+          e.preventDefault();
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
+
   </body>
 </html>

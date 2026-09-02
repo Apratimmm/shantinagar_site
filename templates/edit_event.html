@@ -62,7 +62,7 @@
             </div>
 
             <button type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+                    class="js-upload bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg">
               Upload
             </button>
           </form>
@@ -83,8 +83,7 @@
                     <input type="hidden" name="form_type" value="delete_image">
                     <input type="hidden" name="image_id" value="{{ img.id }}">
                     <button type="submit"
-                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg"
-                            onclick="return confirm('Delete this image?')">
+                            class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">
                       Delete
                     </button>
                   </form>
@@ -97,5 +96,35 @@
         </div>
       </div>
     </main>
+
+    <script>
+      document.querySelectorAll(".js-delete-photo").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this image?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+
+      document.querySelectorAll(".js-upload").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Upload these image(s)?")) {
+            e.preventDefault();
+            return;
+          }
+          e.preventDefault();
+          this.textContent = "Uploading...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
+
   </body>
 </html>
