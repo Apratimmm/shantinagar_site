@@ -46,7 +46,9 @@ urlpatterns = [
     path('update_month/', update_month, name='update_month'),
     path('show_committees/', show_committees, name='show_committees'),
     path('add_committee/', add_committee, name='add_committee'),
+    path('add_member_pictures/<int:committee_id>/', add_member_pictures, name='add_member_pictures'),
     path('edit_committee/<name>/', edit_committee, name='edit_committee'),
+    path('edit_member_pictures/<int:committee_id>/', edit_member_pictures, name='edit_member_pictures'),
     path('delete_committee/<name>/', delete_committee, name='delete_committee'),
 
 ]

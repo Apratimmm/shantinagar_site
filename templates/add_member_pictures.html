@@ -1,0 +1,94 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add member pictures</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/show_committees/"><span class="text-lg font-bold text-primary">Back to Committees</span></a>
+      </div>
+    </nav>
+
+    <main class="flex-1 p-6 sm:p-10">
+
+      <div class="mx-auto max-w-5xl">
+      {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+      {% endif %}
+
+      <div class="mt-8">
+            <a href="{% url 'show_committees' %}">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+                Add pictures later
+              </button></a>
+      </div>
+      <br>
+
+          <h1 class="text-3xl font-bold tracking-tight mb-2">Committee: {{ committee.name }} </h1>
+
+        {% if member_rows %}
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="bg-white rounded-2xl shadow p-8">
+
+              <div class="space-y-4">
+                {% for row in member_rows %}
+                  <div class="flex flex-col md:flex-row md:items-start gap-4 border-b pb-4 last:border-b-0 last:pb-0">
+                    <div class="flex-1 min-w-0">
+                      <div class="text-sm text-gray-500">{{ row.post_label }}</div>
+                      <div class="font-semibold truncate">{{ row.name }}</div>
+                    </div>
+
+                    <div class="flex-shrink-0 w-40">
+                      <div class="block text-sm font-medium mb-1">Choose Photo</div>
+                      <input type="file" name="image_{{ forloop.counter0 }}" accept="image/*"
+                             class="w-full text-sm" />
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="mt-8">
+              <button type="submit"
+                      class="js-upload bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+                Add Pictures
+              </button>
+            </div>
+          </form>
+        {% else %}
+          <div class="bg-white rounded-2xl shadow p-8 text-center text-gray-500">
+            No member names were saved on this committee. Go back and add names first.
+          </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <script>
+      document.querySelectorAll(".js-upload").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          this.textContent = "Adding pictures...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
+  </body>
+</html>

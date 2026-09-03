@@ -72,12 +72,24 @@
 
           <div class="mt-8">
             <button type="submit"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
-              Save Changes
+                    class="js-upload bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Update names
             </button>
           </div>
         </form>
       </div>
     </main>
+
+    <script>
+      document.querySelectorAll(".js-upload").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          this.textContent = "Updating names...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
   </body>
 </html>

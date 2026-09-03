@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+import os
 
 class UserManager(BaseUserManager):
     def create_user(self, name, password=None):
@@ -363,3 +364,33 @@ class Committee(models.Model):
             if names:
                 result.append((label, names))
         return result
+
+def committee_member_upload_path(instance, filename):
+    name = (instance.committee.name or "unnamed").strip().replace(" ", "_").replace("/", "")
+    return os.path.join("committee", name, filename)
+
+class CommitteeMember(models.Model):
+    committee = models.ForeignKey(
+        "Committee",
+        on_delete=models.CASCADE,
+        related_name="members",
+    )
+    post = models.CharField(
+        max_length=30,
+        choices=Committee.POST_FIELDS,
+    )
+    name = models.CharField(max_length=150)
+    image = models.ImageField(
+        upload_to=committee_member_upload_path,
+        blank=True,
+        null=True,
+    )
+    order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["post", "order", "id"]
+        verbose_name = "committee-member"
+        verbose_name_plural = "committee-members"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_post_display()})"
