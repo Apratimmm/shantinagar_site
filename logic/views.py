@@ -1,4 +1,3 @@
-from pprint import pprint
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
@@ -316,7 +315,7 @@ def delete_event(request, event_id):
 @login_required
 def show_calenders(request):
     months = [
-        (1, "Baisakh"),
+        (1, "Baishakh"),
         (2, "Jestha"),
         (3, "Ashadh"),
         (4, "Shrawan"),

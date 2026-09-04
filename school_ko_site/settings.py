@@ -13,9 +13,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
-import cloudinary
-import cloudinary.uploader
-from cloudinary.utils import cloudinary_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -157,8 +154,3 @@ STATICFILES_DIRS = [BASE_DIR / 'images', BASE_DIR / 'static']
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
-MAILERS = {
-    'default': {
-        'BACKEND': 'django.core.mail.backends.console.EmailBackend',
-    },
-}
