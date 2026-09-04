@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from logic.models import *
+from logic.context_processors import get_contact_info
 from django.contrib import messages
 from django.http import JsonResponse
 def home(request):
@@ -72,7 +73,7 @@ def month_data(request, month_id):
     return JsonResponse(month_data)
 
 def contact(request):
-    contact_info = ContactInfo.objects.first()
+    contact_info = get_contact_info()
     context = {
         "contact": contact_info,
     }

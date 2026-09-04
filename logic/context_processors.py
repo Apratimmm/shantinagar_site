@@ -1,12 +1,20 @@
 from django.core.cache import cache
 from .models import ContactInfo
 
-def global_context(request):
-    contact = cache.get("site_contact_info")
+CACHE_KEY = "site_contact_info"
+CACHE_TTL = 60 * 15
+
+def get_contact_info():
+    contact = cache.get(CACHE_KEY)
 
     if contact is None:
         contact = ContactInfo.objects.first()
-        cache.set("site_contact_info", contact, 60 * 15)
+        cache.set(CACHE_KEY, contact, CACHE_TTL)
+
+    return contact
+
+def global_context(request):
+    contact = get_contact_info()
 
     if contact:
         return {

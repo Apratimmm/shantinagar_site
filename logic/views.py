@@ -2,9 +2,11 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import *
+from .context_processors import CACHE_KEY
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import os
@@ -149,6 +151,7 @@ def edit_contact(request):
         if request.FILES.get("logo"):
             contact.logo = request.FILES["logo"]
         contact.save()
+        cache.delete(CACHE_KEY)
 
         messages.success(request, "Contact information updated successfully!")
         return redirect("edit_contact")
