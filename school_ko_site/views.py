@@ -99,4 +99,14 @@ def user_login(request):
     return render(request, 'login.html')
 
 def committee(request):
-    return render(request, "committee.html", {"committees": Committee.objects.prefetch_related("members").all()})
+    committees = Committee.objects.prefetch_related("members").all()
+    for c in committees:
+        c.members_by_post = {}
+        for m in c.members.all():
+            c.members_by_post.setdefault(m.post, {})[m.name] = m
+        c.posts_with_members = [
+            (key, label, [(name, c.members_by_post.get(key, {}).get(name)) for name in c._split_names(getattr(c, key))])
+            for key, label in Committee.POST_FIELDS
+            if c._split_names(getattr(c, key))
+        ]
+    return render(request, "committee.html", {"committees": committees})

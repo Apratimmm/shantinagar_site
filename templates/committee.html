@@ -53,40 +53,36 @@
                 <!-- Hidden posts source for the modal -->
                 <template id="committee-data-{{ forloop.counter0 }}">
                   <div class="flex flex-col gap-5">
-                    {% for label, names in c.posts %}
+                    {% for post_key, label, members in c.posts_with_members %}
                       <div class="rounded-lg border border-border bg-card/60 overflow-hidden">
                         <div class="flex items-center justify-between border-b border-border px-4 py-3">
                           <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
-                          {% if names|length > 1 %}
-                            <span class="text-xs font-medium text-muted-foreground/70">{{ names|length }}</span>
+                          {% if members|length > 1 %}
+                            <span class="text-xs font-medium text-muted-foreground/70">{{ members|length }}</span>
                           {% endif %}
                         </div>
 
                         <div class="grid gap-6 p-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                          {% for name in names %}
-                            {% for m in c.members.all %}
-                              {% if m.name == name %}
-                                <figure class="group flex flex-col items-center">
-                                  <div class="flex w-full cursor-pointer flex-col bg-white p-3 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-1.5deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[1.5deg]{% else %}rotate-[-0.5deg]{% endif %}"
-                                       {% if m.image %}onclick="openLightbox(this)" data-gallery-photo="true" data-photo-src="{{ m.image.url }}" data-photo-alt="{{ m.name }}" data-event-title="{{ label }}"{% endif %}>
-                                    <div class="relative aspect-square overflow-hidden bg-muted">
-                                      {% if m.image %}
-                                        <img src="{{ m.image.url }}" alt="{{ m.name }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                                      {% else %}
-                                        <div class="flex h-full w-full items-center justify-center bg-primary/10">
-                                          <span class="font-display text-4xl font-bold text-primary/30 select-none">
-                                            {{ m.first_name }}
-                                          </span>
-                                        </div>
-                                      {% endif %}
+                          {% for name, m in members %}
+                            <figure class="group flex flex-col items-center">
+                              <div class="flex w-full cursor-pointer flex-col bg-white p-3 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-1.5deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[1.5deg]{% else %}rotate-[-0.5deg]{% endif %}"
+                                   {% if m and m.image %}onclick="openLightbox(this)" data-gallery-photo="true" data-photo-src="{{ m.image.url }}" data-photo-alt="{{ m.name }}" data-event-title="{{ label }}"{% endif %}>
+                                <div class="relative aspect-square overflow-hidden bg-muted">
+                                  {% if m and m.image %}
+                                    <img src="{{ m.image.url }}" alt="{{ m.name }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                  {% else %}
+                                    <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                                      <span class="font-display text-4xl font-bold text-primary/30 select-none">
+                                        {% if m %}{{ m.first_name }}{% endif %}
+                                      </span>
                                     </div>
-                                    <figcaption class="mt-2 px-1 max-w-full text-center text-xs font-semibold text-foreground/85 break-words">
-                                      {{ m.name }}
-                                    </figcaption>
-                                  </div>
-                                </figure>
-                              {% endif %}
-                            {% endfor %}
+                                  {% endif %}
+                                </div>
+                                <figcaption class="mt-2 px-1 max-w-full text-center text-xs font-semibold text-foreground/85 break-words">
+                                  {{ name }}
+                                </figcaption>
+                              </div>
+                            </figure>
                           {% endfor %}
                         </div>
                       </div>
