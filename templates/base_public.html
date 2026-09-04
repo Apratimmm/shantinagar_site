@@ -1,0 +1,139 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Shantinagar English School{% endblock %}</title>
+    {% block meta_tags %}
+    <meta
+      name="description"
+      content="{% block description %}Shantinagar English School{% endblock %}"
+    />
+    <meta property="og:title" content="{% block og_title %}{{ block.super }}{% endblock %}" />
+    <meta
+      property="og:description"
+      content="{% block og_description %}Shantinagar English School{% endblock %}"
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    {% endblock meta_tags %}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Nunito+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="min-h-screen bg-background text-foreground">
+    <nav data-chrome="nav" class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center px-4 lg:px-2">
+
+        <div class="flex items-center">
+          <img src="{{ logo_url|default:'/static/logo.png' }}" alt="Logo" class="h-14 mr-4"/>
+          <div class="flex flex-col">
+            <span class="font-display text-2xl font-bold uppercase tracking-tight text-primary">
+              Shantinagar English School
+            </span>
+            <span class="text-xs font-medium italic text-muted-primary">
+              "Quality education is our motto"
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="absolute top-1/2 right-4 hidden lg:flex -translate-y-1/2 items-center gap-8">
+        <div id="desktop-nav" class="flex items-center gap-8 text-base font-medium text-muted-foreground">
+        </div>
+        <a href="/login/" class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
+          Log in
+        </a>
+      </div>
+
+      <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
+        <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
+      </div>
+    </nav>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block lightbox %}{% include "_public_lightbox.html" %}{% endblock %}
+
+    {% block footer %}{% include "_public_footer.html" %}{% endblock %}
+
+    <script>
+      // Single source of truth for nav links
+      const NAV = [
+        { to: "/", label: "About Us" },
+        { to: "/academics/", label: "Academics" },
+        { to: "/calendar/",  label: "Calendar" },
+        { to: "/gallery/",   label: "Gallery" },
+        { to: "/results/",   label: "Results" },
+        { to: "/notice/",    label: "Notice" },
+        { to: "/committee/", label: "Committees" },
+        { to: "/contact/",   label: "Contact Us" },
+      ];
+
+      const isActive = (to) => {
+        const path = window.location.pathname;
+        if (to === "/") return path === "/";
+        return path === to || path.startsWith(to);
+      };
+
+      const renderNavLink = (i, baseClass) => {
+        const active = isActive(i.to);
+        return `<a href="${i.to}" class="${baseClass} ${
+          active
+            ? "text-foreground underline underline-offset-4"
+            : "text-muted-foreground"
+        }">${i.label}</a>`;
+      };
+
+      const desktopEl = document.getElementById("desktop-nav");
+      if (desktopEl) desktopEl.innerHTML = NAV.map(i => renderNavLink(i, "transition-colors hover:text-foreground")).join("");
+
+      const mobileEl = document.getElementById("mobile-nav-links");
+      if (mobileEl) mobileEl.innerHTML = NAV.map(i => renderNavLink(i, "")).join("");
+
+      const footerEl = document.getElementById("footer-nav");
+      if (footerEl) footerEl.innerHTML = NAV.map(i =>
+        `<a href="${i.to}" class="text-muted-foreground transition-colors hover:text-foreground">${i.label}</a>`
+      ).join("");
+
+      const yearEl = document.getElementById("year");
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const lightboxEl = document.getElementById("lightbox");
+      if (lightboxEl && !document.getElementById("lightbox-prev")) {
+        function openLightbox(src, title, subtitle) {
+          document.getElementById("lightbox-img").src = src;
+          document.getElementById("lightbox-title").textContent = title || "";
+          const subEl = document.getElementById("lightbox-subtitle");
+          if (subEl) subEl.textContent = subtitle || "";
+          lightboxEl.classList.remove("hidden");
+          document.body.style.overflow = "hidden";
+        }
+        function closeLightbox() {
+          lightboxEl.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+        document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+        lightboxEl.addEventListener("click", (e) => {
+          if (e.target.id === "lightbox") closeLightbox();
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !lightboxEl.classList.contains("hidden")) closeLightbox();
+        });
+        window.openLightbox = openLightbox;
+        window.closeLightbox = closeLightbox;
+      }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

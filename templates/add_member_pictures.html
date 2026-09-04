@@ -1,25 +1,15 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Add member pictures</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
-  </head>
-  <body class="min-h-screen bg-background text-foreground flex flex-col">
-    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
-      <div class="mx-auto max-w-7xl flex justify-between items-center">
-        <a href="/show_committees/"><span class="text-lg font-bold text-primary">Back to Committees</span></a>
-      </div>
-    </nav>
+{% extends "base_admin.html" %}
+{% block title %}Add member pictures{% endblock %}
 
-    <main class="flex-1 p-6 sm:p-10">
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/show_committees/"><span class="text-lg font-bold text-primary">Back to Committees</span></a>
+  </div>
+</nav>
+{% endblock %}
 
-      <div class="mx-auto max-w-5xl">
+{% block content %}
       {% if messages %}
           <div class="mb-6 space-y-3">
             {% for message in messages %}
@@ -76,9 +66,9 @@
             No member names were saved on this committee. Go back and add names first.
           </div>
         {% endif %}
-      </div>
-    </main>
+{% endblock %}
 
+{% block extra_js %}
     <script>
       document.querySelectorAll(".js-upload").forEach((btn) => {
         btn.addEventListener("click", function (e) {
@@ -90,5 +80,4 @@
         });
       });
     </script>
-  </body>
-</html>
+{% endblock %}

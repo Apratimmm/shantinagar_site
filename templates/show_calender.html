@@ -1,28 +1,17 @@
+{% extends "base_admin.html" %}
 {% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Calendar</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link href="{% static 'dist/styles.css' %}" rel="stylesheet" />
-  </head>
-  <body class="min-h-screen bg-background text-foreground flex flex-col">
-    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
-      <div class="mx-auto max-w-7xl flex justify-between items-center">
-        <a href="/edit_calender/"><span class="text-lg font-bold text-primary">Back</span></a>
-        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
-      </div>
-    </nav>
+{% block title %}Calendar{% endblock %}
 
-    <main class="flex-1 p-6 sm:p-10">
-      <div class="mx-auto max-w-5xl">
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/edit_calender/"><span class="text-lg font-bold text-primary">Back to Months</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
           <h2 class="text-xl font-semibold mb-6 text-primary">Month information</h2>
           <p class="text-sm text-muted-foreground mb-6">Add or update the basic information of a month</p>
         <div class="bg-white rounded-2xl shadow p-6 mb-8">
@@ -121,9 +110,9 @@
             </span>
           </button>
         </div>
-      </div>
-    </main>
+{% endblock %}
 
+{% block extra_js %}
     <!-- EVENT EDITOR (modal) -->
     <div
       id="editor"
@@ -191,10 +180,6 @@
     <script id="server-data" type="application/json">{"hasData": false}</script>
     {% endif %}
 
-    <!-- Server data is injected above as a JSON <script> tag.
-         The Django POST URL is passed via window.UPDATE_URL so the
-         cached calendar-edit.js can read it at runtime. -->
     <script>window.UPDATE_URL = "{% url 'update_month' %}";</script>
     <script src="{% static 'dist/calendar-edit.js' %}" defer></script>
-  </body>
-</html>
+{% endblock %}

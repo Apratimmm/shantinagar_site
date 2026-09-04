@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}{% endblock %} - Shantinagar English School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="min-h-screen bg-background text-foreground flex flex-col">
+
+    {% block nav %}
+    <nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+      <div class="mx-auto max-w-7xl flex justify-between items-center">
+        <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+        <a href="/logout/" class="text-lg font-bold text-primary">Log Out</a>
+      </div>
+    </nav>
+    {% endblock %}
+
+    <main class="flex-1 p-6 sm:p-10">
+      <div class="mx-auto max-w-5xl">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
