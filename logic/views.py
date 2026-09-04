@@ -163,8 +163,8 @@ def edit_contact(request):
 
 @login_required
 def edit_results(request):
-    yearly_results = YearlyResult.objects.all().order_by("-year")[:3]
-    toppers = Topper.objects.all().order_by("-score")[:5]
+    yearly_results = YearlyResult.objects.all()[:3]
+    toppers = Topper.objects.all()[:5]
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
