@@ -29,7 +29,7 @@
     
 
 <nav class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-  <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+  <div class="mx-auto flex h-20 max-w-7xl items-center px-4 lg:px-2">
 
     <!-- Logo + School Name -->
     <div class="flex items-center">
@@ -44,16 +44,16 @@
       </div>
     </div>
 
-    <!-- Desktop Links -->
-    <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
-    </div>
-
   </div>
 
-  <!-- Log in button pinned to the right edge of the screen -->
-  <a href="/login/" class="absolute top-1/2 right-4 hidden lg:inline-flex -translate-y-1/2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
-    Log in
-  </a>
+  <!-- Desktop links + Log in, pinned to the right edge of the screen -->
+  <div class="absolute top-1/2 right-4 hidden lg:flex -translate-y-1/2 items-center gap-8">
+    <div id="desktop-nav" class="flex items-center gap-8 text-base font-medium text-muted-foreground">
+    </div>
+    <a href="/login/" class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
+      Log in
+    </a>
+  </div>
 
   <!-- Mobile Navigation -->
   <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
@@ -248,6 +248,7 @@
         { to: "/calendar/",  label: "Calendar" },
         { to: "/gallery/",   label: "Gallery" },
         { to: "/results/",   label: "Results" },
+        { to: "/notice/",     label: "Notice" },
         { to: "/committee/",  label: "Committees" },
         { to: "/contact/",   label: "Contact Us" },
       ];
