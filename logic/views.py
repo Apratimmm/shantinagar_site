@@ -442,19 +442,23 @@ def add_member_pictures(request, committee_id):
     committee = get_object_or_404(Committee, id=committee_id)
 
     member_rows = []
+    row_index = {}
     for key, label in Committee.POST_FIELDS:
         for name in committee._split_names(getattr(committee, key)):
-            existing = (
-                CommitteeMember.objects
-                .filter(committee=committee, post=key, name=name)
-                .first()
-            )
             member_rows.append({
                 "post_key": key,
                 "post_label": label,
                 "name": name,
-                "member": existing,
+                "member": None,
             })
+            row_index[(key, name)] = None
+
+    existing_members = CommitteeMember.objects.filter(committee=committee)
+    for m in existing_members:
+        if (m.post, m.name) in row_index:
+            row_index[(m.post, m.name)] = m
+    for row in member_rows:
+        row["member"] = row_index[(row["post_key"], row["name"])]
 
     if request.method == "POST":
         saved = 0
@@ -531,19 +535,23 @@ def edit_member_pictures(request, committee_id):
     committee = get_object_or_404(Committee, id=committee_id)
 
     member_rows = []
+    row_index = {}
     for key, label in Committee.POST_FIELDS:
         for name in committee._split_names(getattr(committee, key)):
-            member = (
-                CommitteeMember.objects
-                .filter(committee=committee, post=key, name=name)
-                .first()
-            )
             member_rows.append({
                 "post_key": key,
                 "post_label": label,
                 "name": name,
-                "member": member,
+                "member": None,
             })
+            row_index[(key, name)] = None
+
+    existing_members = CommitteeMember.objects.filter(committee=committee)
+    for m in existing_members:
+        if (m.post, m.name) in row_index:
+            row_index[(m.post, m.name)] = m
+    for row in member_rows:
+        row["member"] = row_index[(row["post_key"], row["name"])]
 
     if request.method == "POST":
         form_type = request.POST.get("form_type")
