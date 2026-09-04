@@ -394,3 +394,7 @@ class CommitteeMember(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.get_post_display()})"
+
+    @property
+    def first_name(self):
+        return self.name.split(maxsplit=1)[0] if self.name else ""

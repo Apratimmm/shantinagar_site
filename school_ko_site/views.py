@@ -103,4 +103,4 @@ def dashboard(request):
     return render(request, 'dashboard.html')
 
 def committee(request):
-    return render(request, "committee.html", {"committees": Committee.objects.all()})
+    return render(request, "committee.html", {"committees": Committee.objects.prefetch_related("members").all()})

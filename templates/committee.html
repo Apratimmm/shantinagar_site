@@ -8,11 +8,16 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="{% static 'dist/styles.css' %}" rel="stylesheet">
+    <style>
+      /* Hide nav + footer while the lightbox (or any modal) is open,
+         so the page chrome doesn't bleed through the translucent backdrop. */
+      body.lightbox-open [data-chrome] { display: none; }
+    </style>
   </head>
   <body class="min-h-screen bg-background text-foreground">
 
-    <nav class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-2">
+    <nav data-chrome="nav" class="relative sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+      <div class="mx-auto flex h-20 max-w-7xl items-center px-4 lg:px-2">
 
         <div class="flex items-center">
           <img src="{{ logo_url|default:'/static/logo.png' }}" alt="Logo" class="h-14 mr-4"/>
@@ -26,13 +31,16 @@
           </div>
         </div>
 
-        <div id="desktop-nav" class="hidden lg:flex items-center gap-8 text-base font-medium text-muted-foreground">
-        </div>
       </div>
 
-      <a href="/login/" class="absolute top-1/2 right-4 hidden lg:inline-flex -translate-y-1/2 rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
-        Log in
-      </a>
+      <!-- Desktop links + Log in, pinned to the right edge of the screen -->
+      <div class="absolute top-1/2 right-4 hidden lg:flex -translate-y-1/2 items-center gap-8">
+        <div id="desktop-nav" class="flex items-center gap-8 text-base font-medium text-muted-foreground">
+        </div>
+        <a href="/login/" class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-primary-foreground shadow transition-colors hover:bg-primary/90">
+          Log in
+        </a>
+      </div>
 
       <div id="mobile-nav" class="hidden lg:hidden border-t border-border bg-background px-6 py-5">
         <div id="mobile-nav-links" class="flex flex-col gap-4 text-base font-medium"></div>
@@ -58,53 +66,73 @@
 
       <!-- COMMITTEES -->
       <section class="border-t border-border bg-secondary/30 px-6 py-20">
-        <div class="mx-auto max-w-7xl grid grid-cols-1 gap-8">
+        <div class="mx-auto max-w-7xl grid grid-cols-1 gap-6 sm:grid-cols-2">
 
           {% if committees %}
             {% for c in committees %}
-              <div class="committee-card reveal rounded-xl border border-border bg-card p-6 shadow-md md:flex md:gap-6 items-stretch">
-                <!-- Left: Committee Info -->
-                <div class="md:w-1/2 rounded-lg border border-border flex flex-col items-center justify-center p-6 bg-secondary/20">
-                  <span class="font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-primary mb-2 text-center">
-                    Committee #{{ forloop.counter }}
-                  </span>
-                  <h2 class="font-display text-2xl font-bold tracking-tight text-center">{{ c.name }}</h2>
-                  {% if c.description %}
-                    <p class="text-sm text-muted-foreground text-center mt-2">{{ c.description }}</p>
-                  {% endif %}
-                </div>
+              <div class="committee-card reveal flex flex-col items-center justify-center rounded-xl border border-border bg-card p-6 text-center shadow-md min-h-[280px]">
+                <span class="mb-2 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+                  Committee #{{ forloop.counter }}
+                </span>
+                <h2 class="font-display text-xl font-bold tracking-tight text-balance">{{ c.name }}</h2>
 
-                <!-- Right: Posts Accordion -->
-                <div class="flex-1 mt-6 md:mt-0 flex flex-col gap-3 justify-center">
-                  {% for label, names in c.posts %}
-                    {% if names|length == 1 %}
-                      <div class="flex items-center justify-between px-4 py-3 border border-border rounded-lg bg-card/60">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
-                        <span class="text-sm text-foreground/85 font-medium">{{ names|first }}</span>
-                      </div>
-                    {% else %}
-                      <div class="border border-border rounded-lg bg-card/60 transition-colors hover:border-primary/50">
-                        <button class="w-full flex items-center justify-between px-4 py-3 text-left focus:outline-none group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                <button type="button"
+                        class="js-open-modal mt-6 inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-semibold uppercase tracking-wider text-foreground transition-colors hover:border-primary hover:text-primary"
+                        data-target="committee-data-{{ forloop.counter0 }}"
+                        data-number="{{ forloop.counter }}"
+                        data-name="{{ c.name }}">
+
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                    <span>Show more info</span>
+                </button>
+
+                <!-- Hidden posts source for the modal -->
+                <template id="committee-data-{{ forloop.counter0 }}">
+                  <div class="flex flex-col gap-5">
+                    {% for label, names in c.posts %}
+                      <div class="rounded-lg border border-border bg-card/60 overflow-hidden">
+                        <div class="flex items-center justify-between border-b border-border px-4 py-3">
                           <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
-                          <svg class="h-5 w-5 text-muted-foreground transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                          </svg>
-                        </button>
-                        <div class="hidden border-t border-border px-5 py-4 bg-secondary/10">
-                          <table class="names-table w-full text-sm">
-                            <tbody>
-                              {% for name in names %}
-                                {% if forloop.counter0|divisibleby:2 %}<tr>{% endif %}
-                                <td class="px-4 py-2 text-foreground/85">{{ name }}</td>
-                                {% if forloop.counter|divisibleby:2 %}</tr>{% elif forloop.last %}<td class="px-4 py-2 text-foreground/85"></td></tr>{% endif %}
-                              {% endfor %}
-                            </tbody>
-                          </table>
+                          {% if names|length > 1 %}
+                            <span class="text-xs font-medium text-muted-foreground/70">{{ names|length }} members</span>
+                          {% endif %}
+                        </div>
+
+                        <div class="grid gap-6 p-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                          {% for name in names %}
+                            {% for m in c.members.all %}
+                              {% if m.name == name %}
+                                <figure class="group flex flex-col items-center">
+                                  <div class="flex w-full cursor-pointer flex-col bg-white p-3 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-1.5deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[1.5deg]{% else %}rotate-[-0.5deg]{% endif %}"
+                                       {% if m.image %}onclick="openLightbox(this)" data-gallery-photo="true" data-photo-src="{{ m.image.url }}" data-photo-alt="{{ m.name }}" data-event-title="{{ label }}"{% endif %}>
+                                    <div class="relative aspect-square overflow-hidden bg-muted">
+                                      {% if m.image %}
+                                        <img src="{{ m.image.url }}" alt="{{ m.name }}" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                                      {% else %}
+                                        <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                                          <span class="font-display text-4xl font-bold text-primary/30 select-none">
+                                            {{ m.first_name }}
+                                          </span>
+                                        </div>
+                                      {% endif %}
+                                    </div>
+                                    <figcaption class="mt-2 px-1 max-w-full text-center text-xs font-semibold text-foreground/85 break-words">
+                                      {{ m.name }}
+                                    </figcaption>
+                                  </div>
+                                </figure>
+                              {% endif %}
+                            {% endfor %}
+                          {% endfor %}
                         </div>
                       </div>
-                    {% endif %}
-                  {% endfor %}
-                </div>
+                    {% empty %}
+                      <p class="text-sm text-muted-foreground text-center">No office bearers listed for this committee yet.</p>
+                    {% endfor %}
+                  </div>
+                </template>
               </div>
             {% endfor %}
           {% else %}
@@ -117,8 +145,47 @@
       </section>
     </main>
 
+    <!-- MODAL -->
+    <div id="committee-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div class="relative flex w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-card shadow-2xl" style="height: calc(60vh + 30px);">
+        <div class="flex items-start justify-between gap-4 border-b border-border px-6 py-4">
+          <div class="min-w-0">
+            <h2 id="modal-committee-name" class="mt-1 font-display text-xl font-bold tracking-tight break-words"></h2>
+          </div>
+          <button id="modal-close" type="button" class="flex-shrink-0 rounded-full p-2 transition-colors hover:bg-secondary" aria-label="Close">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <div id="modal-content" class="px-6 py-4" style="flex: 1 1 0%; min-height: 0; overflow-y: auto;">
+          <!-- Posts injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGHTBOX (member photo preview) -->
+    <div id="lightbox" class="fixed inset-0 z-[110] hidden flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300">
+      <button id="lightbox-close" type="button" class="absolute top-6 right-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Close modal">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <button id="lightbox-prev" type="button" class="absolute left-4 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Previous photo">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+      </button>
+      <button id="lightbox-next" type="button" class="absolute right-4 top-1/2 z-10 -translate-y-1/2 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Next photo">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      </button>
+      <div class="max-h-[90vh] max-w-5xl text-center">
+        <img id="lightbox-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-xl shadow-2xl mx-auto object-contain"/>
+        <div class="mt-4 px-4">
+          <span id="lightbox-event" class="inline-block rounded bg-primary/80 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-white"></span>
+          <p id="lightbox-name" class="mt-2 text-base font-semibold text-white"></p>
+        </div>
+      </div>
+    </div>
+
     <!-- FOOTER -->
-    <footer class="border-t border-border px-6 py-12">
+    <footer data-chrome="footer" class="border-t border-border px-6 py-12">
       <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
         <div>
           <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
@@ -158,6 +225,7 @@
         { to: "/calendar/",  label: "Calendar" },
         { to: "/gallery/",   label: "Gallery" },
         { to: "/results/",   label: "Results" },
+        { to: "/notice/",     label: "Notice" },
         { to: "/committee/",  label: "Committees" },
         { to: "/contact/",   label: "Contact Us" },
       ];
@@ -200,6 +268,111 @@
         });
       }, { threshold: 0.12 });
       document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+      // Committee modal
+      (function () {
+        const modal = document.getElementById("committee-modal");
+        const modalContent = document.getElementById("modal-content");
+        const modalName = document.getElementById("modal-committee-name");
+        const modalClose = document.getElementById("modal-close");
+        let lastTrigger = null;
+
+        function openModal(trigger) {
+          const targetId = trigger.dataset.target;
+          const template = document.getElementById(targetId);
+          if (!template) return;
+          modalName.textContent = trigger.dataset.name;
+          modalContent.innerHTML = "";
+          modalContent.appendChild(template.content.cloneNode(true));
+
+          modal.classList.remove("hidden");
+          modal.classList.add("flex");
+          document.body.classList.add("lightbox-open");
+          document.body.style.overflow = "hidden";
+          lastTrigger = trigger;
+          modalClose.focus();
+        }
+
+        function closeModal() {
+          modal.classList.add("hidden");
+          modal.classList.remove("flex");
+
+          if (document.getElementById("lightbox").classList.contains("hidden")) {
+            document.body.classList.remove("lightbox-open");
+          }
+          document.body.style.overflow = "";
+          if (lastTrigger && typeof lastTrigger.focus === "function") {
+            lastTrigger.focus();
+          }
+          lastTrigger = null;
+        }
+
+        modalClose.addEventListener("click", closeModal);
+        modal.addEventListener("click", (e) => {
+          if (e.target === modal) closeModal();
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && !modal.classList.contains("hidden")) closeModal();
+        });
+
+        document.querySelectorAll(".js-open-modal").forEach((btn) => {
+          btn.addEventListener("click", () => openModal(btn));
+        });
+      })();
+
+      let activeFigure = null;
+
+      function getPhotoFigures() {
+        return Array.from(document.querySelectorAll('[data-gallery-photo="true"]'));
+      }
+
+      function openLightbox(figure) {
+        const figures = getPhotoFigures();
+        const idx = figures.indexOf(figure);
+        if (idx === -1) return;
+        activeFigure = figure;
+        document.getElementById("lightbox-img").src = figure.dataset.photoSrc;
+        document.getElementById("lightbox-img").alt = figure.dataset.photoAlt || "";
+        document.getElementById("lightbox-event").textContent = figure.dataset.eventTitle || "";
+        document.getElementById("lightbox-name").textContent = figure.dataset.photoAlt || "";
+        document.getElementById("lightbox").classList.remove("hidden");
+        document.body.classList.add("lightbox-open");
+      }
+
+      function closeLightbox() {
+        document.getElementById("lightbox").classList.add("hidden");
+        if (document.getElementById("committee-modal").classList.contains("hidden")) {
+          document.body.classList.remove("lightbox-open");
+        }
+        activeFigure = null;
+      }
+
+      function prevLightbox() {
+        const figures = getPhotoFigures();
+        if (!activeFigure || figures.length === 0) return;
+        const idx = figures.indexOf(activeFigure);
+        openLightbox(figures[(idx - 1 + figures.length) % figures.length]);
+      }
+
+      function nextLightbox() {
+        const figures = getPhotoFigures();
+        if (!activeFigure || figures.length === 0) return;
+        const idx = figures.indexOf(activeFigure);
+        openLightbox(figures[(idx + 1) % figures.length]);
+      }
+
+      document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+      document.getElementById("lightbox-prev").addEventListener("click", prevLightbox);
+      document.getElementById("lightbox-next").addEventListener("click", nextLightbox);
+      document.getElementById("lightbox").addEventListener("click", (e) => {
+        if (e.target.id === "lightbox") closeLightbox();
+      });
+      document.addEventListener("keydown", (e) => {
+        if (document.getElementById("lightbox").classList.contains("hidden")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") prevLightbox();
+        if (e.key === "ArrowRight") nextLightbox();
+      });
     </script>
   </body>
 </html>
