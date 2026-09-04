@@ -28,10 +28,8 @@ def academics(request):
     }
     return render(request, 'academics.html', context)
 
-MONTH_NAMES = [
-    "Baishakh", "Jestha", "Ashadh", "Shrawan", "Bhadra", "Ashwin",
-    "Kartik", "Mangsir", "Poush", "Magh", "Falgun", "Chaitra",
-]
+MONTH_NAMES = [name for _, name in MonthInfo.MONTH_CHOICES]
+MONTH_NAMES_BY_ID = dict(MonthInfo.MONTH_CHOICES)
 
 
 def get_month_data(month_id):
@@ -51,7 +49,7 @@ def get_month_data(month_id):
         idx = month_id - 1
         return {
             "month": month_id,
-            "monthName": MONTH_NAMES[idx] if 0 <= idx < len(MONTH_NAMES) else "Unknown",
+            "monthName": MONTH_NAMES_BY_ID.get(month_id, "Unknown"),
             "daysInMonth": 31,
             "firstDay": 0,
             "events": {},
