@@ -3,8 +3,7 @@
 
 {% block extra_head %}
 <style>
-  /* Hide nav + footer while the lightbox (or any modal) is open,
-     so the page chrome doesn't bleed through the translucent backdrop. */
+
   body.lightbox-open [data-chrome] { display: none; }
 </style>
 {% endblock %}
@@ -59,7 +58,7 @@
                         <div class="flex items-center justify-between border-b border-border px-4 py-3">
                           <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{{ label }}</span>
                           {% if names|length > 1 %}
-                            <span class="text-xs font-medium text-muted-foreground/70">{{ names|length }} members</span>
+                            <span class="text-xs font-medium text-muted-foreground/70">{{ names|length }}</span>
                           {% endif %}
                         </div>
 

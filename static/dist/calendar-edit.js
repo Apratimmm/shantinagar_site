@@ -1,7 +1,3 @@
-// Calendar editor: rendering, event editing, and saving.
-// Server-provided data is injected inline (SERVER_DATA) and the Django URL
-// for POST is passed via window.UPDATE_URL — this file itself is cached.
-
 const SERVER_DATA = JSON.parse(
   document.getElementById("server-data")?.textContent || '{"hasData":false}'
 );
@@ -15,7 +11,6 @@ const MONTH_NAMES = [
 
 const WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
 
-// ---- Storage for user-added events (per rendered month) ----
 const EXTRA_STORE = "schoolCalendarExtras";
 const EXTRA = loadExtras();
 
@@ -36,8 +31,6 @@ function saveExtras() {
   }
 }
 
-// Stable identity for the month currently being rendered, so extras persist
-// per month even across different month names / custom inputs.
 function monthId(monthIndex, monthName) {
   return monthIndex !== -1
     ? "i:" + monthIndex
@@ -49,7 +42,6 @@ function monthIndexFromName(name) {
   return MONTH_NAMES.findIndex((m) => m.toLowerCase() === norm);
 }
 
-// Read current form values in one place — avoids repeated DOM queries.
 function readFormValues() {
   return {
     name: document.getElementById("month-name").value.trim() || "Mangsir",
@@ -58,7 +50,6 @@ function readFormValues() {
   };
 }
 
-// Merge server events + user extras for the given month name.
 function mergeEvents(name) {
   const serverEvents =
     SERVER_DATA.hasData && name === SERVER_DATA.monthName
@@ -67,28 +58,21 @@ function mergeEvents(name) {
   return Object.assign({}, serverEvents, EXTRA[currentMonthId] || {});
 }
 
-// Render a single month card. `extraByDay` maps day -> { label, type }.
-// Server events and user-added events are both passed in via this object;
-// user extras take precedence over server events for the same day.
 function renderMonth(monthName, daysInMonth, firstDay, extraByDay) {
   const extra = extraByDay || {};
 
-  // Pre-compute the set of weekend days once; both cell styling and the
-  // event list reuse this set instead of recalculating weekday per day twice.
   const weekendDays = new Set();
   for (let d = 1; d <= daysInMonth; d++) {
     const weekday = (firstDay + d - 1) % 7;
     if (weekday === 0 || weekday === 6) weekendDays.add(d);
   }
 
-  // Every Saturday and Sunday is a weekend holiday. All other events
   // are added by users.
   const regularFor = (day) =>
     weekendDays.has(day)
       ? { label: "Weekend", type: "holiday" }
       : null;
 
-  // User-added events take precedence so the cell reflects what you set.
   const eventFor = (day) => {
     const ex = extra[day];
     return ex ? ex : regularFor(day);
@@ -117,7 +101,6 @@ function renderMonth(monthName, daysInMonth, firstDay, extraByDay) {
     );
   }
 
-  // Combine weekend holidays + user-added events, sorted by day.
   const combined = [];
   for (const d of weekendDays.keys()) {
     combined.push({ day: d, label: "Weekend", type: "holiday" });
@@ -131,8 +114,6 @@ function renderMonth(monthName, daysInMonth, firstDay, extraByDay) {
   });
   combined.sort((a, b) => a.day - b.day);
 
-  // Weekends are visible on the grid (as holiday cells) but omitted
-  // from the legend list to keep it focused on actual events.
   const legendEvents = combined.filter((e) => e.label !== "Weekend");
 
   let list = "";
@@ -210,7 +191,7 @@ function getCookie(name) {
 
 function showSaveMessage(text, isError) {
   saveMessage.textContent = text;
-  saveMessage.className = "pt-2 text-center text-sm " + (isError
+  saveMessage.className = "pt-2 text-center text-3xl " + (isError
     ? "text-destructive"
     : "text-green-600");
   saveMessage.classList.remove("hidden");
@@ -258,7 +239,7 @@ async function update_month() {
 
     if (data.success) {
       showSaveMessage(data.message, false);
-      setTimeout(() => location.reload(), 1500);
+      setTimeout(() => location.reload(), 6500);
     } else {
       showSaveMessage("Error: " + data.message, true);
     }
@@ -324,14 +305,10 @@ function removeEditor() {
   renderFromInputs();
 }
 
-// When the server supplied month data, pre-fill the form and render the
-// calendar automatically.  Otherwise the user fills the inputs and clicks
-// "Render calendar".
 if (SERVER_DATA.hasData) {
   document.getElementById("month-name").value = SERVER_DATA.monthName;
   document.getElementById("day-count").value = String(SERVER_DATA.daysInMonth);
   document.getElementById("start-day").value = String(SERVER_DATA.firstDay);
-  // Lock the month-name select — the server already picked this month.
   document.getElementById("month-name").disabled = true;
   renderFromInputs();
 }
