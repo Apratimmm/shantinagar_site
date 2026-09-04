@@ -191,7 +191,7 @@ function getCookie(name) {
 
 function showSaveMessage(text, isError) {
   saveMessage.textContent = text;
-  saveMessage.className = "pt-2 text-center text-3xl " + (isError
+  saveMessage.className = "pt-2 text-center text-3xl font-bold " + (isError
     ? "text-destructive"
     : "text-green-600");
   saveMessage.classList.remove("hidden");
@@ -239,7 +239,7 @@ async function update_month() {
 
     if (data.success) {
       showSaveMessage(data.message, false);
-      setTimeout(() => location.reload(), 6500);
+      setTimeout(() => location.reload(), 4700);
     } else {
       showSaveMessage("Error: " + data.message, true);
     }
