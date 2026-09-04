@@ -1,0 +1,34 @@
+ <footer data-chrome="footer" class="border-t border-border px-6 py-12">
+      <div class="mx-auto flex max-w-7xl flex-col justify-between gap-8 md:flex-row">
+        <div>
+          <span class="font-display text-lg font-bold uppercase tracking-tight text-primary">
+            Shantinagar English School
+          </span>
+          <p class="mt-2 text-sm text-muted-foreground">
+            Itahari-2, Shantinagar, Sunsari<br/>
+          </p>
+
+            {% if email_address or contact_numbers %}
+            <p class="mt-2 text-sm text-muted-foreground">
+              {% for number in contact_numbers %}
+                {{ number }}{% if not forloop.last %} / {% endif %}
+              {% endfor %}
+            </p>
+            <p class="mt-2 text-sm text-muted-foreground">
+              {{ email_address }}
+            </p>
+            {% if facebook_link %}
+              <p class="mt-2 text-sm">
+                <a href="{{ facebook_link }}" target="_blank" class="text-primary hover:underline">
+                  Facebook
+                </a>
+              </p>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div id="footer-nav" class="grid grid-cols-2 gap-x-12 gap-y-3 text-sm sm:grid-cols-3"></div>
+      </div>
+      <div class="mx-auto mt-10 max-w-7xl border-t border-border pt-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+        © <span id="year"></span> Shantinagar English School. All rights reserved.
+      </div>
+</footer>

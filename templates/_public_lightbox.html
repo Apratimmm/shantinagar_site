@@ -1,0 +1,12 @@
+ <div id="lightbox" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm transition-opacity duration-300">
+      <button id="lightbox-close" class="absolute top-6 right-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20" aria-label="Close modal">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="max-h-[90vh] max-w-5xl text-center">
+        <img id="lightbox-img" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-xl shadow-2xl mx-auto object-contain"/>
+        <div class="mt-4 px-4">
+          <span id="lightbox-title" class="inline-block rounded bg-primary/80 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white"></span>
+          <p id="lightbox-subtitle" class="mt-1 text-xs text-white/70 font-mono"></p>
+        </div>
+      </div>
+ </div>
