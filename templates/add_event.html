@@ -1,5 +1,13 @@
 {% extends "base_admin.html" %}
-{% block title %}Add event{% endblock %}
+{% block title %}Add Event{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="{% url 'show_events' %}"><span class="text-lg font-bold text-primary">Back to Events</span></a>
+  </div>
+</nav>
+{% endblock %}
 
 {% block content %}
         <h1 class="text-3xl font-bold tracking-tight mb-8">Add Event</h1>
@@ -31,6 +39,7 @@
             </div>
 
             <button type="submit"
+                    onclick="this.textContent='Creating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
               Create Event
             </button>

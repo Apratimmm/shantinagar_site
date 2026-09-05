@@ -1,6 +1,14 @@
 {% extends "base_admin.html" %}
 {% block title %}Edit Contact{% endblock %}
 
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+  </div>
+</nav>
+{% endblock %}
+
 {% block content %}
         <div class="flex items-center justify-between mb-8">
           <h1 class="text-3xl font-bold tracking-tight">Edit Contact Information</h1>
@@ -58,8 +66,8 @@
           <div class="flex justify-end">
             <button type="submit"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg"
-                    onclick="this.textContent='Saving...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();">
-              Save Changes
+                    onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();">
+              Update
             </button>
           </div>
 

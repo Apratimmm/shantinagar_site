@@ -132,8 +132,9 @@
 
           <div class="flex justify-end">
             <button type="submit"
+                    onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg">
-              Save Changes
+              Update
             </button>
           </div>
 

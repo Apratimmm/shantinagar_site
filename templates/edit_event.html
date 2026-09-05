@@ -12,6 +12,16 @@
 {% block content %}
         <h1 class="text-3xl font-bold tracking-tight mb-8">Edit Event</h1>
 
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
         <div class="bg-white rounded-2xl shadow p-8 mb-10">
 
           <form method="POST">
@@ -34,8 +44,9 @@
             </div>
 
             <button type="submit"
+                    onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
-              Save Changes
+              Update
             </button>
           </form>
         </div>

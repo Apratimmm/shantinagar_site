@@ -1,6 +1,14 @@
 {% extends "base_admin.html" %}
 {% block title %}Show Committees{% endblock %}
 
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+  </div>
+</nav>
+{% endblock %}
+
 {% block content %}
         <h1 class="text-3xl font-bold tracking-tight mb-8">All Committees</h1>
 
