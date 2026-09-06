@@ -1,0 +1,60 @@
+{% extends "base_admin.html" %}
+{% block title %}Edit Notice{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="{% url 'show_notices' %}"><span class="text-lg font-bold text-primary">Back to Notices</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+        <h1 class="text-3xl font-bold tracking-tight mb-8">Edit Notice</h1>
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="bg-white rounded-2xl shadow p-8 mb-10">
+
+          <form method="POST">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium mb-1">Title</label>
+                <input type="text" name="title" required
+                       value="{{ notice.title }}"
+                       class="w-full border rounded-lg px-4 py-2">
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-1">Date ( format: day/month/year )</label>
+                <input type="text" name="notice_date" required
+                       value="{{ notice.notice_date }}"
+                       class="w-full border rounded-lg px-4 py-2"
+                       placeholder="e.g. Baisakh 20, 2083">
+              </div>
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-1">Body</label>
+              <textarea name="body" required rows="19"
+                        class="w-full border rounded-lg px-4 py-2">{{ notice.body }}</textarea>
+            </div>
+
+            <button type="submit"
+                    onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Update
+            </button>
+          </form>
+        </div>
+{% endblock %}

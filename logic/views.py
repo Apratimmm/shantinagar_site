@@ -280,7 +280,7 @@ def edit_event(request, event_id):
                 event.event_name = event_name
                 event.event_date = event_date
                 event.save()
-                messages.success(request, "Event updated successfully!")
+                messages.success(request, "Event name and/or date updated successfully!")
             else:
                 messages.error(request, "Event name and date are required.")
 
@@ -298,7 +298,7 @@ def edit_event(request, event_id):
             image_id = request.POST.get("image_id")
             image = get_object_or_404(GalleryImage, id=image_id, event=event)
             image.delete()
-            messages.success(request, "Image deleted!")
+            messages.success(request, "Image deleted successfully!")
             return redirect("edit_event", event_id=event.id)
 
     context = {
@@ -591,3 +591,79 @@ def delete_committee(request, name):
 
     messages.success(request, f'Committee "{committee_name}" deleted successfully!')
     return redirect("show_committees")
+
+@login_required
+def show_notices(request):
+    notices = Notice.objects.all()
+    return render(request, "show_notices.html", {"notices": notices})
+
+@login_required
+def add_notice(request):
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        body = request.POST.get("body", "").strip()
+        notice_date = request.POST.get("notice_date", "").strip()
+
+        if not title or not body or not notice_date:
+            messages.error(request, "All fields are required.")
+            return render(request, "add_notice.html", {
+                "title": title,
+                "body": body,
+                "notice_date": notice_date,
+            })
+
+        Notice.objects.create(
+            title=title,
+            body=body,
+            notice_date=notice_date,
+        )
+
+        return redirect("show_notices")
+
+    return render(request, "add_notice.html")
+
+@login_required
+def edit_notice(request, notice_id):
+    notice = get_object_or_404(Notice, id=notice_id)
+
+    if request.method == "POST":
+        title = request.POST.get("title", "").strip()
+        body = request.POST.get("body", "").strip()
+        notice_date = request.POST.get("notice_date", "").strip()
+
+        if not title or not body or not notice_date:
+            messages.error(request, "All fields are required.")
+        else:
+            notice.title = title
+            notice.body = body
+            notice.notice_date = notice_date
+            notice.save()
+            messages.success(request, "Notice updated successfully!")
+
+        return redirect("edit_notice", notice_id=notice.id)
+
+    return render(request, "edit_notice.html", {"notice": notice})
+
+@login_required
+def delete_notice(request, notice_id):
+    notice = get_object_or_404(Notice, id=notice_id)
+    notice_title = notice.title
+    notice.delete()
+
+    messages.success(request, f'Notice "{notice_title}" deleted successfully!')
+    return redirect("show_notices")
+
+@login_required
+def edit_signature(request):
+    signature, _ = PrincipalSignature.objects.get_or_create(id=1)
+
+    if request.method == "POST":
+        signature.name = request.POST.get("name", "").strip()
+        if request.FILES.get("image"):
+            signature.image = request.FILES["image"]
+            signature.save()
+            messages.success(request, "Principal details updated successfully!")
+        else:
+            messages.error(request, "Please choose an image file to upload.")
+        return redirect("edit_signature")
+    return render(request, "edit_signature.html", {"signature": signature})

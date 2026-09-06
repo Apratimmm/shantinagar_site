@@ -24,6 +24,7 @@ urlpatterns = [
     path('login/', user_login, name='login'),
     path('dashboard/', dashboard, name='dashboard'),
     path('academics/', academics, name='academics'),
+    path('notices/', notices, name='notices'),
     path('calendar/' ,calendar, name='calendar'),
     path('month_data/<int:month_id>/', month_data, name='month_data'),
     path('contact/', contact, name='contact'),
@@ -50,5 +51,11 @@ urlpatterns = [
     path('edit_committee/<name>/', edit_committee, name='edit_committee'),
     path('edit_member_pictures/<int:committee_id>/', edit_member_pictures, name='edit_member_pictures'),
     path('delete_committee/<name>/', delete_committee, name='delete_committee'),
+    path('show_notices/', show_notices, name='show_notices'),
+    path('add_notice/', add_notice, name='add_notice'),
+    path('edit_notice/<int:notice_id>/', edit_notice, name='edit_notice'),
+    path('delete_notice/<int:notice_id>/', delete_notice, name='delete_notice'),
+    path('edit_signature/', edit_signature, name='edit_signature'),
+    path('view_notice/<int:notice_id>/', view_notice, name='view_notice'),
 
 ]

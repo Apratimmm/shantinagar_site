@@ -1,0 +1,217 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Official School Notice - Shantinagar English School</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- html2canvas for client-side PNG export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Custom Styles for Print and Watermark -->
+<style data-purpose="print-and-layout">
+    @media print {
+      body {
+        background-color: transparent !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-container {
+        box-shadow: none !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+      }
+    }
+
+    /* A4 Dimensions aspect ratio simulation for screen display */
+    .page-container {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 2rem auto;
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+  </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased">
+<!-- BEGIN: PageContainer -->
+<div class="page-container flex flex-col justify-between px-10 pt-6 pb-5 md:px-14 md:pt-8 md:pb-7 relative">
+<!-- Download PNG button (hidden when printing) -->
+<button id="downloadBtn" onclick="downloadAsImage()"
+        class="no-print absolute top-4 right-4 z-20 bg-blue-900 hover:bg-blue-800 text-white text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-lg shadow">
+  Download notice
+</button>
+<!-- BEGIN: WatermarkBackground -->
+<!-- Large, semi-transparent logo watermark centered on the page -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.08] overflow-hidden" data-purpose="watermark">
+<img alt="Watermark Logo" class="w-[600px] h-[600px] object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQiw35fx9F2T13c8gt80ixG8uaLzYOIVg6gdi6zSwVGPYyk9pfKlYQgScK_iSHl29gIQcow-tTvlnEvRwSs0XXjvtPuUNeFhRJR63HHOwgx7FCrKYFO8MW_YAiTp9ubpmdaJYO9GiibJS0WuhXDUDQGqtZtdPBi_Jp94Ph7pLQWCzuxPLQqwfodan7muvOWfLGRKCv_FJoclLo15WRTQJSBDp6SiVHRJmw_l7DqbNRHvUPmJrfn6glo7fIibGbFJHvEqc">
+</div>
+<!-- END: WatermarkBackground -->
+<!-- Top Content Wrapper (Header + Notice Body) -->
+<div class="relative z-10 flex flex-col flex-grow">
+<!-- BEGIN: SchoolHeader -->
+<header class="-mx-10 md:-mx-14 px-10 md:px-14 pt-3 pb-6 border-b-2 border-blue-900 mb-5" data-purpose="school-letterhead">
+<div class="flex items-center justify-between gap-6">
+<!-- School Logo -->
+<div class="w-32 h-32 flex-shrink-0 -translate-x-3" data-purpose="logo-container">
+<img alt="Shantinagar English School Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNepOwUsD_iK7IVXwjRYDisduTq7m53Yz-KkTNUExmBEm0XeMjY5_rntlQax0urY6k7uTq9u9LzBZFi5Y_iiR9CJ-TywsgTJEteRLxoFRoxHMkIVucCx0Fn32RGPWdCt-8oNbROOh65SsqzQxHrvKx4qWgXJLkNVuyPvkpPA9VcyovRxDaCZVpiJ4IO8Cu-cyXKQy9loLniauqThdWEvny0oIp397b9ODDB4z_q0A7uiPYGDNtIlDLtXJCXOiSW54J0T0">
+</div>
+<!-- School Name & Details -->
+<div class="text-center flex-grow">
+<h1 class="font-sans text-xl md:text-2xl font-bold tracking-wider text-blue-900 uppercase">
+              Shantinagar English School
+            </h1>
+<p class="text-xs font-semibold text-slate-600 mt-1 uppercase tracking-wide">
+              Itahari-2, Sunsari, Nepal
+            </p>
+<div class="flex flex-col items-center gap-0.5 text-xs text-slate-600 mt-1 font-semibold">
+<span>025591014</span>
+<span>englishshantinagar@gmail.com</span>
+</div>
+</div>
+<!-- Spacer for balance -->
+<div class="w-32 hidden md:block"></div>
+</div>
+</header>
+<!-- END: SchoolHeader -->
+<!-- BEGIN: NoticeMetaSection -->
+<!-- Reference number and date fields -->
+<section class="relative flex justify-end items-center mb-8 text-base font-semibold text-slate-700" data-purpose="notice-metadata">
+<!-- Notice title stays centered independently of the date on the right -->
+<div class="absolute left-1/2 -translate-x-1/2" data-purpose="notice-title-container">
+<h2 class="font-sans text-2xl font-bold text-blue-900 uppercase tracking-wider inline-block px-4">
+          NOTICE
+        </h2>
+</div>
+<div class="mt-4 font-bold">
+<span class="text-blue-900 ">Date :</span>
+<span class="inline-block pb-0.5 px-0.5 text-blue-900"> {{ notice.notice_date }}</span>
+</div></section>
+<!-- END: NoticeMetaSection -->
+<!-- BEGIN: NoticeBody -->
+<!-- Expansive clean blank area specifically designed for notices and announcements -->
+<main class="min-h-[350px] mb-12" data-purpose="notice-content-area">
+<!-- Subject line placeholder -->
+<p class="font-bold mb-6 tracking-wide">
+          <span class="text-blue-900">Subject :</span>
+          <span class="inline-block pb-0.5 px-0 text-blue-900">{{ notice.title }}</span>
+</p>
+<!-- Main text space with subtle placeholder lines for easy writing/typing simulation if needed -->
+<div class="space-y-4 text-slate-700 leading-7">
+{{ notice.body|linebreaksbr }}
+</div>
+</main>
+<!-- END: NoticeBody -->
+</div>
+<!-- BEGIN: SchoolFooter -->
+<footer class="relative z-10 pt-6 mt-auto" data-purpose="school-footer">
+<!-- Signature Area -->
+<div class="flex justify-end mb-4">
+<div class="text-center w-48">
+<div class="relative h-16 flex items-end justify-center">
+  <div class="absolute inset-x-0 bottom-1 h-12 border-b border-slate-400"></div>
+  {% if signature and signature.image %}
+    <img src="{{ signature.image.url }}"
+         alt="Principal signature"
+         class="relative h-16 w-40 object-contain"
+         crossorigin="anonymous">
+  {% endif %}
+</div>
+{% if signature and signature.name %}
+  <p class="font-bold text-sm text-blue-900">{{ signature.name }}</p>
+{% endif %}
+<p class="font-bold text-sm text-blue-900">Principal</p>
+</div>
+</div>
+<!-- Bottom Border & Contact Strip -->
+<div class="-mx-10 md:-mx-14 px-10 md:px-14 border-t-2 border-blue-900 pt-4 text-center text-xs text-slate-500 font-semibold">
+<p>Shantinagar English School</p>
+    <p>Itahari-2, Sunsari</p>
+<p class="mt-1">025591014</p>
+<p>englishshantinagar@gmail.com</p>
+</div>
+</footer>
+<!-- END: SchoolFooter -->
+</div>
+<!-- END: PageContainer -->
+
+
+<script>
+  // Slugify the notice title for a tidy filename.
+  function slugify(text) {
+    return (text || '')
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')   // strip punctuation
+      .replace(/\s+/g, '-')         // spaces -> dashes
+      .replace(/-+/g, '-')          // collapse multiple dashes
+      .slice(0, 60) || 'notice';
+  }
+
+  async function downloadAsImage() {
+    const btn = document.getElementById('downloadBtn');
+    const target = document.querySelector('.page-container');
+    if (!target) return;
+
+    // UI feedback while we render
+    const originalLabel = btn.textContent;
+    btn.textContent = 'Rendering...';
+    btn.disabled = true;
+    btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+    try {
+      // Wait for any custom fonts (Inter) to actually be available, so the
+      // screenshot doesn't fall back to a system font.
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+
+      // Hide the button so it doesn't appear in the captured image.
+      btn.style.visibility = 'hidden';
+
+      const canvas = await html2canvas(target, {
+        scale: 2,                // 2x for crisp output
+        useCORS: true,           // allow cross-origin images (watermark, logo)
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+
+      // Restore the button immediately — no need to keep it hidden during download.
+      btn.style.visibility = '';
+
+      // Convert canvas to PNG blob and trigger a download.
+      canvas.toBlob((blob) => {
+        if (!blob) {
+          alert('Could not generate image. Please try again.');
+          return;
+        }
+        const noticeId = '{{ notice.id }}';
+        const titleSlug = slugify('{{ notice.title|escapejs }}');
+        const filename = `notice-${noticeId}-${titleSlug}.png`;
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 'image/png');
+    } catch (err) {
+      console.error('PNG export failed:', err);
+      alert('Could not generate image. Please try again.');
+    } finally {
+      btn.textContent = originalLabel;
+      btn.disabled = false;
+      btn.classList.remove('opacity-75', 'cursor-not-allowed');
+    }
+  }
+</script>
+</body></html>

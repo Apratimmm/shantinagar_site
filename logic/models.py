@@ -398,3 +398,41 @@ class CommitteeMember(models.Model):
     @property
     def first_name(self):
         return self.name.split(maxsplit=1)[0] if self.name else ""
+
+class Notice(models.Model):
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    notice_date = models.CharField(
+        max_length=100,
+        help_text="Free-form date, e.g. Baisakh 20, 2083 OR 23 Baisakh, 2083",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "notice"
+        verbose_name_plural = "notices"
+
+    def __str__(self):
+        return f"{self.title} ({self.notice_date})"
+
+class PrincipalSignature(models.Model):
+    name = models.CharField(
+        max_length=150,
+        blank=True,
+        help_text="Printed name of the principal (shown above the 'Principal' label)",
+    )
+    image = models.ImageField(
+        upload_to="signature/",
+        blank=True,
+        null=True,
+        help_text="PNG signature image with a transparent background works best",
+    )
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "principal-signature"
+        verbose_name_plural = "principal-signature"
+
+    def __str__(self):
+        return self.name or "Principal Signature"

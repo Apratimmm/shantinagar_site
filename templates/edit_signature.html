@@ -1,0 +1,88 @@
+{% extends "base_admin.html" %}
+{% block title %}Edit Principal Details{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="{% url 'show_notices' %}"><span class="text-lg font-bold text-primary">Back to Notices</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-3xl font-bold tracking-tight">Edit Principal Details</h1>
+        </div>
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" action="{% url 'edit_signature' %}" class="space-y-12">
+          {% csrf_token %}
+
+          <div class="bg-white rounded-2xl shadow p-8">
+            <h2 class="text-xl font-semibold mb-6 text-primary">Principal Details</h2>
+
+            <p class="text-sm text-gray-600 mb-6">
+              The signature and name are shown on every official notice.
+            </p>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-1">Principal's printed name</label>
+              <input type="text" name="name" value="{{ signature.name|default:'' }}"
+                     placeholder="e.g. Mr. Hari Sharma"
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+
+            <div class="mb-6">
+              <label class="block text-sm font-medium mb-2">Current Signature</label>
+              {% if signature.image %}
+                <div class="inline-block p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                  <img src="{{ signature.image.url }}" alt="Current principal signature"
+                       class="h-24 w-64 object-contain">
+                </div>
+                {% if signature.updated_at %}
+                  <p class="mt-2 text-xs text-gray-500">Last updated: {{ signature.updated_at|date:"M j, Y, P" }}</p>
+                {% endif %}
+              {% else %}
+                <p class="text-gray-500 italic">No signature uploaded yet.</p>
+              {% endif %}
+            </div>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">
+                {% if signature.image %}Replace signature{% else %}Upload signature{% endif %}
+              </label>
+              <input type="file" name="image" accept="image/png,image/jpeg,image/webp"
+                     class="w-full border rounded-lg px-4 py-2 bg-white">
+
+                <p class="text-l text-gray-600 mb-6">
+                    Upload a <strong>PNG</strong> with a
+                    transparent background for the best result.
+                </p>
+
+                <p class="text-l text-gray-600 mb-6">
+                    Visit <strong><a class="text-primary underline" href="https://www.remove.bg/" target="_blank">https://www.remove.bg/</a></strong>
+                    to remove background from your signature image.
+                </p>
+              </div>
+
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <button type="submit"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-3 rounded-lg"
+                    onclick="this.textContent='Saving...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();">
+              Save
+            </button>
+          </div>
+
+        </form>
+{% endblock %}

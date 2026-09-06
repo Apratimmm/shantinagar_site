@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from logic.models import *
 from logic.context_processors import get_contact_info
 from django.contrib import messages
@@ -110,3 +110,12 @@ def committee(request):
             if c._split_names(getattr(c, key))
         ]
     return render(request, "committee.html", {"committees": committees})
+
+def notices(request):
+    notice_list = Notice.objects.all()
+    return render(request, "notices.html", {"notices": notice_list})
+
+def view_notice(request, notice_id):
+    notice = get_object_or_404(Notice, id=notice_id)
+    signature, _ = PrincipalSignature.objects.get_or_create(id=1)
+    return render(request, "notice_base.html", {"notice": notice, "signature": signature})
