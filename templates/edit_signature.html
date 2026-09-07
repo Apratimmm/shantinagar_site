@@ -27,6 +27,10 @@
         <form method="post" enctype="multipart/form-data" action="{% url 'edit_signature' %}" class="space-y-12">
           {% csrf_token %}
 
+          <p class="text-sm text-gray-500">
+            To change the signature, first delete the current one.
+          </p>
+
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Principal Details</h2>
 
@@ -48,9 +52,11 @@
                   <img src="{{ signature.image.url }}" alt="Current principal signature"
                        class="h-24 w-64 object-contain">
                 </div>
-                {% if signature.updated_at %}
-                  <p class="mt-2 text-xs text-gray-500">Last updated: {{ signature.updated_at|date:"M j, Y, P" }}</p>
-                {% endif %}
+                <button type="button"
+                        data-form-type="delete_signature"
+                        class="js-delete-image mt-3 block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
+                  Delete image
+                </button>
               {% else %}
                 <p class="text-gray-500 italic">No signature uploaded yet.</p>
               {% endif %}
@@ -58,10 +64,10 @@
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">
-                {% if signature.image %}Replace signature{% else %}Upload signature{% endif %}
+                {% if not signature.image %}Upload signature
               </label>
-              <input type="file" name="image" accept="image/png,image/jpeg,image/webp"
-                     class="w-full border rounded-lg px-4 py-2 bg-white">
+                <input type="file" name="image" accept="image/png,image/jpeg,image/webp"
+                       class="w-full border rounded-lg px-4 py-2 bg-white">
 
                 <p class="text-l text-gray-600 mb-6">
                     Upload a <strong>PNG</strong> with a
@@ -72,6 +78,7 @@
                     Visit <strong><a class="text-primary underline" href="https://www.remove.bg/" target="_blank">https://www.remove.bg/</a></strong>
                     to remove background from your signature image.
                 </p>
+              {% endif %}
               </div>
 
           </div>
@@ -85,4 +92,41 @@
           </div>
 
         </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      document.querySelectorAll(".js-delete-image").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this image?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "{% url 'edit_signature' %}";
+
+          const csrf = document.createElement("input");
+          csrf.type = "hidden";
+          csrf.name = "csrfmiddlewaretoken";
+          csrf.value = csrfToken;
+          form.appendChild(csrf);
+
+          const ft = document.createElement("input");
+          ft.type = "hidden";
+          ft.name = "form_type";
+          ft.value = this.dataset.formType;
+          form.appendChild(ft);
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+      });
+    </script>
 {% endblock %}

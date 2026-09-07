@@ -28,6 +28,7 @@
         <div class="mb-14">
           <h2 class="text-xl font-semibold mb-6 text-primary">Yearly Results</h2>
           <p class="text-sm text-muted-foreground mb-6">Edit the SEE results of your last three years.</p>
+          <p class="text-sm text-muted-foreground mb-6">To change the photo, first delete the current one.</p>
 
           <form method="post" enctype="multipart/form-data" action="/edit_results/" class="space-y-6">
             {% csrf_token %}
@@ -39,61 +40,63 @@
 
               <input type="hidden" name="result_id_{{ forloop.counter0 }}" value="{{ slot.id|default:'' }}">
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Year</label>
-                  <input required type="number" name="year_{{ forloop.counter0 }}" value="{{ slot.year|default_if_none:'' }}"
-                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Candidates</label>
-                  <input required type="number" name="candidates_{{ forloop.counter0 }}" value="{{ slot.candidates|default_if_none:'' }}"
-                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
-                </div>
-              </div>
+              <div class="flex flex-col md:flex-row md:items-start gap-6">
+                <div class="flex-1 min-w-0 space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Year</label>
+                      <input required type="number" name="year_{{ forloop.counter0 }}" value="{{ slot.year|default_if_none:'' }}"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Candidates</label>
+                      <input required type="number" name="candidates_{{ forloop.counter0 }}" value="{{ slot.candidates|default_if_none:'' }}"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                  </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Pass Rate (%)</label>
-                  <input required type="number" name="pass_rate_{{ forloop.counter0 }}" value="{{ slot.pass_rate|default_if_none:'' }}" step="0.01"
-                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
-                </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Highest (%)</label>
-                  <input required type="number" name="highest_{{ forloop.counter0 }}" value="{{ slot.highest|default_if_none:'' }}" step="0.01"
-                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
-                </div>
-              </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Pass Rate (%)</label>
+                      <input required type="number" name="pass_rate_{{ forloop.counter0 }}" value="{{ slot.pass_rate|default_if_none:'' }}" step="0.01"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Highest (%)</label>
+                      <input required type="number" name="highest_{{ forloop.counter0 }}" value="{{ slot.highest|default_if_none:'' }}" step="0.01"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                  </div>
 
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Highest Scorer Name</label>
-                  <input type="text" name="highest_scorer_name_{{ forloop.counter0 }}" value="{{ slot.highest_scorer_name|default_if_none:'' }}"
-                         class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Highest Scorer Name</label>
+                    <input type="text" name="highest_scorer_name_{{ forloop.counter0 }}" value="{{ slot.highest_scorer_name|default_if_none:'' }}"
+                           class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                  </div>
                 </div>
-                <div>
-                  <label class="block text-sm font-medium mb-1">Highest Scorer Photo</label>
-                  <input type="file" name="highest_scorer_image_{{ forloop.counter0 }}" accept="image/*">
-                </div>
-              </div>
 
-              {% if slot.id and slot.highest_scorer_image %}
-              <div class="mt-4 flex items-start gap-4">
-                <div>
-                  <label class="block text-sm font-medium mb-1">Current Photo</label>
-                  <img src="{{ slot.highest_scorer_image.url }}" alt="{{ slot.highest_scorer_name }}" class="h-32 rounded">
+                <div class="flex-shrink-0 w-48">
+                  <div class="block text-sm font-medium mb-1">Highest Scorer Photo</div>
+                  {% if slot.id and slot.highest_scorer_image %}
+                    <img src="{{ slot.highest_scorer_image.url }}" alt="{{ slot.highest_scorer_name }}" class="h-32 w-48 object-cover rounded">
+                    <button type="button"
+                            data-form-type="delete_yearly_image"
+                            data-record-field="result_id"
+                            data-record-id="{{ slot.id }}"
+                            class="js-delete-image mt-3 block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg w-full">
+                      Delete image
+                    </button>
+                  {% else %}
+                    <div class="h-32 w-48 rounded bg-gray-100 border flex items-center justify-center text-gray-400 text-xs">
+                      no image yet
+                    </div>
+                    <div class="mt-3">
+                      <label class="block text-sm font-medium mb-1">Upload Photo</label>
+                      <input type="file" name="highest_scorer_image_{{ forloop.counter0 }}" accept="image/*" class="w-full text-sm">
+                    </div>
+                  {% endif %}
                 </div>
-                <form method="post" action="/edit_results/" class="self-end">
-                  {% csrf_token %}
-                  <input type="hidden" name="form_type" value="delete_yearly_image">
-                  <input type="hidden" name="result_id" value="{{ slot.id }}">
-                  <button type="submit"
-                          class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">
-                    Delete photo
-                  </button>
-                </form>
               </div>
-              {% endif %}
             </div>
             {% endfor %}
 
@@ -138,15 +141,13 @@
                 <div class="block text-sm font-medium mb-1">Current Photo</div>
                   {% if slot.id and slot.image %}
                     <img src="{{ slot.image.url }}" alt="{{ slot.name }}" class="h-32 w-32 object-cover rounded">
-                    <form method="post" action="/edit_results/" class="mt-2">
-                      {% csrf_token %}
-                      <input type="hidden" name="form_type" value="delete_topper_image">
-                      <input type="hidden" name="topper_id" value="{{ slot.id }}">
-                      <button type="submit"
-                              class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg w-full">
-                        Delete
-                      </button>
-                    </form>
+                    <button type="button"
+                            data-form-type="delete_topper_image"
+                            data-record-field="topper_id"
+                            data-record-id="{{ slot.id }}"
+                            class="js-delete-image mt-3 block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg w-full">
+                      Delete image
+                    </button>
                   {% else %}
                     <div class="h-32 w-32 rounded bg-gray-100 border flex items-center justify-center text-gray-400 text-xs">
                       no image yet
@@ -174,16 +175,42 @@
 
 {% block extra_js %}
     <script>
-      document.querySelectorAll(".js-delete-photo").forEach((btn) => {
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      document.querySelectorAll(".js-delete-image").forEach((btn) => {
         btn.addEventListener("click", function (e) {
-          if (!confirm("Delete this top scorer photo?")) {
+          if (!confirm("Delete this image?")) {
             e.preventDefault();
             return;
           }
           this.textContent = "Deleting...";
           this.disabled = true;
           this.classList.add("opacity-75", "cursor-not-allowed");
-          this.closest("form").submit();
+
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/edit_results/";
+
+          const csrf = document.createElement("input");
+          csrf.type = "hidden";
+          csrf.name = "csrfmiddlewaretoken";
+          csrf.value = csrfToken;
+          form.appendChild(csrf);
+
+          const ft = document.createElement("input");
+          ft.type = "hidden";
+          ft.name = "form_type";
+          ft.value = this.dataset.formType;
+          form.appendChild(ft);
+
+          const id = document.createElement("input");
+          id.type = "hidden";
+          id.name = this.dataset.recordField;
+          id.value = this.dataset.recordId;
+          form.appendChild(id);
+
+          document.body.appendChild(form);
+          form.submit();
         });
       });
     </script>

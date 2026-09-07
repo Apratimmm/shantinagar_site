@@ -27,13 +27,17 @@
         <form method="post" enctype="multipart/form-data" action="/edit_contact/" class="space-y-12">
           {% csrf_token %}
 
+          <p class="text-sm text-gray-500">
+            To change the logo, first delete the current one.
+          </p>
+
           {% if contact %}
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Contact Details</h2>
 
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Telephone</label>
-              <textarea required name="telephone" rows="3"
+              <textarea required name="telephone" rows="2"
                         class="w-full border rounded-lg px-4 py-2">{{ contact.telephone }}</textarea>
               <p class="mt-1 text-xs text-muted-foreground">Separate multiple numbers with a comma or new line.</p>
             </div>
@@ -54,10 +58,14 @@
               <label class="block text-sm font-medium mb-1">Logo</label>
               {% if contact.logo %}
                 <img src="{{ contact.logo.url }}" alt="Current logo" class="h-32 mb-3 rounded">
+                <button type="button"
+                        data-form-type="delete_logo"
+                        class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
+                  Delete image
+                </button>
               {% else %}
-                <p class="text-gray-500">No logo uploaded yet.</p>
+                <input type="file" name="logo" accept="image/*">
               {% endif %}
-              <input type="file" name="logo" accept="image/*">
             </div>
 
           </div>
@@ -72,4 +80,41 @@
           </div>
 
         </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      document.querySelectorAll(".js-delete-image").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this image?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/edit_contact/";
+
+          const csrf = document.createElement("input");
+          csrf.type = "hidden";
+          csrf.name = "csrfmiddlewaretoken";
+          csrf.value = csrfToken;
+          form.appendChild(csrf);
+
+          const ft = document.createElement("input");
+          ft.type = "hidden";
+          ft.name = "form_type";
+          ft.value = this.dataset.formType;
+          form.appendChild(ft);
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+      });
+    </script>
 {% endblock %}

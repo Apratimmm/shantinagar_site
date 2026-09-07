@@ -27,6 +27,10 @@
         <form method="post" enctype="multipart/form-data" action="/edit_academics/" class="space-y-12">
           {% csrf_token %}
 
+          <p class="text-sm text-gray-500">
+            To change an image, first delete the current one.
+          </p>
+
           {% if primary %}
           <div class="bg-white rounded-2xl shadow p-8">
             <h2 class="text-xl font-semibold mb-6 text-primary">Primary School</h2>
@@ -60,8 +64,14 @@
               <label class="block text-sm font-medium mb-1">Image</label>
               {% if primary.image %}
                 <img src="{{ primary.image.url }}" alt="Current image" class="h-32 mb-3 rounded">
+                <button type="button"
+                        data-form-type="delete_primary_image"
+                        class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
+                  Delete image
+                </button>
+              {% else %}
+                <input type="file" name="primary_image" accept="image/*">
               {% endif %}
-              <input type="file" name="primary_image" accept="image/*">
             </div>
           </div>
           {% endif %}
@@ -99,8 +109,14 @@
               <label class="block text-sm font-medium mb-1">Image</label>
               {% if secondary.image %}
                 <img src="{{ secondary.image.url }}" alt="Current image" class="h-32 mb-3 rounded">
+                <button type="button"
+                        data-form-type="delete_secondary_image"
+                        class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
+                  Delete image
+                </button>
+              {% else %}
+                <input type="file" name="secondary_image" accept="image/*">
               {% endif %}
-              <input type="file" name="secondary_image" accept="image/*">
             </div>
           </div>
           {% endif %}
@@ -114,4 +130,41 @@
           </div>
 
         </form>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      document.querySelectorAll(".js-delete-image").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this image?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/edit_academics/";
+
+          const csrf = document.createElement("input");
+          csrf.type = "hidden";
+          csrf.name = "csrfmiddlewaretoken";
+          csrf.value = csrfToken;
+          form.appendChild(csrf);
+
+          const ft = document.createElement("input");
+          ft.type = "hidden";
+          ft.name = "form_type";
+          ft.value = this.dataset.formType;
+          form.appendChild(ft);
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+      });
+    </script>
 {% endblock %}

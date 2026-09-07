@@ -39,74 +39,79 @@ def dashboard(request):
     return render(request, "dashboard.html")
 
 @login_required
+def _delete_image_field(instance, field_name, request, success_message):
+    """Delete the file referenced by instance.<field_name> from storage and null the field."""
+    image = getattr(instance, field_name, None)
+    if image:
+        image.delete(save=False)
+        setattr(instance, field_name, None)
+        instance.save()
+        messages.success(request, success_message)
+
+
+@login_required
 def edit_about(request):
-    history, _ = AboutSection.objects.get_or_create(section="history")
-    principal, _ = AboutSection.objects.get_or_create(section="principal")
-    chairperson, _ = AboutSection.objects.get_or_create(section="chairperson")
+    sections = [
+        ("history",     AboutSection.objects.get_or_create(section="history")[0],
+            ["heading", "text"], "image", "History image deleted."),
+        ("principal",   AboutSection.objects.get_or_create(section="principal")[0],
+            ["heading", "text", "person_name", "person_title"], "image", "Principal photo deleted."),
+        ("chairperson", AboutSection.objects.get_or_create(section="chairperson")[0],
+            ["heading", "text", "person_name", "person_title"], "image", "Chairperson photo deleted."),
+    ]
 
     if request.method == "POST":
+        form_type = request.POST.get("form_type")
 
-        history.heading = request.POST.get("history_heading", "")
-        history.text = request.POST.get("history_text", "")
-        if request.FILES.get("history_image"):
-            history.image = request.FILES["history_image"]
-        history.save()
+        if form_type and form_type.startswith("delete_"):
+            for key, instance, _text_fields, image_field, delete_msg in sections:
+                if image_field and form_type == f"delete_{key}_{image_field}":
+                    _delete_image_field(instance, image_field, request, delete_msg)
+                    return redirect("edit_about")
 
-        principal.heading = request.POST.get("principal_heading", "")
-        principal.text = request.POST.get("principal_text", "")
-        principal.person_name = request.POST.get("principal_name", "")
-        principal.person_title = request.POST.get("principal_title", "")
-        if request.FILES.get("principal_image"):
-            principal.image = request.FILES["principal_image"]
-        principal.save()
-
-        chairperson.heading = request.POST.get("chairperson_heading", "")
-        chairperson.text = request.POST.get("chairperson_text", "")
-        chairperson.person_name = request.POST.get("chairperson_name", "")
-        chairperson.person_title = request.POST.get("chairperson_title", "")
-        if request.FILES.get("chairperson_image"):
-            chairperson.image = request.FILES["chairperson_image"]
-        chairperson.save()
+        for section_key, instance, text_fields, image_field, _delete_msg in sections:
+            for field in text_fields:
+                setattr(instance, field, request.POST.get(f"{section_key}_{field}", ""))
+            if image_field and request.FILES.get(f"{section_key}_{image_field}"):
+                setattr(instance, image_field, request.FILES[f"{section_key}_{image_field}"])
+            instance.save()
 
         messages.success(request, "About Us content updated successfully!")
         return redirect("edit_about")
 
-    context = {
-        "history": history,
-        "principal": principal,
-        "chairperson": chairperson,
-    }
+    context = {key: instance for key, instance, *_ in sections}
     return render(request, "edit_about.html", context)
+
 
 @login_required
 def edit_academics(request):
-    primary, _ = Academic.objects.get_or_create(school="primary")
-    secondary, _ = Academic.objects.get_or_create(school="secondary")
+    sections = [
+        ("primary",   Academic.objects.get_or_create(school="primary")[0],
+            ["description", "quote", "teacher_name", "teacher_designation"], "image", "Primary school image deleted."),
+        ("secondary", Academic.objects.get_or_create(school="secondary")[0],
+            ["description", "quote", "teacher_name", "teacher_designation"], "image", "Secondary school image deleted."),
+    ]
 
     if request.method == "POST":
-        primary.description = request.POST.get("primary_description", "")
-        primary.quote = request.POST.get("primary_quote", "")
-        primary.teacher_name = request.POST.get("primary_teacher_name", "")
-        primary.teacher_designation = request.POST.get("primary_teacher_designation", "")
-        if request.FILES.get("primary_image"):
-            primary.image = request.FILES["primary_image"]
-        primary.save()
+        form_type = request.POST.get("form_type")
 
-        secondary.description = request.POST.get("secondary_description", "")
-        secondary.quote = request.POST.get("secondary_quote", "")
-        secondary.teacher_name = request.POST.get("secondary_teacher_name", "")
-        secondary.teacher_designation = request.POST.get("secondary_teacher_designation", "")
-        if request.FILES.get("secondary_image"):
-            secondary.image = request.FILES["secondary_image"]
-        secondary.save()
+        if form_type and form_type.startswith("delete_"):
+            for key, instance, _text_fields, image_field, delete_msg in sections:
+                if image_field and form_type == f"delete_{key}_{image_field}":
+                    _delete_image_field(instance, image_field, request, delete_msg)
+                    return redirect("edit_academics")
+
+        for section_key, instance, text_fields, image_field, _delete_msg in sections:
+            for field in text_fields:
+                setattr(instance, field, request.POST.get(f"{section_key}_{field}", ""))
+            if image_field and request.FILES.get(f"{section_key}_{image_field}"):
+                setattr(instance, image_field, request.FILES[f"{section_key}_{image_field}"])
+            instance.save()
 
         messages.success(request, "Academics content updated successfully!")
         return redirect("edit_academics")
 
-    context = {
-        "primary": primary,
-        "secondary": secondary,
-    }
+    context = {key: instance for key, instance, *_ in sections}
     return render(request, "edit_academics.html", context)
 
 @require_POST
@@ -145,6 +150,13 @@ def send_email(request):
 def edit_contact(request):
     contact, _ = ContactInfo.objects.get_or_create(id=1)
     if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "delete_logo":
+            _delete_image_field(contact, "logo", request, "Logo deleted.")
+            cache.delete(CACHE_KEY)
+            return redirect("edit_contact")
+
         contact.telephone = request.POST.get("telephone", "")
         contact.email = request.POST.get("email", "")
         contact.facebook_link = request.POST.get("facebook_link", "")
@@ -195,19 +207,11 @@ def edit_results(request):
 
         elif form_type == "delete_yearly_image":
             result = get_object_or_404(YearlyResult, id=request.POST.get("result_id"))
-            if result.highest_scorer_image:
-                result.highest_scorer_image.delete(save=False)
-                result.highest_scorer_image = None
-                result.save()
-            messages.success(request, "Top scorer photo deleted.")
+            _delete_image_field(result, "highest_scorer_image", request, "Top scorer photo deleted.")
 
         elif form_type == "delete_topper_image":
             topper = get_object_or_404(Topper, id=request.POST.get("topper_id"))
-            if topper.image:
-                topper.image.delete(save=False)
-                topper.image = None
-                topper.save()
-            messages.success(request, "Topper photo deleted.")
+            _delete_image_field(topper, "image", request, "Topper photo deleted.")
 
         elif form_type == "topper":
             for i in range(5):
@@ -658,12 +662,17 @@ def edit_signature(request):
     signature, _ = PrincipalSignature.objects.get_or_create(id=1)
 
     if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "delete_signature":
+            _delete_image_field(signature, "image", request, "Signature deleted.")
+            return redirect("edit_signature")
+
         signature.name = request.POST.get("name", "").strip()
         if request.FILES.get("image"):
             signature.image = request.FILES["image"]
-            signature.save()
-            messages.success(request, "Principal details updated successfully!")
-        else:
-            messages.error(request, "Please choose an image file to upload.")
+        signature.save()
+        messages.success(request, "Principal details updated successfully!")
         return redirect("edit_signature")
+
     return render(request, "edit_signature.html", {"signature": signature})
