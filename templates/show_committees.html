@@ -35,22 +35,22 @@
 
         <div class="bg-white rounded-2xl shadow p-8">
 
-          {% if committee %}
+          {% if committees %}
             <div class="space-y-4">
-              {% for c in committee %}
-                {% if c.name %}
+              {% for c in committees %}
+                {% if c.committee_name %}
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4">
-                  <h3 class="font-medium text-lg">{{ c.name }}</h3>
+                  <h3 class="font-medium text-lg">{{ c.committee_name }}</h3>
 
                   <div class="flex gap-3">
-                    <a href="{% url 'edit_committee' c.name %}"
+                    <a href="{% url 'add_committee_people' c.id %}"
                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg">
                       Edit
                     </a>
 
-                    <form method="post" action="{% url 'delete_committee' c.name %}" class="inline">
+                    <form method="post" action="{% url 'delete_committee' c.id %}" class="inline">
                       {% csrf_token %}
-                      <button type="submit"
+                      <button type="button"
                               class="js-delete-committee bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-lg">
                         Delete
                       </button>
