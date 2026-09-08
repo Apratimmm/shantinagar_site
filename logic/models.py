@@ -305,114 +305,6 @@ class EventInfo(models.Model):
     def __str__(self):
         return f"{self.event_date} - {self.event_name}"
 
-class Committee(models.Model):
-
-    POST_FIELDS = [
-        ("president", "President"),
-        ("vice_president", "Vice President"),
-        ("secretary", "Secretary"),
-        ("vice_secretary", "Vice Secretary"),
-        ("treasurer", "Treasurer"),
-        ("vice_treasurer", "Vice Treasurer"),
-        ("event_coordinator", "Event Coordinator"),
-        ("media_pr_officer", "Media & Public Relation Officer"),
-        ("member", "Member"),
-    ]
-
-    name = models.CharField(
-        max_length=150,
-        unique=True,
-    )
-
-    description = models.TextField(
-        blank=True,
-        help_text="Optional description of this committee"
-    )
-
-    president = models.TextField(
-        blank=True,
-    )
-    vice_president = models.TextField(
-        blank=True,
-    )
-    secretary = models.TextField(
-        blank=True,
-    )
-    vice_secretary = models.TextField(
-        blank=True,
-    )
-    treasurer = models.TextField(
-        blank=True,
-    )
-    vice_treasurer = models.TextField(
-        blank=True,
-    )
-    event_coordinator = models.TextField(
-        blank=True,
-    )
-    media_pr_officer = models.TextField(
-        blank=True,
-    )
-    member = models.TextField(
-        blank=True,
-    )
-
-    class Meta:
-        ordering = ["-id"]
-        verbose_name = "committee"
-        verbose_name_plural = "committees"
-
-    def __str__(self):
-        return self.name
-
-    @staticmethod
-    def _split_names(value):
-        if not value:
-            return []
-        return [n.strip() for n in value.replace(",", "\n").splitlines() if n.strip()]
-
-    def posts(self):
-        result = []
-        for key, label in self.POST_FIELDS:
-            names = self._split_names(getattr(self, key))
-            if names:
-                result.append((label, names))
-        return result
-
-def committee_member_upload_path(instance, filename):
-    name = (instance.committee.name or "unnamed").strip().replace(" ", "_").replace("/", "")
-    return os.path.join("committee", name, filename)
-
-class CommitteeMember(models.Model):
-    committee = models.ForeignKey(
-        "Committee",
-        on_delete=models.CASCADE,
-        related_name="members",
-    )
-    post = models.CharField(
-        max_length=30,
-        choices=Committee.POST_FIELDS,
-    )
-    name = models.CharField(max_length=150)
-    image = models.ImageField(
-        upload_to=committee_member_upload_path,
-        blank=True,
-        null=True,
-    )
-    order = models.PositiveSmallIntegerField(default=0)
-
-    class Meta:
-        ordering = ["post", "order", "id"]
-        verbose_name = "committee-member"
-        verbose_name_plural = "committee-members"
-
-    def __str__(self):
-        return f"{self.name} ({self.get_post_display()})"
-
-    @property
-    def first_name(self):
-        return self.name.split(maxsplit=1)[0] if self.name else ""
-
 class Notice(models.Model):
     title = models.CharField(max_length=255)
     body = models.TextField()
@@ -450,3 +342,94 @@ class PrincipalSignature(models.Model):
 
     def __str__(self):
         return self.name or "Principal Signature"
+
+class Committee(models.Model):
+
+    POST_FIELDS = [
+        ("president", "President"),
+        ("vice_president", "Vice President"),
+        ("secretary", "Secretary"),
+        ("vice_secretary", "Vice Secretary"),
+        ("treasurer", "Treasurer"),
+        ("vice_treasurer", "Vice Treasurer"),
+        ("event_coordinator", "Event Coordinator"),
+        ("media_pr_officer", "Media & Public Relation Officer"),
+        ("member", "Member"),
+    ]
+
+    committee_name = models.CharField(
+        max_length=150,
+        unique=True,
+        help_text="Committee name, e.g. 'Student Council 2083/84'",
+    )
+
+    description = models.TextField(
+        blank=True,
+        help_text="Optional description of this committee",
+    )
+
+    class Meta:
+        ordering = ["-id"]
+        verbose_name = "committee"
+        verbose_name_plural = "committees"
+
+    def __str__(self):
+        return self.committee_name
+
+def committee_member_upload_path(instance, filename):
+    name = (
+        (instance.committee.committee_name or "unnamed")
+        .strip()
+        .replace(" ", "_")
+        .replace("/", "")
+    )
+    return os.path.join("committee", name, filename)
+
+class CommitteePeople(models.Model):
+    POST_ORDER = {
+        "president": 1,
+        "vice_president": 2,
+        "secretary": 3,
+        "vice_secretary": 4,
+        "treasurer": 5,
+        "vice_treasurer": 6,
+        "event_coordinator": 7,
+        "media_pr_officer": 8,
+        "member": 9,
+    }
+
+    committee = models.ForeignKey(
+        Committee,
+        on_delete=models.CASCADE,
+        related_name="people",
+        help_text="Committee this person belongs to",
+    )
+    post = models.CharField(
+        max_length=30,
+        choices=Committee.POST_FIELDS,
+        help_text="Predefined office-bearer post",
+    )
+    name = models.CharField(max_length=150)
+    image = models.ImageField(
+        upload_to=committee_member_upload_path,
+        blank=True,
+        null=True,
+        help_text="Optional photo of this person",
+    )
+    order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "committee-people"
+        verbose_name_plural = "committee-peoples"
+
+    def __str__(self):
+        return f"{self.name} ({self.get_post_display()})"
+
+    def save(self, *args, **kwargs):
+        self.order = self.POST_ORDER.get(self.post, len(self.POST_ORDER) + 1)
+        super().save(*args, **kwargs)
+
+    @property
+    def first_name(self):
+        return self.name.split(maxsplit=1)[0] if self.name else ""

@@ -380,214 +380,102 @@ def update_month(request):
 
 @login_required
 def show_committees(request):
-    committees = Committee.objects.all().only("name")
-    return render(request, "show_committees.html", {"committee": committees})
+    committees = Committee.objects.all().only("id", "committee_name")
+    return render(request, "show_committees.html", {"committees": committees})
 
 @login_required
 def add_committee(request):
     if request.method == "POST":
-        name = request.POST.get("name", "").strip()
-        if not name:
+        committee_name = request.POST.get("committee_name", "").strip()
+        if not committee_name:
             messages.error(request, "Committee name is required.")
             return render(
                 request,
                 "add_committee.html",
                 {
                     "committee": Committee(
-                        name=name,
+                        committee_name=committee_name,
                         description=request.POST.get("description", ""),
-                        **{key: request.POST.get(key, "") for key, _ in Committee.POST_FIELDS},
                     ),
-                    "committee_fields": [
-                        (key, label, request.POST.get(key, ""))
-                        for key, label in Committee.POST_FIELDS
-                    ],
                 },
             )
-        committee = Committee(name=name)
-        for key, _ in Committee.POST_FIELDS:
-            setattr(committee, key, request.POST.get(key, ""))
-        committee.description = request.POST.get("description", "")
+
+        committee = Committee(
+            committee_name=committee_name,
+            description=request.POST.get("description", ""),
+        )
         committee.save()
 
-        messages.success(request, "Committee created. Add pictures for each member below (or ignore for now).")
-        return redirect("add_member_pictures", committee_id=committee.id)
+        messages.success(request, "Committee created. Add the office bearers now.")
+        return redirect("add_committee_people", committee_id=committee.id)
 
     return render(
         request,
         "add_committee.html",
-        {
-            "committee": Committee(name=""),
-            "committee_fields": [
-                (key, label, "")
-                for key, label in Committee.POST_FIELDS
-            ],
-        },
+        {"committee": Committee(committee_name="")},
     )
 
 @login_required
-def add_member_pictures(request, committee_id):
+def add_committee_people(request, committee_id):
     committee = get_object_or_404(Committee, id=committee_id)
-
-    member_rows = []
-    row_index = {}
-    for key, label in Committee.POST_FIELDS:
-        for name in committee._split_names(getattr(committee, key)):
-            member_rows.append({
-                "post_key": key,
-                "post_label": label,
-                "name": name,
-                "member": None,
-            })
-            row_index[(key, name)] = None
-
-    existing_members = CommitteeMember.objects.filter(committee=committee)
-    for m in existing_members:
-        if (m.post, m.name) in row_index:
-            row_index[(m.post, m.name)] = m
-    for row in member_rows:
-        row["member"] = row_index[(row["post_key"], row["name"])]
 
     if request.method == "POST":
         saved = 0
-        for idx, row in enumerate(member_rows):
-            file = request.FILES.get(f"image_{idx}")
-            if not file:
+        i = 0
+        while i < 100:
+            name = request.POST.get(f"name_{i}", "").strip()
+            post = request.POST.get(f"post_{i}", "")
+            file = request.FILES.get(f"image_{i}")
+            if not name:
+                i += 1
                 continue
-            member, _ = CommitteeMember.objects.get_or_create(
+
+            person, _ = CommitteePeople.objects.get_or_create(
                 committee=committee,
-                post=row["post_key"],
-                name=row["name"],
+                post=post,
+                name=name,
             )
-            member.image = file
-            member.save()
+            if file:
+                person.image = file
+                person.save()
             saved += 1
+            i += 1
 
         if saved:
-            messages.success(request, f"Saved {saved} member picture(s).")
+            messages.success(request, f"New office bearer(s) were added.")
         else:
-            messages.info(request, "No pictures were uploaded.")
+            messages.info(request, "No new office bearer(s) were added.")
         return redirect("show_committees")
 
     return render(
         request,
-        "add_member_pictures.html",
-        {
-            "committee": committee,
-            "member_rows": member_rows,
-        },
+        "add_committee_people.html",
+        {"committee": committee},
     )
 
 @login_required
-def edit_committee(request, name):
-    committee, _ = Committee.objects.get_or_create(name=name)
+def delete_committee_people(request, person_id):
+    person = get_object_or_404(CommitteePeople, id=person_id)
+    committee_id = person.committee_id
+    name = person.name
 
-    if request.method == "POST":
-        new_name = request.POST.get("name", "").strip()
-        if not new_name:
-            messages.error(request, "Committee name is required.")
-            return render(
-                request,
-                "edit_committee.html",
-                {
-                    "committee": committee,
-                    "committee_fields": [
-                        (key, label, request.POST.get(key, ""))
-                        for key, label in Committee.POST_FIELDS
-                    ],
-                },
-            )
-        for key, _ in Committee.POST_FIELDS:
-            setattr(committee, key, request.POST.get(key, ""))
-        committee.name = new_name
-        committee.description = request.POST.get("description", "")
-        committee.save()
+    if person.image:
+        person.image.delete(save=False)
+    person.delete()
 
-        messages.success(request, "Names have been updated.")
-        return redirect("edit_member_pictures", committee_id=committee.id)
-
-    return render(
-        request,
-        "edit_committee.html",
-        {
-            "committee": committee,
-            "committee_fields": [
-                (key, label, getattr(committee, key))
-                for key, label in Committee.POST_FIELDS
-            ],
-        },
-    )
+    messages.success(request, f'Removed the office bearer from committee.')
+    return redirect("add_committee_people", committee_id=committee_id)
 
 @login_required
-def edit_member_pictures(request, committee_id):
+def delete_committee(request, committee_id):
     committee = get_object_or_404(Committee, id=committee_id)
+    committee_name = committee.committee_name
 
-    member_rows = []
-    row_index = {}
-    for key, label in Committee.POST_FIELDS:
-        for name in committee._split_names(getattr(committee, key)):
-            member_rows.append({
-                "post_key": key,
-                "post_label": label,
-                "name": name,
-                "member": None,
-            })
-            row_index[(key, name)] = None
+    for person in list(committee.people.all()):
+        if person.image:
+            person.image.delete(save=False)
+        person.delete()
 
-    existing_members = CommitteeMember.objects.filter(committee=committee)
-    for m in existing_members:
-        if (m.post, m.name) in row_index:
-            row_index[(m.post, m.name)] = m
-    for row in member_rows:
-        row["member"] = row_index[(row["post_key"], row["name"])]
-
-    if request.method == "POST":
-        form_type = request.POST.get("form_type")
-
-        if form_type == "upload":
-            saved = 0
-            for idx, row in enumerate(member_rows):
-                file = request.FILES.get(f"image_{idx}")
-                if not file:
-                    continue
-                member, _ = CommitteeMember.objects.get_or_create(
-                    committee=committee,
-                    post=row["post_key"],
-                    name=row["name"],
-                )
-                member.image = file
-                member.save()
-                saved += 1
-            if saved:
-                messages.success(request, f"Updated {saved} member picture(s).")
-            return redirect("show_committees")
-
-        elif form_type == "delete":
-            member_id = request.POST.get("member_id")
-            member = get_object_or_404(
-                CommitteeMember,
-                id=member_id,
-                committee=committee,
-            )
-            if member.image:
-                member.image.delete(save=False)
-            member.delete()
-            messages.success(request, f'Deleted picture for "{member.name}".')
-            return redirect("edit_member_pictures", committee_id=committee.id)
-
-    return render(
-        request,
-        "edit_member_pictures.html",
-        {
-            "committee": committee,
-            "member_rows": member_rows,
-        },
-    )
-
-@login_required
-def delete_committee(request, name):
-    committee = get_object_or_404(Committee, name=name)
-    committee_name = committee.name
     committee.delete()
 
     messages.success(request, f'Committee "{committee_name}" deleted successfully!')
