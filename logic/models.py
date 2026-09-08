@@ -211,13 +211,27 @@ class GalleryEvent(models.Model):
     def __str__(self):
         return f"{self.event_name} ({self.event_date})"
 
+    def delete(self, *args, **kwargs):
+        for image in list(self.images.all()):
+            image.delete()
+        return super().delete(*args, **kwargs)
+
+def gallery_image_upload_path(instance, filename):
+    name = (instance.event.event_name or "unnamed").strip().replace(" ", "_").replace("/", "")
+    return os.path.join("gallery", name, filename)
+
 class GalleryImage(models.Model):
     event = models.ForeignKey(
         GalleryEvent,
         on_delete=models.CASCADE,
         related_name="images"
     )
-    image = models.ImageField(upload_to="gallery/")
+    image = models.ImageField(upload_to=gallery_image_upload_path)
+
+    def delete(self, *args, **kwargs):
+        if self.image:
+            self.image.delete(save=False)
+        return super().delete(*args, **kwargs)
 
     class Meta:
         ordering = ["id"]
