@@ -38,16 +38,14 @@ def logoutt(request):
 def dashboard(request):
     return render(request, "dashboard.html")
 
-@login_required
 def _delete_image_field(instance, field_name, request, success_message):
-    """Delete the file referenced by instance.<field_name> from storage and null the field."""
+
     image = getattr(instance, field_name, None)
     if image:
         image.delete(save=False)
         setattr(instance, field_name, None)
         instance.save()
         messages.success(request, success_message)
-
 
 @login_required
 def edit_about(request):
@@ -81,7 +79,6 @@ def edit_about(request):
 
     context = {key: instance for key, instance, *_ in sections}
     return render(request, "edit_about.html", context)
-
 
 @login_required
 def edit_academics(request):
