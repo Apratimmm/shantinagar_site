@@ -14,20 +14,36 @@
 
         <div class="bg-white rounded-2xl shadow p-8 mb-10">
 
-          <form method="POST">
+          <form method="POST" id="notice-form">
             {% csrf_token %}
+
+            <div class="mb-8">
+              <label class="block text-sm font-medium mb-3">Language</label>
+              <div class="flex gap-3">
+                <button type="button" id="lang-en" onclick="selectLanguage('en')"
+                        class="lang-btn flex-1 py-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 text-sm font-semibold transition-colors">
+                  <div class="text-base font-bold text-blue-700">English</div>
+
+                </button>
+                <button type="button" id="lang-ne" onclick="selectLanguage('ne')"
+                        class="lang-btn flex-1 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 text-sm font-semibold transition-colors">
+                  <div class="text-base font-bold text-gray-900">नेपाली</div>
+
+                </button>
+              </div>
+              <input type="hidden" name="language" id="language-input" value="en">
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label class="block text-sm font-medium mb-1">Title</label>
+                <label class="block text-sm font-medium mb-1" id="label-title">Title</label>
                 <input type="text" name="title" required
                        value="{{ title|default:'' }}"
-                       class="w-full border rounded-lg px-4 py-2"
-                       placeholder="e.g. Holiday Announcement">
+                       class="w-full border rounded-lg px-4 py-2">
               </div>
 
               <div>
-                <label class="block text-sm font-medium mb-1">Date ( format: day/month/year )</label>
+                <label class="block text-sm font-medium mb-1" id="label-date">Date ( format: day/month/year )</label>
                 <input type="text" name="notice_date" required
                        value="{{ notice_date|default:'' }}"
                        class="w-full border rounded-lg px-4 py-2">
@@ -35,10 +51,9 @@
             </div>
 
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-1">Body</label>
+              <label class="block text-sm font-medium mb-1" id="label-body">Body</label>
               <textarea name="body" required rows="19"
-                        class="w-full border rounded-lg px-4 py-2"
-                        placeholder="Write the notice content here...">{{ body|default:'' }}</textarea>
+                        class="w-full border rounded-lg px-4 py-2">{{ body|default:'' }}</textarea>
             </div>
 
             <button type="submit"
@@ -48,4 +63,51 @@
             </button>
           </form>
         </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const ACTIVE = ["border-blue-600", "bg-blue-50", "text-blue-700"];
+  const INACTIVE = ["border-gray-300", "bg-white", "text-gray-900"];
+  const labels = {
+    en: { title: "Title", date: "Date ( format: day/month/year )", body: "Body", placeholder: "Write the notice content here..." },
+    ne: { title: "शीर्षक", date: "मिति ( दिन/महिना/वर्ष )", body: "विवरण", placeholder: "यहाँ अधिसूचना सामग्री लेख्नुहोस्..." }
+  };
+
+  function setButton(btn, active) {
+    const add = active ? ACTIVE : INACTIVE;
+    const remove = active ? INACTIVE : ACTIVE;
+    btn.classList.remove(...remove);
+    btn.classList.add(...add);
+    const title = btn.querySelector("div:first-child");
+    const sub = btn.querySelector("div:last-child");
+
+    if (active) {
+      title.classList.remove("text-gray-900");
+      title.classList.add("text-blue-700");
+      sub.classList.remove("text-gray-500");
+      sub.classList.add("text-blue-700");
+    } else {
+      title.classList.remove("text-blue-700");
+      title.classList.add("text-gray-900");
+      sub.classList.remove("text-blue-700");
+      sub.classList.add("text-gray-500");
+    }
+  }
+
+  function selectLanguage(lang) {
+    document.getElementById("language-input").value = lang;
+    const en = document.getElementById("lang-en");
+    const ne = document.getElementById("lang-ne");
+    setButton(en, lang === "en");
+    setButton(ne, lang === "ne");
+    const L = labels[lang];
+    document.getElementById("label-title").textContent = L.title;
+    document.getElementById("label-date").textContent = L.date;
+    document.getElementById("label-body").textContent = L.body;
+  }
+
+  selectLanguage(document.getElementById("language-input").value);
+
+</script>
 {% endblock %}

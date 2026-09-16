@@ -306,11 +306,21 @@ class EventInfo(models.Model):
         return f"{self.event_date} - {self.event_name}"
 
 class Notice(models.Model):
+    LANGUAGE_CHOICES = [
+        ("en", "English"),
+        ("ne", "Nepali"),
+    ]
     title = models.CharField(max_length=255)
     body = models.TextField()
     notice_date = models.CharField(
         max_length=100,
         help_text="Free-form date, e.g. Baisakh 20, 2083 OR 23 Baisakh, 2083",
+    )
+    language = models.CharField(
+        max_length=10,
+        choices=LANGUAGE_CHOICES,
+        default="en",
+        help_text="Language the notice title, date and body are written in.",
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

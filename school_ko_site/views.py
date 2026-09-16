@@ -115,7 +115,15 @@ def notices(request):
     notice_list = Notice.objects.all()
     return render(request, "notices.html", {"notices": notice_list})
 
+NEPALI_CHROME = {
+    "notice_word": "सूचना",
+    "date_word": "मिति",
+    "subject_word": "विषय",
+    "principal_word": "प्रिन्सिपल",
+}
+
 def view_notice(request, notice_id):
     notice = get_object_or_404(Notice, id=notice_id)
     signature, _ = PrincipalSignature.objects.get_or_create(id=1)
-    return render(request, "notice_base.html", {"notice": notice, "signature": signature})
+    chrome = NEPALI_CHROME if notice.language == "ne" else {}
+    return render(request, "notice_base.html", {"notice": notice, "signature": signature, "chrome": chrome})

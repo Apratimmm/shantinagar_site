@@ -492,6 +492,10 @@ def add_notice(request):
         title = request.POST.get("title", "").strip()
         body = request.POST.get("body", "").strip()
         notice_date = request.POST.get("notice_date", "").strip()
+        language = request.POST.get("language", "en").strip()
+
+        if language not in ("en", "ne"):
+            language = "en"
 
         if not title or not body or not notice_date:
             messages.error(request, "All fields are required.")
@@ -499,12 +503,14 @@ def add_notice(request):
                 "title": title,
                 "body": body,
                 "notice_date": notice_date,
+                "language": language,
             })
 
         Notice.objects.create(
             title=title,
             body=body,
             notice_date=notice_date,
+            language=language,
         )
 
         return redirect("show_notices")
@@ -519,6 +525,10 @@ def edit_notice(request, notice_id):
         title = request.POST.get("title", "").strip()
         body = request.POST.get("body", "").strip()
         notice_date = request.POST.get("notice_date", "").strip()
+        language = request.POST.get("language", "en").strip()
+
+        if language not in ("en", "ne"):
+            language = "en"
 
         if not title or not body or not notice_date:
             messages.error(request, "All fields are required.")
@@ -526,6 +536,7 @@ def edit_notice(request, notice_id):
             notice.title = title
             notice.body = body
             notice.notice_date = notice_date
+            notice.language = language
             notice.save()
             messages.success(request, "Notice updated successfully!")
 
