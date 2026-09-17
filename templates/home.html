@@ -7,8 +7,18 @@
 {% block content %}
     <main>
       <!-- HERO -->
-      <section class="relative isolate border-b border-border bg-secondary/60 px-6 py-20 md:py-28">
-        <div class="absolute -top-32 -right-32 hidden h-96 w-96 rounded-full bg-primary/8 blur-3xl md:block"></div>
+       <section class="relative isolate overflow-hidden border-b border-border">
+           <div class="w-full px-6">
+               <video autoplay muted loop playsinline
+                      class="w-full h-[340px] md:h-[440px] lg:h-[500px] object-cover"
+                      style="filter: brightness(0.9);">
+                   <source src="" type="video/mp4">
+               </video>
+           </div>
+</section>
+
+      <!-- HERO TEXT -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-20 md:py-28">
         <div class="mx-auto max-w-7xl fade-up">
           <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
             Established 2063
