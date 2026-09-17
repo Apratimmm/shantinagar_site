@@ -1,0 +1,22 @@
+{% extends "base_admin.html" %}
+{% block title %}Edit School Video{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/edit_about/"><span class="text-lg font-bold text-primary">Back to Edit About Us</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="mx-auto max-w-3xl">
+  <h1 class="text-3xl font-bold tracking-tight mb-8">Follow these steps</h1>
+
+  <div class="rounded-xl border border-border bg-card p-8 shadow-md space-y-6">
+      <p class="text-lg leading-relaxed text-foreground">Visit <strong><a class="text-primary underline" href="https://console.cloudinary.com/app/c-10ebc2cbde0e7d106aeea67fd618ba/assets/media_library/folders/d057344b9709465cda291e4bd5a8a4113f?view_mode=list" target="_blank">this link to the cloud folder</a></strong>.</p>
+      <p class="text-lg leading-relaxed text-foreground">Delete the current video.</p>
+      <p class="text-lg leading-relaxed text-foreground">Upload your new video.</p>
+  </div>
+</div>
+{% endblock %}

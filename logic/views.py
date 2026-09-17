@@ -572,3 +572,7 @@ def edit_signature(request):
         return redirect("edit_signature")
 
     return render(request, "edit_signature.html", {"signature": signature})
+
+@login_required
+def edit_school_video(request):
+    return render(request, 'edit_school_video.html')

@@ -10,9 +10,10 @@
        <section class="relative isolate overflow-hidden border-b border-border">
            <div class="w-full px-6">
                <video autoplay muted loop playsinline
-                      class="w-full h-[340px] md:h-[440px] lg:h-[500px] object-cover"
-                      style="filter: brightness(0.9);">
-                   <source src="" type="video/mp4">
+                      width="1280" height="720"
+                      class="w-full max-w-[1280px] mx-auto h-auto max-h-[720px] object-contain block"
+                      style="filter: brightness(0.95); image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
+                   <source src="{{ video_url }}" type="video/mp4">
                </video>
            </div>
 </section>

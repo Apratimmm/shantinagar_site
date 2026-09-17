@@ -33,6 +33,7 @@ urlpatterns = [
     path('results/', results, name='results'),
     path('verify_user/',verify_user, name='verify_user'),
     path('logout/', logoutt, name='logout'),
+    path('edit_school_video/', edit_school_video, name='edit_school_video'),
     path('edit_about/', edit_about, name='edit_about'),
     path('edit_academics/', edit_academics, name='edit_academics'),
     path('send_email/', send_email, name='send_mail'),
