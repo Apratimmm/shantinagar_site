@@ -115,6 +115,8 @@
           document.getElementById("lightbox-title").textContent = title || "";
           const subEl = document.getElementById("lightbox-subtitle");
           if (subEl) subEl.textContent = subtitle || "";
+          const cap = document.getElementById("lightbox-caption");
+          if (cap) cap.style.display = (!title && !subtitle) ? "none" : "";
           lightboxEl.classList.remove("hidden");
           document.body.style.overflow = "hidden";
         }

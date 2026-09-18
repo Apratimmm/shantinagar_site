@@ -4,6 +4,7 @@
 <title>{% if chrome %}आधिकारिक स्कूल सूचना{% else %}Official School Notice{% endif %} - Shantinagar English School</title>
 <!-- Tailwind CSS v3 -->
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
 <!-- html2canvas for client-side PNG export -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <!-- Custom Styles for Print and Watermark -->
@@ -49,7 +50,7 @@
 <!-- BEGIN: WatermarkBackground -->
 <!-- Large, semi-transparent logo watermark centered on the page -->
 <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.08] overflow-hidden" data-purpose="watermark">
-<img alt="Watermark Logo" class="w-[600px] h-[600px] object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQiw35fx9F2T13c8gt80ixG8uaLzYOIVg6gdi6zSwVGPYyk9pfKlYQgScK_iSHl29gIQcow-tTvlnEvRwSs0XXjvtPuUNeFhRJR63HHOwgx7FCrKYFO8MW_YAiTp9ubpmdaJYO9GiibJS0WuhXDUDQGqtZtdPBi_Jp94Ph7pLQWCzuxPLQqwfodan7muvOWfLGRKCv_FJoclLo15WRTQJSBDp6SiVHRJmw_l7DqbNRHvUPmJrfn6glo7fIibGbFJHvEqc">
+<img alt="Watermark Logo" class="w-[600px] h-[600px] object-contain" src="{% if logo_url %}{{ logo_url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuCQiw35fx9F2T13c8gt80ixG8uaLzYOIVg6gdi6zSwVGPYyk9pfKlYQgScK_iSHl29gIQcow-tTvlnEvRwSs0XXjvtPuUNeFhRJR63HHOwgx7FCrKYFO8MW_YAiTp9ubpmdaJYO9GiibJS0WuhXDUDQGqtZtdPBi_Jp94Ph7pLQWCzuxPLQqwfodan7muvOWfLGRKCv_FJoclLo15WRTQJSBDp6SiVHRJmw_l7DqbNRHvUPmJrfn6glo7fIibGbFJHvEqc{% endif %}">
 </div>
 <!-- END: WatermarkBackground -->
 <!-- Top Content Wrapper (Header + Notice Body) -->
@@ -59,7 +60,7 @@
 <div class="flex items-center justify-between gap-6">
 <!-- School Logo -->
 <div class="w-32 h-32 flex-shrink-0 -translate-x-3" data-purpose="logo-container">
-<img alt="Shantinagar English School Logo" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNepOwUsD_iK7IVXwjRYDisduTq7m53Yz-KkTNUExmBEm0XeMjY5_rntlQax0urY6k7uTq9u9LzBZFi5Y_iiR9CJ-TywsgTJEteRLxoFRoxHMkIVucCx0Fn32RGPWdCt-8oNbROOh65SsqzQxHrvKx4qWgXJLkNVuyPvkpPA9VcyovRxDaCZVpiJ4IO8Cu-cyXKQy9loLniauqThdWEvny0oIp397b9ODDB4z_q0A7uiPYGDNtIlDLtXJCXOiSW54J0T0">
+<img alt="School Logo" class="w-full h-full object-contain" src="{% if logo_url %}{{ logo_url }}{% else %}https://lh3.googleusercontent.com/aida-public/AB6AXuCNepOwUsD_iK7IVXwjRYDisduTq7m53Yz-KkTNUExmBEm0XeMjY5_rntlQax0urY6k7uTq9u9LzBZFi5Y_iiR9CJ-TywsgTJEteRLxoFRoxHMkIVucCx0Fn32RGPWdCt-8oNbROOh65SsqzQxHrvKx4qWgXJLkNVuyPvkpPA9VcyovRxDaCZVpiJ4IO8Cu-cyXKQy9loLniauqThdWEvny0oIp397b9ODDB4z_q0A7uiPYGDNtIlDLtXJCXOiSW54J0T0{% endif %}">
 </div>
 <!-- School Name & Details -->
 <div class="text-center flex-grow">
@@ -71,8 +72,8 @@
               {{ chrome.address|default:"Itahari-2, Shantinagar, Nepal" }}
             </p>
 <div class="flex flex-col items-center gap-0.5 text-xs text-slate-600 mt-1 font-semibold">
-<span>025591014</span>
-<span>englishshantinagar@gmail.com</span>
+<span>{% if contact_numbers %}{{ contact_numbers.0 }}{% else %}025591014{% endif %}</span>
+<span>{% if email_address %}{{ email_address }}{% else %}englishshantinagar@gmail.com{% endif %}</span>
 </div>
 </div>
 <!-- Spacer for balance -->
@@ -91,7 +92,7 @@
 </div>
 <div class="mt-4 font-bold">
 <span class="text-blue-900 ">{{ chrome.date_word|default:"Date" }} :</span>
-<span class="inline-block pb-0.5 px-0.5 text-blue-900"> {{ notice.notice_date }}</span>
+<span class="inline-block pb-0.5 px-0.5 text-blue-900"> {{ notice.date }}</span>
 </div></section>
 <!-- END: NoticeMetaSection -->
 <!-- BEGIN: NoticeBody -->
@@ -103,9 +104,10 @@
           <span class="inline-block pb-0.5 px-0 text-blue-900">{{ notice.title }}</span>
 </p>
 <!-- Main text space with subtle placeholder lines for easy writing/typing simulation if needed -->
-<div class="space-y-4 text-slate-700 leading-7">
-{{ notice.body|linebreaksbr }}
+<div class="space-y-4 text-slate-700 leading-7" style="font-family: 'Noto Sans Devanagari', 'Mangal', sans-serif;">
+  {{ notice.body|linebreaksbr }}
 </div>
+
 </main>
 <!-- END: NoticeBody -->
 </div>
@@ -131,10 +133,10 @@
 </div>
 <!-- Bottom Border & Contact Strip -->
 <div class="-mx-10 md:-mx-14 px-10 md:px-14 border-t-2 border-blue-900 pt-4 text-center text-xs text-slate-500 font-semibold">
-<p>Shantinagar English School</p>
-    <p>Itahari-2, Shantinagar, Sunsari</p>
-<p class="mt-1">025591014</p>
-<p>englishshantinagar@gmail.com</p>
+<p>{{ chrome.school_name|default:"Shantinagar English School" }}</p>
+    <p>{{ chrome.address|default:"Itahari-2, Shantinagar, Sunsari" }}</p>
+<p class="mt-1">{% if contact_numbers %}{{ contact_numbers.0 }}{% else %}025591014{% endif %}</p>
+<p>{% if email_address %}{{ email_address }}{% else %}englishshantinagar@gmail.com{% endif %}</p>
 </div>
 </footer>
 <!-- END: SchoolFooter -->

@@ -14,21 +14,36 @@
 
         <div class="bg-white rounded-2xl shadow p-8 mb-10">
 
-          <form method="POST" id="notice-form">
+          <form method="POST" id="notice-form" enctype="multipart/form-data">
             {% csrf_token %}
 
+            <!-- Type toggle -->
             <div class="mb-8">
-              <label class="block text-sm font-medium mb-3">Language</label>
+              <label class="block text-sm font-medium mb-3" id="label-type">Type</label>
+              <div class="flex gap-3" id="type-btns">
+                <button type="button" id="type-text" onclick="selectType('text')"
+                        class="type-btn flex-1 py-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 text-sm font-semibold transition-colors">
+                  <div class="text-base font-bold text-blue-700">Text</div>
+                </button>
+                <button type="button" id="type-photo" onclick="selectType('photo')"
+                        class="type-btn flex-1 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 text-sm font-semibold transition-colors">
+                  <div class="text-base font-bold text-gray-900">Photo</div>
+                </button>
+              </div>
+              <input type="hidden" name="notice_type" id="type-input" value="text">
+            </div>
+
+            <!-- Language selection -->
+            <div class="mb-8">
+              <label class="block text-sm font-medium mb-3">Language / भाषा</label>
               <div class="flex gap-3">
                 <button type="button" id="lang-en" onclick="selectLanguage('en')"
                         class="lang-btn flex-1 py-3 rounded-lg border-2 border-blue-600 bg-blue-50 text-blue-700 text-sm font-semibold transition-colors">
                   <div class="text-base font-bold text-blue-700">English</div>
-
                 </button>
                 <button type="button" id="lang-ne" onclick="selectLanguage('ne')"
                         class="lang-btn flex-1 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 text-sm font-semibold transition-colors">
                   <div class="text-base font-bold text-gray-900">नेपाली</div>
-
                 </button>
               </div>
               <input type="hidden" name="language" id="language-input" value="en">
@@ -44,22 +59,31 @@
 
               <div>
                 <label class="block text-sm font-medium mb-1" id="label-date">Date ( format: day/month/year )</label>
-                <input type="text" name="notice_date" required
-                       value="{{ notice_date|default:'' }}"
-                       class="w-full border rounded-lg px-4 py-2">
+                <input type="text" name="date" required
+                       value="{{ date|default:'' }}"
+                       class="w-full border rounded-lg px-4 py-2"
+                       placeholder="e.g. Baisakh 20, 2083">
               </div>
             </div>
 
-            <div class="mb-6">
+            <!-- Body shown only for text -->
+            <div class="mb-6" id="body-section">
               <label class="block text-sm font-medium mb-1" id="label-body">Body</label>
-              <textarea name="body" required rows="19"
+              <textarea name="body" rows="10" id="body-text"
                         class="w-full border rounded-lg px-4 py-2">{{ body|default:'' }}</textarea>
+            </div>
+
+            <!-- Image shown only for photo -->
+            <div class="mb-6 hidden" id="image-section">
+              <label class="block text-sm font-medium mb-1" id="label-image">Photo</label>
+              <input type="file" name="notice_image" accept="image/*" id="image-input"
+                     class="w-full border rounded-lg px-4 py-2 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
             </div>
 
             <button type="submit"
                     onclick="this.textContent='Creating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg">
-              Create
+              <span id="btn-text">Create</span>
             </button>
           </form>
         </div>
@@ -70,8 +94,8 @@
   const ACTIVE = ["border-blue-600", "bg-blue-50", "text-blue-700"];
   const INACTIVE = ["border-gray-300", "bg-white", "text-gray-900"];
   const labels = {
-    en: { title: "Title", date: "Date ( format: day/month/year )", body: "Body", placeholder: "Write the notice content here..." },
-    ne: { title: "शीर्षक", date: "मिति ( दिन/महिना/वर्ष )", body: "विवरण", placeholder: "यहाँ अधिसूचना सामग्री लेख्नुहोस्..." }
+    en: { title: "Title", date: "Date ( format: day/month/year )", body: "Body" },
+    ne: { title: "शीर्षक", date: "मिति ( दिन/महिना/वर्ष )", body: "विवरण" }
   };
 
   function setButton(btn, active) {
@@ -81,7 +105,6 @@
     btn.classList.add(...add);
     const title = btn.querySelector("div:first-child");
     const sub = btn.querySelector("div:last-child");
-
     if (active) {
       title.classList.remove("text-gray-900");
       title.classList.add("text-blue-700");
@@ -107,7 +130,32 @@
     document.getElementById("label-body").textContent = L.body;
   }
 
-  selectLanguage(document.getElementById("language-input").value);
+  function selectType(t) {
+    document.getElementById("type-input").value = t;
+    const textBtn = document.getElementById("type-text");
+    const photoBtn = document.getElementById("type-photo");
+    setButton(textBtn, t === "text");
+    setButton(photoBtn, t === "photo");
 
+    const bodySec = document.getElementById("body-section");
+    const imageSec = document.getElementById("image-section");
+    const bodyArea = document.getElementById("body-text");
+
+    if (t === "text") {
+      bodySec.classList.remove("hidden");
+      imageSec.classList.add("hidden");
+      bodyArea.setAttribute("required", "required");
+      document.getElementById("image-input").removeAttribute("required");
+    } else {
+      bodySec.classList.add("hidden");
+      imageSec.classList.remove("hidden");
+      bodyArea.removeAttribute("required");
+      document.getElementById("image-input").setAttribute("required", "required");
+    }
+  }
+
+  // Init
+  selectLanguage(document.getElementById("language-input").value);
+  selectType(document.getElementById("type-input").value || "text");
 </script>
 {% endblock %}

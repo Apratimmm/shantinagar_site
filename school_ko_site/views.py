@@ -126,4 +126,4 @@ def view_notice(request, notice_id):
     notice = get_object_or_404(Notice, id=notice_id)
     signature, _ = PrincipalSignature.objects.get_or_create(id=1)
     chrome = NEPALI_CHROME if notice.language == "ne" else {}
-    return render(request, "notice_base.html", {"notice": notice, "signature": signature, "chrome": chrome})
+    return render(request, "base_notice.html", {"notice": notice, "signature": signature, "chrome": chrome})

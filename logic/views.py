@@ -491,31 +491,46 @@ def add_notice(request):
     if request.method == "POST":
         title = request.POST.get("title", "").strip()
         body = request.POST.get("body", "").strip()
-        notice_date = request.POST.get("notice_date", "").strip()
+        date = request.POST.get("date", "").strip()
         language = request.POST.get("language", "en").strip()
+        notice_type = request.POST.get("notice_type", "text").strip()
+        if notice_type not in ("text", "photo"):
+            notice_type = "text"
 
         if language not in ("en", "ne"):
             language = "en"
 
-        if not title or not body or not notice_date:
-            messages.error(request, "All fields are required.")
-            return render(request, "add_notice.html", {
-                "title": title,
-                "body": body,
-                "notice_date": notice_date,
-                "language": language,
-            })
+        image = request.FILES.get("notice_image")
 
-        Notice.objects.create(
+        if notice_type == "photo":
+            if not title or not date or not image:
+                messages.error(request, "Title, date and photo are required for photo notices.")
+                return render(request, "add_notice.html", {
+                    "title": title, "body": body, "date": date,
+                    "language": language, "notice_type": notice_type,
+                })
+        else:
+            if not title or not date or not body:
+                messages.error(request, "Title, date and body are required.")
+                return render(request, "add_notice.html", {
+                    "title": title, "body": body, "date": date,
+                    "language": language, "notice_type": notice_type,
+                })
+
+        notice = Notice.objects.create(
             title=title,
             body=body,
-            notice_date=notice_date,
+            date=date,
             language=language,
+            notice_type=notice_type,
         )
+        if image and notice_type == "photo":
+            notice.notice_image = image
+            notice.save()
 
         return redirect("show_notices")
 
-    return render(request, "add_notice.html")
+    return render(request, "add_notice.html", {"notice_type": "text"})
 
 @login_required
 def edit_notice(request, notice_id):
@@ -524,18 +539,18 @@ def edit_notice(request, notice_id):
     if request.method == "POST":
         title = request.POST.get("title", "").strip()
         body = request.POST.get("body", "").strip()
-        notice_date = request.POST.get("notice_date", "").strip()
+        date = request.POST.get("date", "").strip()
         language = request.POST.get("language", "en").strip()
 
         if language not in ("en", "ne"):
             language = "en"
 
-        if not title or not body or not notice_date:
-            messages.error(request, "All fields are required.")
+        if not title or not date or not body:
+            messages.error(request, "Title, date and body are required.")
         else:
             notice.title = title
             notice.body = body
-            notice.notice_date = notice_date
+            notice.date = date
             notice.language = language
             notice.save()
             messages.success(request, "Notice updated successfully!")

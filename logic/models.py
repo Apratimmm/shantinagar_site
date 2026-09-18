@@ -310,17 +310,31 @@ class Notice(models.Model):
         ("en", "English"),
         ("ne", "Nepali"),
     ]
-    title = models.CharField(max_length=255)
-    body = models.TextField()
-    notice_date = models.CharField(
-        max_length=100,
-        help_text="Free-form date, e.g. Baisakh 20, 2083 OR 23 Baisakh, 2083",
+    TYPE_CHOICES = [
+        ("text", "Text"),
+        ("photo", "Photo"),
+    ]
+    notice_type = models.CharField(
+        max_length=10,
+        choices=TYPE_CHOICES,
+        default="text",
     )
     language = models.CharField(
         max_length=10,
         choices=LANGUAGE_CHOICES,
         default="en",
         help_text="Language the notice title, date and body are written in.",
+    )
+    title = models.CharField(max_length=255)
+    date = models.CharField(
+        max_length=100,
+        help_text="Free-form date, e.g. Baisakh 20, 2083 OR 23 Baisakh, 2083",
+    )
+    body = models.TextField()
+    notice_image = models.ImageField(
+        upload_to="notices/",
+        blank=True,
+        null=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -330,7 +344,7 @@ class Notice(models.Model):
         verbose_name_plural = "notices"
 
     def __str__(self):
-        return f"{self.title} ({self.notice_date})"
+        return f"{self.title} ({self.date})"
 
 class PrincipalSignature(models.Model):
     name = models.CharField(
