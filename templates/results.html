@@ -50,7 +50,7 @@
                       </div>
                     {% endif %}
                     {% if result.highest_scorer_image %}
-                        <img src="{{ result.highest_scorer_image.url }}" alt="{{ result.highest_scorer_name }}" class="h-40 w-40 rounded-full object-cover ring-2 ring-border" loading="lazy">
+                        <img src="{{ result.highest_scorer_image.url }}?f_auto,q_auto" alt="{{ result.highest_scorer_name }}" class="h-40 w-40 rounded-full object-cover ring-2 ring-border" loading="lazy">
                     {% endif %}
               </div>
             </div>
@@ -73,7 +73,7 @@
               <div class="relative aspect-[4/3] overflow-hidden bg-muted">
                 {% if topper.image %}
                 <img
-                  src="{{ topper.image.url }}"
+                  src="{{ topper.image.url }}?f_auto,q_auto"
                   alt="{{ topper.name }}"
                   width="800"
                   height="1000"

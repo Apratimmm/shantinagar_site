@@ -119,7 +119,7 @@
 <div class="relative h-16 flex items-end justify-center">
   <div class="absolute inset-x-0 bottom-1 h-12 border-b border-slate-400"></div>
   {% if signature and signature.image %}
-    <img src="{{ signature.image.url }}"
+    <img src="{{ signature.image.url }}?f_auto,q_auto"
          alt="Principal signature"
          class="relative h-16 w-40 object-contain"
          crossorigin="anonymous">

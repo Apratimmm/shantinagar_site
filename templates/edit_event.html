@@ -77,7 +77,7 @@
             <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
               {% for img in event.images.all %}
                 <div class="relative group">
-                  <img src="{{ img.image.url }}" alt="Gallery image"
+                  <img src="{{ img.image.url }}?f_auto,q_auto" alt="Gallery image"
                        class="w-full h-48 object-cover rounded-xl shadow" loading="lazy">
 
                   <form method="POST" class="absolute top-2 right-2">

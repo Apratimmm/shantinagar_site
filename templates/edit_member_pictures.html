@@ -51,7 +51,7 @@
                     <div class="flex-shrink-0 w-40">
                       {% if row.member and row.member.image %}
                         <div class="block text-sm font-medium mb-1">Current Photo</div>
-                        <img src="{{ row.member.image.url }}" alt="{{ row.name }}"
+                        <img src="{{ row.member.image.url }}?f_auto,q_auto" alt="{{ row.name }}"
                              class="h-32 w-32 object-cover rounded"  loading="lazy"/>
                         <button type="button"
                                 data-member-id="{{ row.member.id }}"

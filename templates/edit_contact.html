@@ -57,7 +57,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Logo</label>
               {% if contact.logo %}
-                <img src="{{ contact.logo.url }}" alt="Current logo" class="h-32 mb-3 rounded" loading="lazy">
+                <img src="{{ contact.logo.url }}?f_auto,q_auto" alt="Current logo" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_logo"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">

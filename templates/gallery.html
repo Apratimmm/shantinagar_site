@@ -61,14 +61,14 @@
                       <figure
                         onclick="openLightbox(this)"
                         data-gallery-photo="true"
-                        data-photo-src="{{ image.image.url }}"
+                        data-photo-src="{{ image.image.url }}?f_auto,q_auto"
                         data-photo-alt="{{ event.event_name }}"
                         data-event-title="{{ event.event_name }}"
                         class="group relative flex cursor-pointer flex-col bg-white p-3.5 shadow-md ring-1 ring-black/5 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-1.5deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[1.5deg]{% else %}rotate-[-0.5deg]{% endif %}"
                       >
                         <div class="relative aspect-[4/3] overflow-hidden bg-muted">
                           <img
-                            src="{{ image.image.url }}"
+                            src="{{ image.image.url }}?f_auto,q_auto"
                             alt="{{ event.event_name }}"
                             loading="lazy"
                             class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"

@@ -56,7 +56,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Image</label>
               {% if history.image %}
-                <img src="{{ history.image.url }}" alt="Current image" class="h-32 mb-3 rounded" loading="lazy">
+                <img src="{{ history.image.url }}?f_auto,q_auto" alt="Current image" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_history_image"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
@@ -101,7 +101,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Photo</label>
               {% if principal.image %}
-                <img src="{{ principal.image.url }}" class="h-32 mb-3 rounded" loading="lazy">
+                <img src="{{ principal.image.url }}?f_auto,q_auto" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_principal_image"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
@@ -146,7 +146,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Photo</label>
               {% if chairperson.image %}
-                <img src="{{ chairperson.image.url }}" class="h-32 mb-3 rounded" loading="lazy">
+                <img src="{{ chairperson.image.url }}?f_auto,q_auto" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_chairperson_image"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
