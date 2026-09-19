@@ -63,7 +63,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Image</label>
               {% if primary.image %}
-                <img src="{{ primary.image.url }}" alt="Current image" class="h-32 mb-3 rounded">
+                <img src="{{ primary.image.url }}" alt="Current image" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_primary_image"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">
@@ -108,7 +108,7 @@
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Image</label>
               {% if secondary.image %}
-                <img src="{{ secondary.image.url }}" alt="Current image" class="h-32 mb-3 rounded">
+                <img src="{{ secondary.image.url }}" alt="Current image" class="h-32 mb-3 rounded" loading="lazy">
                 <button type="button"
                         data-form-type="delete_secondary_image"
                         class="js-delete-image block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg">

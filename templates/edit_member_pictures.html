@@ -52,7 +52,7 @@
                       {% if row.member and row.member.image %}
                         <div class="block text-sm font-medium mb-1">Current Photo</div>
                         <img src="{{ row.member.image.url }}" alt="{{ row.name }}"
-                             class="h-32 w-32 object-cover rounded" />
+                             class="h-32 w-32 object-cover rounded"  loading="lazy"/>
                         <button type="button"
                                 data-member-id="{{ row.member.id }}"
                                 class="js-delete-photo mt-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg w-full">

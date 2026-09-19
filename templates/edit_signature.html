@@ -50,7 +50,7 @@
               {% if signature.image %}
                 <div class="inline-block p-4 bg-gray-50 border border-gray-200 rounded-lg">
                   <img src="{{ signature.image.url }}" alt="Current principal signature"
-                       class="h-24 w-64 object-contain">
+                       class="h-24 w-64 object-contain" loading="lazy">
                 </div>
                 <button type="button"
                         data-form-type="delete_signature"

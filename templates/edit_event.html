@@ -78,7 +78,7 @@
               {% for img in event.images.all %}
                 <div class="relative group">
                   <img src="{{ img.image.url }}" alt="Gallery image"
-                       class="w-full h-48 object-cover rounded-xl shadow">
+                       class="w-full h-48 object-cover rounded-xl shadow" loading="lazy">
 
                   <form method="POST" class="absolute top-2 right-2">
                     {% csrf_token %}
