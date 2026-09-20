@@ -483,7 +483,7 @@ def delete_committee(request, committee_id):
 
 @login_required
 def show_notices(request):
-    notices = Notice.objects.all()
+    notices = Notice.objects.all().only("id","title","date","notice_type")
     return render(request, "show_notices.html", {"notices": notices})
 
 @login_required
