@@ -257,9 +257,10 @@ def add_event(request):
             event_date=event_date
         )
 
-        images = request.FILES.getlist("images")
-        for img in images:
-            GalleryImage.objects.create(event=event, image=img)
+        image_urls = request.POST.getlist("image_urls")
+        GalleryImage.objects.bulk_create(
+            [GalleryImage(event=event, image=url) for url in image_urls if url]
+        )
 
         messages.success(request, "Event created successfully!")
         return redirect("show_events")
@@ -289,8 +290,9 @@ def edit_event(request, event_id):
 
         elif form_type == "add_images":
             images = request.FILES.getlist("images")
-            for img in images:
-                GalleryImage.objects.create(event=event, image=img)
+            GalleryImage.objects.bulk_create(
+                [GalleryImage(event=event, image=img) for img in images]
+            )
 
             messages.success(request, "Images added successfully!")
             return redirect("edit_event", event_id=event.id)
