@@ -287,7 +287,7 @@ class MonthInfo(models.Model):
     def __str__(self):
         return self.get_month_display()
 
-class EventInfo(models.Model):
+class MonthEvent(models.Model):
     month = models.ForeignKey(MonthInfo, on_delete=models.CASCADE, related_name="events")
     event_date = models.PositiveSmallIntegerField()
     event_name = models.CharField(max_length=200)

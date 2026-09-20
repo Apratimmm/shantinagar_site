@@ -367,7 +367,7 @@ def update_month(request):
 
     month_info.events.all().delete()
     for ev in events:
-        EventInfo.objects.create(
+        MonthEvent.objects.create(
             month=month_info,
             event_date=ev.get("event_date"),
             event_name=ev.get("event_name", ""),
