@@ -42,21 +42,21 @@
                   <div class="text-xs text-gray-500">शीर्षक, मिति र विवरण नेपालीमा</div>
                 </button>
               </div>
-              <input type="hidden" name="language" id="language-input" value="{{ notice.language|default:'en' }}">
+              <input type="hidden" name="language" id="language-input" value="{{ submitted_language|default:notice.language|default:'en' }}">
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
                 <label class="block text-sm font-medium mb-1" id="label-title">Title</label>
                 <input type="text" name="title" required
-                       value="{{ notice.title }}"
+                       value="{{ submitted_title|default:notice.title }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
 
               <div>
                 <label class="block text-sm font-medium mb-1" id="label-date">Date ( format: day/month/year )</label>
-                <input type="text" name="notice_date" required
-                       value="{{ notice.notice_date }}"
+                <input type="text" name="date" required
+                       value="{{ submitted_date|default:notice.date }}"
                        class="w-full border rounded-lg px-4 py-2"
                        placeholder="e.g. Baisakh 20, 2083">
               </div>
@@ -65,7 +65,7 @@
             <div class="mb-6">
               <label class="block text-sm font-medium mb-1" id="label-body">Body</label>
               <textarea name="body" required rows="19"
-                        class="w-full border rounded-lg px-4 py-2">{{ notice.body }}</textarea>
+                        class="w-full border rounded-lg px-4 py-2">{{ submitted_body|default:notice.body }}</textarea>
             </div>
 
             <button type="submit"

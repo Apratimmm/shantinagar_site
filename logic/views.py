@@ -549,6 +549,13 @@ def edit_notice(request, notice_id):
 
         if not title or not date or not body:
             messages.error(request, "Title, date and body are required.")
+            return render(request, "edit_notice.html", {
+                "notice": notice,
+                "submitted_title": title,
+                "submitted_body": body,
+                "submitted_date": date,
+                "submitted_language": language,
+            })
         else:
             notice.title = title
             notice.body = body
@@ -556,8 +563,7 @@ def edit_notice(request, notice_id):
             notice.language = language
             notice.save()
             messages.success(request, "Notice updated successfully!")
-
-        return redirect("edit_notice", notice_id=notice.id)
+            return redirect("edit_notice", notice_id=notice.id)
 
     return render(request, "edit_notice.html", {"notice": notice})
 

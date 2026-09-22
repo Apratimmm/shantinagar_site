@@ -25,3 +25,5 @@ node_modules/
 
 /logic/migrations/
 /logic/admin.py
+
+images
