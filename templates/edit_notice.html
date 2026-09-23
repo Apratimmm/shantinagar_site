@@ -23,38 +23,19 @@
         {% endif %}
 
         <div class="bg-white rounded-2xl shadow p-8 mb-10">
-
           <form method="POST" id="notice-form">
             {% csrf_token %}
-
-            <!-- Language selection first -->
-            <div class="mb-8">
-              <label class="block text-sm font-medium mb-3">Language / भाषा</label>
-              <div class="flex gap-3">
-                <button type="button" id="lang-en" onclick="selectLanguage('en')"
-                        class="lang-btn flex-1 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 text-sm font-semibold transition-colors">
-                  <div class="text-base font-bold text-gray-900">English</div>
-                  <div class="text-xs text-gray-500">Title, date &amp; body in English</div>
-                </button>
-                <button type="button" id="lang-ne" onclick="selectLanguage('ne')"
-                        class="lang-btn flex-1 py-3 rounded-lg border-2 border-gray-300 bg-white text-gray-900 text-sm font-semibold transition-colors">
-                  <div class="text-base font-bold text-gray-900">नेपाली</div>
-                  <div class="text-xs text-gray-500">शीर्षक, मिति र विवरण नेपालीमा</div>
-                </button>
-              </div>
-              <input type="hidden" name="language" id="language-input" value="{{ submitted_language|default:notice.language|default:'en' }}">
-            </div>
+            <input type="hidden" name="form_type" value="update_details">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div>
-                <label class="block text-sm font-medium mb-1" id="label-title">Title</label>
+                <label class="block text-sm font-medium mb-1">Title</label>
                 <input type="text" name="title" required
                        value="{{ submitted_title|default:notice.title }}"
                        class="w-full border rounded-lg px-4 py-2">
               </div>
-
               <div>
-                <label class="block text-sm font-medium mb-1" id="label-date">Date ( format: day/month/year )</label>
+                <label class="block text-sm font-medium mb-1">Date</label>
                 <input type="text" name="date" required
                        value="{{ submitted_date|default:notice.date }}"
                        class="w-full border rounded-lg px-4 py-2"
@@ -62,11 +43,13 @@
               </div>
             </div>
 
+            {% if notice.notice_type == 'text' %}
             <div class="mb-6">
-              <label class="block text-sm font-medium mb-1" id="label-body">Body</label>
-              <textarea name="body" required rows="19"
+              <label class="block text-sm font-medium mb-1">Body</label>
+              <textarea name="body" required rows="10"
                         class="w-full border rounded-lg px-4 py-2">{{ submitted_body|default:notice.body }}</textarea>
             </div>
+            {% endif %}
 
             <button type="submit"
                     onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();"
@@ -75,52 +58,77 @@
             </button>
           </form>
         </div>
+
+        {% if notice.notice_type == 'photo' %}
+        <div class="bg-white rounded-2xl shadow p-8 mb-10">
+          <h2 class="text-xl font-semibold mb-6 text-primary">Add Image(s)</h2>
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="add_images">
+            <div class="mb-6">
+              <input type="file" name="images" accept="image/*" multiple
+                     class="w-full border rounded-lg px-4 py-2">
+            </div>
+            <button type="submit"
+                    class="js-upload bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-2.5 rounded-lg">
+              Upload
+            </button>
+          </form>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow p-8">
+          <h2 class="text-xl font-semibold mb-6 text-primary">Current Image(s)</h2>
+          {% if notice.images.all %}
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+              {% for img in notice.images.all %}
+                <div class="relative group">
+                  <img src="{{ img.image.url }}?f_auto,q_auto" alt=""
+                       class="w-full h-48 object-cover rounded-xl shadow" loading="lazy">
+                  <form method="POST" class="absolute top-2 right-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="delete_image">
+                    <input type="hidden" name="image_id" value="{{ img.id }}">
+                    <button type="submit"
+                            class="js-delete-photo bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1 rounded-lg">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p class="text-gray-500">No images uploaded yet.</p>
+          {% endif %}
+        </div>
+        {% endif %}
 {% endblock %}
 
 {% block extra_js %}
-<script>
-  const ACTIVE = ["border-blue-600", "bg-blue-50", "text-blue-700"];
-  const INACTIVE = ["border-gray-300", "bg-white", "text-gray-900"];
-  const labels = {
-    en: { title: "Title", date: "Date ( format: day/month/year )", body: "Body" },
-    ne: { title: "शीर्षक", date: "मिति ( दिन/महिना/वर्ष )", body: "विवरण" }
-  };
-
-  function setButton(btn, active) {
-    const add = active ? ACTIVE : INACTIVE;
-    const remove = active ? INACTIVE : ACTIVE;
-    btn.classList.remove(...remove);
-    btn.classList.add(...add);
-    const title = btn.querySelector("div:first-child");
-    const sub = btn.querySelector("div:last-child");
-    // Swap the inner text colors too — text-gray-900/500 are defined after
-    // text-blue-700 in the CSS, so both can't be present at once.
-    if (active) {
-      title.classList.remove("text-gray-900");
-      title.classList.add("text-blue-700");
-      sub.classList.remove("text-gray-500");
-      sub.classList.add("text-blue-700");
-    } else {
-      title.classList.remove("text-blue-700");
-      title.classList.add("text-gray-900");
-      sub.classList.remove("text-blue-700");
-      sub.classList.add("text-gray-500");
-    }
-  }
-
-  function selectLanguage(lang) {
-    document.getElementById("language-input").value = lang;
-    const en = document.getElementById("lang-en");
-    const ne = document.getElementById("lang-ne");
-    setButton(en, lang === "en");
-    setButton(ne, lang === "ne");
-    const L = labels[lang];
-    document.getElementById("label-title").textContent = L.title;
-    document.getElementById("label-date").textContent = L.date;
-    document.getElementById("label-body").textContent = L.body;
-  }
-
-  // Highlight whichever language is currently selected
-  selectLanguage(document.getElementById("language-input").value);
-</script>
+    <script>
+      document.querySelectorAll(".js-delete-photo").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Delete this image?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+      document.querySelectorAll(".js-upload").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm("Upload these image(s)?")) {
+            e.preventDefault();
+            return;
+          }
+          e.preventDefault();
+          this.textContent = "Uploading...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+          this.closest("form").submit();
+        });
+      });
+    </script>
 {% endblock %}

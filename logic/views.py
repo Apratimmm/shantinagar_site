@@ -502,11 +502,11 @@ def add_notice(request):
         if language not in ("en", "ne"):
             language = "en"
 
-        image = request.FILES.get("notice_image")
+        images = request.FILES.getlist("notice_image")
 
         if notice_type == "photo":
-            if not title or not date or not image:
-                messages.error(request, "Title, date and photo are required for photo notices.")
+            if not title or not date or not images:
+                messages.error(request, "Title, date and at least one photo are required for photo notices.")
                 return render(request, "add_notice.html", {
                     "title": title, "body": body, "date": date,
                     "language": language, "notice_type": notice_type,
@@ -526,9 +526,8 @@ def add_notice(request):
             language=language,
             notice_type=notice_type,
         )
-        if image and notice_type == "photo":
-            notice.notice_image = image
-            notice.save()
+        for img in images:
+            NoticeImage.objects.create(notice=notice, image=img)
 
         return redirect("show_notices")
 
@@ -539,31 +538,52 @@ def edit_notice(request, notice_id):
     notice = get_object_or_404(Notice, id=notice_id)
 
     if request.method == "POST":
+        form_type = request.POST.get("form_type", "update_details")
+
+        if form_type == "add_images":
+            images = request.FILES.getlist("images")
+            for img in images:
+                NoticeImage.objects.create(notice=notice, image=img)
+            messages.success(request, "Images uploaded successfully!")
+            return redirect("edit_notice", notice_id=notice.id)
+
+        if form_type == "delete_image":
+            image_id = request.POST.get("image_id")
+            img = get_object_or_404(NoticeImage, id=image_id, notice=notice)
+            img.image.delete(save=False)
+            img.delete()
+            messages.success(request, "Image deleted successfully!")
+            return redirect("edit_notice", notice_id=notice.id)
+
         title = request.POST.get("title", "").strip()
         body = request.POST.get("body", "").strip()
         date = request.POST.get("date", "").strip()
-        language = request.POST.get("language", "en").strip()
 
-        if language not in ("en", "ne"):
-            language = "en"
-
-        if not title or not date or not body:
-            messages.error(request, "Title, date and body are required.")
+        if not title or not date:
+            messages.error(request, "Title and date are required.")
             return render(request, "edit_notice.html", {
                 "notice": notice,
                 "submitted_title": title,
                 "submitted_body": body,
                 "submitted_date": date,
-                "submitted_language": language,
             })
-        else:
-            notice.title = title
+
+        if notice.notice_type == "text" and not body:
+            messages.error(request, "Body is required for text notices.")
+            return render(request, "edit_notice.html", {
+                "notice": notice,
+                "submitted_title": title,
+                "submitted_body": body,
+                "submitted_date": date,
+            })
+
+        notice.title = title
+        notice.date = date
+        if notice.notice_type == "text":
             notice.body = body
-            notice.date = date
-            notice.language = language
-            notice.save()
-            messages.success(request, "Notice updated successfully!")
-            return redirect("edit_notice", notice_id=notice.id)
+        notice.save()
+        messages.success(request, "Notice updated successfully!")
+        return redirect("edit_notice", notice_id=notice.id)
 
     return render(request, "edit_notice.html", {"notice": notice})
 

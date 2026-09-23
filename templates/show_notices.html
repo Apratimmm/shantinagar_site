@@ -10,6 +10,7 @@
 {% endblock %}
 
 {% block content %}
+{% include "_public_lightbox.html" %}
         <h1 class="text-3xl font-bold tracking-tight mb-8">All Notices</h1>
 
         {% if messages %}
@@ -49,11 +50,15 @@
                   </div>
 
                   <div class="flex gap-3">
-                    <a href="{% url 'view_notice' notice.id %}"
-                       target="_blank"
-                       class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg">
+                    {% if notice.notice_type == 'photo' %}
+                    <a href="#" onclick="openLightboxGallery('{{ notice.id }}', [{% for img in notice.images.all %}'{{ img.image.url }}'{% if not forloop.last %}, {% endif %}{% endfor %}], '{{ notice.title|escapejs }}', '{{ notice.date|escapejs }}'); return false;" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg">
                       View
                     </a>
+                    {% else %}
+                    <a href="{% url 'view_notice' notice.id %}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-lg">
+                      View
+                    </a>
+                    {% endif %}
 
                     <a href="{% url 'edit_notice' notice.id %}"
                        class="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg">
@@ -76,6 +81,64 @@
 {% endblock %}
 
 {% block extra_js %}
+    <script>
+      // same lightbox gallery behavior
+      var lightboxEl = document.getElementById("lightbox");
+      if (lightboxEl && !document.getElementById("lightbox-prev")) {
+        document.getElementById("lightbox-close").addEventListener("click", function() {
+          lightboxEl.classList.add("hidden");
+          document.body.style.overflow = "";
+        });
+        lightboxEl.addEventListener("click", function(e) {
+          if (e.target.id === "lightbox") {
+            lightboxEl.classList.add("hidden");
+            document.body.style.overflow = "";
+          }
+        });
+      }
+      window.openLightboxGallery = function(id, urls, title, subtitle) {
+        if (!urls || !urls.length) return;
+        window.currentGalleryUrls = urls;
+        window.currentGalleryIdx = 0;
+        document.getElementById("lightbox-title").textContent = title || "";
+        var subEl = document.getElementById("lightbox-subtitle");
+        if (subEl) subEl.textContent = subtitle || "";
+        function render() {
+          document.getElementById("lightbox-img").src = window.currentGalleryUrls[window.currentGalleryIdx];
+        }
+        render();
+        document.getElementById("lightbox").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+        var box = document.getElementById("lightbox");
+        if (!box.querySelector(".lb-prev")) {
+          var prev = document.createElement("button");
+          prev.className = "lb-prev absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full hover:bg-black/80 z-30";
+          prev.innerHTML = "&larr;";
+          prev.onclick = function() { window.currentGalleryIdx = (window.currentGalleryIdx - 1 + window.currentGalleryUrls.length) % window.currentGalleryUrls.length; render(); };
+          var next = document.createElement("button");
+          next.className = "lb-next absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white px-3 py-2 rounded-full hover:bg-black/80 z-30";
+          next.innerHTML = "&rarr;";
+          next.onclick = function() { window.currentGalleryIdx = (window.currentGalleryIdx + 1) % window.currentGalleryUrls.length; render(); };
+          box.appendChild(prev);
+          box.appendChild(next);
+        }
+      };
+      document.addEventListener("keydown", function(e) {
+        if (document.getElementById("lightbox").classList.contains("hidden")) return;
+        if (e.key === "Escape") {
+          document.getElementById("lightbox").classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+        if (e.key === "ArrowLeft" && window.currentGalleryUrls) {
+          window.currentGalleryIdx = (window.currentGalleryIdx - 1 + window.currentGalleryUrls.length) % window.currentGalleryUrls.length;
+          document.getElementById("lightbox-img").src = window.currentGalleryUrls[window.currentGalleryIdx];
+        }
+        if (e.key === "ArrowRight" && window.currentGalleryUrls) {
+          window.currentGalleryIdx = (window.currentGalleryIdx + 1) % window.currentGalleryUrls.length;
+          document.getElementById("lightbox-img").src = window.currentGalleryUrls[window.currentGalleryIdx];
+        }
+      });
+    </script>
     <script>
       document.querySelectorAll(".js-delete-notice").forEach((btn) => {
         btn.addEventListener("click", function () {

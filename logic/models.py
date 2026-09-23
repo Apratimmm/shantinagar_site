@@ -331,17 +331,29 @@ class Notice(models.Model):
         help_text="Free-form date, e.g. Baisakh 20, 2083 OR 23 Baisakh, 2083",
     )
     body = models.TextField()
-    notice_image = models.ImageField(
-        upload_to="notices/",
-        blank=True,
-        null=True,
-    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["-created_at"]
         verbose_name = "notice"
         verbose_name_plural = "notices"
+
+import os
+from django.utils.text import slugify
+
+def notice_image_path(instance, filename):
+    safe_title = slugify(instance.notice.title) or "untitled"
+    return os.path.join("notices", safe_title, filename)
+
+class NoticeImage(models.Model):
+    notice = models.ForeignKey(
+        Notice, on_delete=models.CASCADE, related_name="images"
+    )
+    image = models.ImageField(upload_to=notice_image_path)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-uploaded_at"]
 
     def __str__(self):
         return f"{self.title} ({self.date})"
