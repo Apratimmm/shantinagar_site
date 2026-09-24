@@ -342,8 +342,7 @@ import os
 from django.utils.text import slugify
 
 def notice_image_path(instance, filename):
-    safe_title = slugify(instance.notice.title) or "untitled"
-    return os.path.join("notices", safe_title, filename)
+    return os.path.join("notices", str(instance.notice.id), filename)
 
 class NoticeImage(models.Model):
     notice = models.ForeignKey(
