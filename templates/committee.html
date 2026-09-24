@@ -53,6 +53,9 @@
                 <!-- Hidden posts source for the modal -->
                 <template id="committee-data-{{ forloop.counter0 }}">
                   <div class="flex flex-col gap-5">
+                    {% if c.description %}
+                      <div class="text-sm text-muted-foreground leading-relaxed">{{ c.description }}</div>
+                    {% endif %}
                     {% for post_key, label, members in c.posts_with_members %}
                       <div class="rounded-lg border border-border bg-card/60 overflow-hidden">
                         <div class="flex items-center justify-between border-b border-border px-4 py-3">
