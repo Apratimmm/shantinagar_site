@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 import os
 import resend
 import json
+import cloudinary.api
 
 resend.api_key = os.environ.get("RESEND_API_KEY")
 def verify_user(request):
@@ -257,9 +258,9 @@ def add_event(request):
             event_date=event_date
         )
 
-        image_urls = request.POST.getlist("image_urls")
+        images = request.FILES.getlist("images")
         GalleryImage.objects.bulk_create(
-            [GalleryImage(event=event, image=url) for url in image_urls if url]
+            [GalleryImage(event=event, image=img) for img in images]
         )
 
         messages.success(request, "Event created successfully!")
@@ -314,7 +315,7 @@ def delete_event(request, event_id):
     event = get_object_or_404(GalleryEvent, id=event_id)
     event_name = event.event_name
     event.delete()
-
+    cloudinary.api.delete_folder(f"gallery/{event_name}")
     messages.success(request, f'Event "{event_name}" deleted successfully!')
     return redirect("show_events")
 
@@ -479,7 +480,7 @@ def delete_committee(request, committee_id):
         person.delete()
 
     committee.delete()
-
+    cloudinary.api.delete_folder(f"committee/{committee_name}")
     messages.success(request, f'Committee "{committee_name}" deleted successfully!')
     return redirect("show_committees")
 
@@ -591,8 +592,20 @@ def edit_notice(request, notice_id):
 def delete_notice(request, notice_id):
     notice = get_object_or_404(Notice, id=notice_id)
     notice_title = notice.title
-    notice.delete()
+    prefix = f"notices/{notice.id}/"
+    try:
+        result = cloudinary.api.delete_resources_by_prefix(
+            prefix,
+            resource_type="image",
+            type="upload",
+            invalidate=True
+        )
+        cloudinary.api.delete_folder(f"notices/{notice.id}")
 
+    except Exception as e:
+        print(f"Cloudinary deletion error: {e}")
+
+    notice.delete()
     messages.success(request, f'Notice "{notice_title}" deleted successfully!')
     return redirect("show_notices")
 
