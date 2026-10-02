@@ -209,8 +209,21 @@ async function update_month() {
   hideSaveMessage();
 
   const allEvents = mergeEvents(name);
-
-  const eventsList = Object.entries(allEvents).map(([day, ev]) => ({
+  // Drop events outside the current day count so shrinking a month
+  // (e.g. 31 -> 28) doesn't leave stale events on days 29-31.
+  const inRange = {};
+  for (const [day, ev] of Object.entries(allEvents)) {
+    const d = Number(day);
+    if (d >= 1 && d <= days) inRange[day] = ev;
+  }
+  if (EXTRA[currentMonthId]) {
+    for (const k of Object.keys(EXTRA[currentMonthId])) {
+      if (Number(k) < 1 || Number(k) > days) delete EXTRA[currentMonthId][k];
+    }
+    if (Object.keys(EXTRA[currentMonthId]).length === 0) delete EXTRA[currentMonthId];
+  }
+  saveExtras();
+  const eventsList = Object.entries(inRange).map(([day, ev]) => ({
     event_date: Number(day),
     event_name: ev.label,
     event_type: ev.type,
