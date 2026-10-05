@@ -638,3 +638,91 @@ def edit_signature(request):
 @login_required
 def edit_school_video(request):
     return render(request, 'edit_school_video.html')
+
+@login_required
+def edit_faculty(request):
+    """Faculty menu page: shows Update / Add / Delete options."""
+    return render(request, "edit_faculty.html")
+
+
+def update_faculty(request):
+    faculty = Faculty.objects.all()
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "update_faculty":
+            member_id = None
+            for key in request.POST:
+                parts = key.split("_")
+                if len(parts) >= 3 and parts[0] == "faculty":
+                    try:
+                        member_id = int(parts[1])
+                    except ValueError:
+                        continue
+                    break
+
+            if member_id is not None:
+                member = get_object_or_404(Faculty, id=member_id)
+                prefix = f"faculty_{member.id}_"
+                member.name = request.POST.get(prefix + "name", "").strip()
+                member.level = request.POST.get(prefix + "level", "").strip()
+                member.designation = request.POST.get(prefix + "designation", "").strip()
+                ph = request.POST.get(prefix + "ph_number", "").strip()
+                member.ph_number = ph or None
+                if request.FILES.get(prefix + "image"):
+                    member.image = request.FILES.get(prefix + "image")
+                member.save()
+                messages.success(request, "Faculty member updated.")
+            return redirect("update_faculty")
+
+        elif form_type == "delete_faculty_image":
+            member = get_object_or_404(Faculty, id=request.POST.get("faculty_id"))
+            _delete_image_field(member, "image", request, "Faculty photo deleted.")
+            return redirect("update_faculty")
+
+    return render(request, "update_faculty.html", {"faculty": faculty})
+
+
+def add_faculty(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        level = request.POST.get("level", "").strip()
+        designation = request.POST.get("designation", "").strip()
+        ph_number = request.POST.get("ph_number", "").strip()
+        image = request.FILES.get("image")
+
+        if not name:
+            messages.error(request, "Faculty name is required.")
+            return redirect("add_faculty")
+
+        member = Faculty(
+            name=name,
+            level=level,
+            designation=designation,
+            ph_number=ph_number or None,
+        )
+        if image:
+            member.image = image
+        member.save()
+        messages.success(request, "Faculty member added.")
+        return redirect("add_faculty")
+
+    return render(request, "add_faculty.html")
+
+
+def delete_faculty(request):
+    faculty = Faculty.objects.all()
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        if form_type == "delete_faculty":
+            member = get_object_or_404(Faculty, id=request.POST.get("faculty_id"))
+            if member.image:
+                member.image.delete(save=False)
+            member.delete()
+            messages.success(request, "Faculty member removed.")
+            return redirect("delete_faculty")
+
+    return render(request, "delete_faculty.html", {"faculty": faculty})

@@ -468,3 +468,36 @@ class CommitteePeople(models.Model):
     @property
     def first_name(self):
         return self.name.split(maxsplit=1)[0] if self.name else ""
+
+class Faculty(models.Model):
+
+    name = models.CharField(
+        max_length=150,
+        help_text="Full name of the faculty member",
+    )
+    level = models.CharField(
+        max_length=20,
+        help_text="Which school level this faculty belongs to",
+    )
+    designation = models.CharField(
+        max_length=150,
+        help_text="Designation / role of the faculty member, e.g. 'Head of Primary'",
+    )
+    ph_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Contact phone number",
+    )
+    image = models.ImageField(
+        upload_to="faculty/",
+        blank=True,
+        null=True,
+        help_text="Optional photo of this faculty member",
+    )
+
+    class Meta:
+        verbose_name = "faculty"
+        verbose_name_plural = "faculty"
+        ordering = ["id"]
+

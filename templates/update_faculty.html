@@ -1,0 +1,144 @@
+{% extends "base_admin.html" %}
+{% block title %}Edit Faculty{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/edit_faculty/"><span class="text-lg font-bold text-primary">Back</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="mb-14">
+
+          {% for member in faculty %}
+          <form method="post" enctype="multipart/form-data" action="/update_faculty/" class="space-y-6">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="update_faculty">
+
+            <div class="bg-white rounded-2xl shadow p-8">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-primary">Faculty Record {{ forloop.counter }}</h3>
+
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg"
+                        onclick="this.textContent='Updating...'; this.disabled=true; this.classList.add('opacity-75', 'cursor-not-allowed'); this.form.submit();">
+                  Update
+                </button>
+              </div>
+
+              <div class="flex flex-col md:flex-row md:items-start gap-6">
+                <div class="flex-1 min-w-0 space-y-4">
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Name</label>
+                      <input required type="text" name="faculty_{{ member.id }}_name" value="{{ member.name|default_if_none:'' }}"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium mb-1">Level</label>
+                      <input type="text" name="faculty_{{ member.id }}_level" value="{{ member.level|default_if_none:'' }}"
+                             class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Designation</label>
+                    <input type="text" name="faculty_{{ member.id }}_designation" value="{{ member.designation|default_if_none:'' }}"
+                           class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                  </div>
+
+                  <div>
+                    <label class="block text-sm font-medium mb-1">Phone Number</label>
+                    <input type="text" name="faculty_{{ member.id }}_ph_number" value="{{ member.ph_number|default_if_none:'' }}"
+                           class="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-ring outline-none">
+                  </div>
+                </div>
+
+                <div class="flex-shrink-0 w-48">
+                  <div class="block text-sm font-medium mb-1">Faculty Photo</div>
+                  {% if member.id and member.image %}
+                    <img src="{{ member.image.url }}?f_auto,q_auto" alt="{{ member.name }}" class="h-32 w-48 object-cover rounded" loading="lazy">
+                    <button type="button"
+                            data-form-type="delete_faculty_image"
+                            data-record-field="faculty_id"
+                            data-record-id="{{ member.id }}"
+                            data-confirm="Delete this image?"
+                            class="js-delete-image mt-3 block bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg w-full">
+                      Delete image
+                    </button>
+                  {% else %}
+                    <div class="h-32 w-48 rounded bg-gray-100 border flex items-center justify-center text-gray-400 text-xs">
+                      no image yet
+                    </div>
+                    <div class="mt-3">
+                      <label class="block text-sm font-medium mb-1">Upload Photo</label>
+                      <input type="file" name="faculty_{{ member.id }}_image" accept="image/*" class="w-full text-sm">
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </form>
+          {% empty %}
+          <div class="bg-white rounded-2xl shadow p-8 text-center text-muted-foreground">
+            No faculty members found yet.
+          </div>
+          {% endfor %}
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+      const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+      document.querySelectorAll(".js-delete-image, .js-delete-faculty").forEach((btn) => {
+        btn.addEventListener("click", function (e) {
+          if (!confirm(this.dataset.confirm || "Delete this?")) {
+            e.preventDefault();
+            return;
+          }
+          this.textContent = "Deleting...";
+          this.disabled = true;
+          this.classList.add("opacity-75", "cursor-not-allowed");
+
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/update_faculty/";
+
+          const csrf = document.createElement("input");
+          csrf.type = "hidden";
+          csrf.name = "csrfmiddlewaretoken";
+          csrf.value = csrfToken;
+          form.appendChild(csrf);
+
+          const ft = document.createElement("input");
+          ft.type = "hidden";
+          ft.name = "form_type";
+          ft.value = this.dataset.formType;
+          form.appendChild(ft);
+
+          const id = document.createElement("input");
+          id.type = "hidden";
+          id.name = this.dataset.recordField;
+          id.value = this.dataset.recordId;
+          form.appendChild(id);
+
+          document.body.appendChild(form);
+          form.submit();
+        });
+      });
+    </script>
+{% endblock %}

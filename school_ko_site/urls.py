@@ -57,5 +57,9 @@ urlpatterns = [
     path('delete_notice/<int:notice_id>/', delete_notice, name='delete_notice'),
     path('edit_signature/', edit_signature, name='edit_signature'),
     path('view_notice/<int:notice_id>/', view_notice, name='view_notice'),
+    path('edit_faculty/', edit_faculty, name='edit_faculty'),
+    path('update_faculty/', update_faculty, name='update_faculty'),
+    path('add_faculty/', add_faculty, name='add_faculty'),
+    path('delete_faculty/', delete_faculty, name='delete_faculty'),
 
 ]

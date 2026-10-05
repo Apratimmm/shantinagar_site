@@ -1,0 +1,42 @@
+{% extends "base_admin.html" %}
+{% block title %}Edit Faculty{% endblock %}
+
+{% block nav %}
+<nav class="border-b border-border bg-background/80 px-4 py-4 backdrop-blur-md">
+  <div class="mx-auto max-w-7xl flex justify-between items-center">
+    <a href="/dashboard/"><span class="text-lg font-bold text-primary">Back to Dashboard</span></a>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+        <div class="flex items-center justify-between mb-8">
+          <h1 class="text-3xl font-bold tracking-tight">Faculty</h1>
+        </div>
+
+        {% if messages %}
+          <div class="mb-6 space-y-3">
+            {% for message in messages %}
+              <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+          <a href="/update_faculty/" class=" text-center group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary">Update</h2>
+          </a>
+
+          <a href="/add_faculty/" class="text-center group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary">Add</h2>
+          </a>
+
+          <a href="/delete_faculty/" class=" text-center group block rounded-[24px] border border-border bg-card p-6 shadow-md transition-shadow hover:shadow-xl">
+            <h2 class="text-xl font-semibold text-primary">Delete</h2>
+          </a>
+
+        </div>
+{% endblock %}
