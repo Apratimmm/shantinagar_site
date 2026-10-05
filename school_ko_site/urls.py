@@ -30,6 +30,7 @@ urlpatterns = [
     path('contact/', contact, name='contact'),
     path('gallery/', gallery, name='gallery'),
     path('committee/', committee, name='committee'),
+    path('faculty/', faculty, name='faculty'),
     path('results/', results, name='results'),
     path('verify_user/',verify_user, name='verify_user'),
     path('logout/', logoutt, name='logout'),

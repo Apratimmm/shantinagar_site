@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect, get_object_or_404
 from logic.models import *
 from logic.context_processors import get_contact_info
@@ -97,6 +98,20 @@ def results(request):
 
 def user_login(request):
     return render(request, 'login.html')
+
+def faculty(request):
+
+    faculty_qs = Faculty.objects.all()
+    paginator = Paginator(faculty_qs, 10)
+    page_number = request.GET.get("page")
+    try:
+        faculty_page = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        faculty_page = paginator.get_page(1)
+    except EmptyPage:
+        faculty_page = paginator.get_page(paginator.num_pages)
+    return render(request, "faculty.html", {"faculty": faculty_page})
+
 
 def committee(request):
     committees = Committee.objects.prefetch_related("people").all()

@@ -1,0 +1,108 @@
+{% extends "base_public.html" %}
+{% block title %}Faculty - Shantinagar English School{% endblock %}
+{% block description %}Meet the faculty members of Shantinagar English School across our primary and secondary levels.{% endblock %}
+{% block og_title %}Faculty - Shantinagar English School{% endblock %}
+{% block og_description %}Our faculty members across primary and secondary school levels.{% endblock %}
+
+{% block content %}
+      <!-- HERO -->
+      <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-24">
+        <div class="mx-auto max-w-7xl">
+          <span class="mb-2 flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.2em] text-primary">
+            Our People
+          </span>
+          <h1 class="max-w-[20ch] font-display text-4xl font-bold leading-[1.02] tracking-tight text-balance md:text-6xl">Meet Our
+            Faculty</h1>
+          <p class="mt-6 max-w-[60ch] text-lg text-muted-foreground text-pretty">
+            The dedicated teachers and staff who shape every classroom at Shantinagar English School.
+          </p>
+        </div>
+      </section>
+
+      <!-- FACULTY GRID (Polaroid style) -->
+      <section class="border-t border-border bg-secondary/40 px-6 py-20">
+        <div class="mx-auto max-w-7xl">
+          {% if faculty %}
+            <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {% for member in faculty %}
+                <figure
+                  class="group relative flex flex-col bg-white p-4 shadow-lg ring-1 ring-black/10 rounded-sm transition-all duration-300 hover:shadow-xl hover:scale-[1.02] hover:rotate-0 {% if forloop.counter0|divisibleby:'3' %}rotate-[-2deg]{% elif forloop.counter0|add:'1'|divisibleby:'3' %}rotate-[2deg]{% else %}rotate-[-1deg]{% endif %}"
+                >
+                  <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                    {% if member.image %}
+                      <img
+                        src="{{ member.image.url }}?f_auto,q_auto"
+                        alt="{{ member.name }} of Shantinagar English School"
+                        loading="lazy"
+                        class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    {% else %}
+                      <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                        <span class="font-display text-4xl font-bold text-primary/30 select-none">
+                          {% for word in member.name.split %}
+                            {% if forloop.counter <= 2 %}{{ word.0|upper }}{% endif %}
+                          {% endfor %}
+                        </span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <figcaption class="mt-3 px-1 text-center">
+                    <h3 class="font-display text-lg font-bold tracking-tight text-foreground">
+                      {{ member.name }}
+                    </h3>
+                    <span class="mt-1 block font-mono text-[10px] uppercase tracking-wider text-primary">
+                      {{ member.designation }}
+                    </span>
+                    {% if member.level %}
+                      <span class="mt-0.5 block text-xs text-muted-foreground/80">
+                        {{ member.level|capfirst }}
+                      </span>
+                    {% endif %}
+                    {% if member.ph_number %}
+                      <span class="mt-1 block text-xs text-muted-foreground/80">
+                        {{ member.ph_number }}
+                      </span>
+                    {% endif %}
+                  </figcaption>
+                </figure>
+              {% endfor %}
+            </div>
+
+            <!-- PAGINATION -->
+            {% if faculty.has_other_pages %}
+              <div class="mt-12 flex items-center justify-center gap-4">
+                {% if faculty.has_previous %}
+                  <a
+                    href="?page={{ faculty.previous_page_number }}"
+                    class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Previous
+                  </a>
+                {% endif %}
+                <span class="text-sm text-muted-foreground">
+                  Page {{ faculty.number }} of {{ faculty.paginator.num_pages }}
+                </span>
+                {% if faculty.has_next %}
+                  <a
+                    href="?page={{ faculty.next_page_number }}"
+                    class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+                  >
+                    Next
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </a>
+                {% endif %}
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="rounded-[28px] border border-border bg-card p-12 text-center">
+              <p class="text-muted-foreground">No faculty members are listed yet.</p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+{% endblock %}

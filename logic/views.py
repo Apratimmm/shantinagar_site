@@ -641,7 +641,6 @@ def edit_school_video(request):
 
 @login_required
 def edit_faculty(request):
-    """Faculty menu page: shows Update / Add / Delete options."""
     return render(request, "edit_faculty.html")
 
 
