@@ -5,7 +5,6 @@
 {% block og_description %}Official notices and announcements from Shantinagar English School.{% endblock %}
 
 {% block content %}
-    <main>
       <!-- HERO -->
       <section class="border-b border-border bg-secondary/60 px-6 py-16 md:py-20">
         <div class="mx-auto max-w-7xl fade-up">
@@ -46,8 +45,38 @@
             </div>
           {% endif %}
         </div>
+
+        <!-- PAGINATION -->
+        {% if notices.has_other_pages %}
+          <div class="mt-12 flex items-center justify-center gap-4">
+            {% if notices.has_previous %}
+              <a
+                href="?page={{ notices.previous_page_number }}"
+                class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+                Previous
+              </a>
+            {% endif %}
+            <span class="text-sm text-muted-foreground">
+              Page {{ notices.number }} of {{ notices.paginator.num_pages }}
+            </span>
+            {% if notices.has_next %}
+              <a
+                href="?page={{ notices.next_page_number }}"
+                class="inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:text-primary"
+              >
+                Next
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
       </section>
-    </main>
 {% endblock %}
 
 {% block extra_js %}

@@ -80,9 +80,16 @@ def contact(request):
 
 def gallery(request):
     events = GalleryEvent.objects.prefetch_related("images").all()
-
+    paginator = Paginator(events, 3)
+    page_number = request.GET.get("page")
+    try:
+        events_page = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        events_page = paginator.get_page(1)
+    except EmptyPage:
+        events_page = paginator.get_page(paginator.num_pages)
     context = {
-        "events": events,
+        "events": events_page,
     }
     return render(request, "gallery.html", context)
 
@@ -102,7 +109,7 @@ def user_login(request):
 def faculty(request):
 
     faculty_qs = Faculty.objects.all()
-    paginator = Paginator(faculty_qs, 10)
+    paginator = Paginator(faculty_qs, 9)
     page_number = request.GET.get("page")
     try:
         faculty_page = paginator.get_page(page_number)
@@ -128,7 +135,15 @@ def committee(request):
 
 def notices(request):
     notice_list = Notice.objects.all()
-    return render(request, "notices.html", {"notices": notice_list})
+    paginator = Paginator(notice_list, 4)
+    page_number = request.GET.get("page")
+    try:
+        notices_page = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        notices_page = paginator.get_page(1)
+    except EmptyPage:
+        notices_page = paginator.get_page(paginator.num_pages)
+    return render(request, "notices.html", {"notices": notices_page})
 
 NEPALI_CHROME = {
     "notice_word": "सूचना",
