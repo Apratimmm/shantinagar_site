@@ -480,7 +480,10 @@ def delete_committee(request, committee_id):
         person.delete()
 
     committee.delete()
-    cloudinary.api.delete_folder(f"committee/{committee_name}")
+    try:
+        cloudinary.api.delete_folder(f"committee/{committee_name}")
+    except Exception as e:
+        print(f"Cloudinary deletion error: {e}")
     messages.success(request, f'Committee "{committee_name}" deleted successfully!')
     return redirect("show_committees")
 
