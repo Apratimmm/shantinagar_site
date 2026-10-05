@@ -315,7 +315,10 @@ def delete_event(request, event_id):
     event = get_object_or_404(GalleryEvent, id=event_id)
     event_name = event.event_name
     event.delete()
-    cloudinary.api.delete_folder(f"gallery/{event_name}")
+    try:
+        cloudinary.api.delete_folder(f"gallery/{event_name}")
+    except Exception as e:
+        print(f"Cloudinary deletion error: {e}")
     messages.success(request, f'Event "{event_name}" deleted successfully!')
     return redirect("show_events")
 

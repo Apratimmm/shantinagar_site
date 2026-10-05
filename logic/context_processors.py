@@ -17,11 +17,15 @@ def get_contact_info():
     return contact
 
 def fetch_video():
-    result = cloudinary.api.resources_by_asset_folder(
-        asset_folder="school-video",
-        resource_type="video",
-        max_results=1
-    )
+    try:
+        result = cloudinary.api.resources_by_asset_folder(
+            asset_folder="school-video",
+            resource_type="video",
+            max_results=1
+        )
+    except Exception as e:
+        print(f"Cloudinary fetch error: {e}")
+        return None
     resources = result.get("resources", [])
     if resources:
         video_url = resources[0].get("secure_url")
